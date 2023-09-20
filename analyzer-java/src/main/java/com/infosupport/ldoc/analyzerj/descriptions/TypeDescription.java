@@ -5,17 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public final class TypeDescription implements Description {
+public record TypeDescription(
+    @JsonProperty("FullName")
+    String fullName,
 
-  @JsonProperty("FullName")
-  public final String fullName;
+    @JsonProperty("BaseTypes")
+    @JsonInclude(Include.NON_EMPTY) List<String> baseTypes
+) implements Description {
 
-  @JsonProperty("BaseTypes")
-  @JsonInclude(Include.NON_EMPTY)
-  public final List<String> baseTypes;
-
-  public TypeDescription(String fullName, List<String> baseTypes) {
-    this.fullName = fullName;
-    this.baseTypes = baseTypes;
-  }
 }
