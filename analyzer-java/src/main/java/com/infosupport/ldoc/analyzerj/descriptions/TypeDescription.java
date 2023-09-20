@@ -10,7 +10,8 @@ public record TypeDescription(
     String fullName,
 
     @JsonProperty("BaseTypes")
-    @JsonInclude(Include.NON_EMPTY) List<String> baseTypes
+    @JsonInclude(Include.NON_EMPTY)
+    List<String> baseTypes
 ) implements Description {
 
 }
