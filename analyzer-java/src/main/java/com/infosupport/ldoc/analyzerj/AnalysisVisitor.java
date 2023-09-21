@@ -2,6 +2,7 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
@@ -13,6 +14,7 @@ import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.GenericListVisitorAdapter;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.resolution.types.ResolvedType;
+import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
@@ -46,6 +48,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return methods;
   }
 
+  private <T extends Node> List<Description> ctors(NodeWithMembers<T> n, Analyzer arg) {
+    List<Description> constructors = new ArrayList<>();
+    for (ConstructorDeclaration constructor : n.getConstructors()) {
+      constructors.addAll(constructor.accept(this, arg));
+    }
+    return constructors;
+  }
+
   private <T extends Node> List<Description> parameters(NodeWithParameters<T> n, Analyzer arg) {
     List<Description> parameters = new ArrayList<>();
     for (Parameter parameter : n.getParameters()) {
@@ -62,7 +72,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     baseTypes.addAll(resolve(n.getExtendedTypes()));
     baseTypes.addAll(resolve(n.getImplementedTypes()));
 
-    return List.of(new TypeDescription(type, fullName, baseTypes, methods(n, arg)));
+    return List.of(new TypeDescription(type, fullName, baseTypes, ctors(n, arg), methods(n, arg)));
   }
 
   @Override
@@ -70,7 +80,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     String fullName = n.getFullyQualifiedName().orElseThrow();
     List<String> baseTypes = resolve(n.getImplementedTypes());
 
-    return List.of(new TypeDescription(TypeType.STRUCT, fullName, baseTypes, methods(n, arg)));
+    return List.of(
+        new TypeDescription(TypeType.STRUCT, fullName, baseTypes, ctors(n, arg), methods(n, arg)));
   }
 
   @Override
@@ -78,7 +89,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     String fullName = n.getFullyQualifiedName().orElseThrow();
     List<String> baseTypes = resolve(n.getImplementedTypes());
 
-    return List.of(new TypeDescription(TypeType.ENUM, fullName, baseTypes, methods(n, arg)));
+    return List.of(
+        new TypeDescription(TypeType.ENUM, fullName, baseTypes, ctors(n, arg), methods(n, arg)));
   }
 
   @Override
@@ -88,6 +100,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
     return List.of(
         new MethodDescription(new MemberDescription(name), retType, parameters(n, arg), List.of()));
+  }
+
+  @Override
+  public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
+    String name = n.getNameAsString();
+
+    return List.of(
+        new ConstructorDescription(new MemberDescription(name), parameters(n, arg), List.of()));
   }
 
   @Override

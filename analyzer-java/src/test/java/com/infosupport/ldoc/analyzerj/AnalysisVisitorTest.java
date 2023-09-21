@@ -7,6 +7,7 @@ import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
@@ -79,9 +80,22 @@ class AnalysisVisitorTest {
   }
 
   @Test
+  void constructor_description() {
+    assertIterableEquals(
+        List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), List.of(
+            new ConstructorDescription(
+                new MemberDescription("Bongo"),
+                List.of(new ParameterDescription("java.lang.Object", "z")),
+                List.of())
+        ), List.of())),
+        parse("class Bongo { Bongo(Object z) {} }")
+    );
+  }
+
+  @Test
   void method_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), List.of(), List.of(
           new MethodDescription(
               new MemberDescription("does"),
               "Example",
