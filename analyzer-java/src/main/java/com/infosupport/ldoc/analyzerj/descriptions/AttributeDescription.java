@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public record MemberDescription(
+public record AttributeDescription(
+    @JsonProperty("Type")
+    String type,
+
     @JsonProperty("Name")
     String name,
 
-    @JsonProperty("Attributes")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> attributes
+    @JsonProperty("Arguments")
+    List<Description> arguments
 ) implements Description {
 
-  public MemberDescription(String name) {
-    this(name, List.of());
-  }
 }

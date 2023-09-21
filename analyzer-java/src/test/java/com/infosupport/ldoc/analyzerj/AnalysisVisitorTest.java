@@ -7,6 +7,8 @@ import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
@@ -85,9 +87,9 @@ class AnalysisVisitorTest {
         List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), List.of(
             new ConstructorDescription(
                 new MemberDescription("Bongo"),
-                List.of(new ParameterDescription("java.lang.Object", "z")),
+                List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
                 List.of())
-        ), List.of())),
+        ), List.of(), List.of())),
         parse("class Bongo { Bongo(Object z) {} }")
     );
   }
@@ -100,9 +102,23 @@ class AnalysisVisitorTest {
               new MemberDescription("does"),
               "Example",
               List.of(
-                  new ParameterDescription("java.lang.Object", "a"),
-                  new ParameterDescription("java.lang.String", "b")),
-              List.of())))),
+                  new ParameterDescription("java.lang.Object", "a", List.of()),
+                  new ParameterDescription("java.lang.String", "b", List.of())),
+              List.of())), List.of())),
         parse("class Example { Example does(Object a, String b) {} }"));
+  }
+
+  @Test
+  void attribute_description() {
+    assertIterableEquals(
+        List.of(new TypeDescription(TypeType.CLASS, "Z", List.of(), List.of(), List.of(), List.of(
+            new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
+        parse("@Deprecated class Z {}"));
+
+    assertIterableEquals(
+        List.of(new TypeDescription(TypeType.CLASS, "X", List.of(), List.of(), List.of(), List.of(
+            new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
+                new AttributeArgumentDescription("value", "java.lang.String", "\"unchecked\"")))))),
+        parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 }
