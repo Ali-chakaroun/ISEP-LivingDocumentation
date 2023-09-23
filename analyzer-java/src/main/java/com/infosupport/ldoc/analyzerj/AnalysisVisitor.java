@@ -1,6 +1,7 @@
 package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
@@ -12,9 +13,6 @@ import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.MemberValuePair;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
-import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
-import com.github.javaparser.ast.nodeTypes.NodeWithMembers;
-import com.github.javaparser.ast.nodeTypes.NodeWithParameters;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.GenericListVisitorAdapter;
@@ -32,6 +30,7 @@ import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Analyzer> {
 
@@ -49,93 +48,71 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return types.stream().map(this::resolve).toList();
   }
 
-  private <T extends Node> List<Description> methods(NodeWithMembers<T> n, Analyzer arg) {
-    List<Description> methods = new ArrayList<>();
-    for (MethodDeclaration method : n.getMethods()) {
-      methods.addAll(method.accept(this, arg));
-    }
-    return methods;
-  }
-
-  private <T extends Node> List<Description> ctors(NodeWithMembers<T> n, Analyzer arg) {
-    List<Description> constructors = new ArrayList<>();
-    for (ConstructorDeclaration constructor : n.getConstructors()) {
-      constructors.addAll(constructor.accept(this, arg));
-    }
-    return constructors;
-  }
-
-  private <T extends Node> List<Description> parameters(NodeWithParameters<T> n, Analyzer arg) {
-    List<Description> parameters = new ArrayList<>();
-    for (Parameter parameter : n.getParameters()) {
-      parameters.addAll(parameter.accept(this, arg));
-    }
-    return parameters;
-  }
-
-  private <T extends Node> List<Description> attributes(NodeWithAnnotations<T> n, Analyzer arg) {
-    List<Description> attributes = new ArrayList<>();
-    for (AnnotationExpr annotation : n.getAnnotations()) {
-      attributes.addAll(annotation.accept(this, arg));
-    }
-    return attributes;
+  /** Like {@link #visit} but only returning descriptions for Nodes matching the given predicate. */
+  private <T extends Node> List<Description> select(List<T> nodes, Predicate<T> p, Analyzer arg) {
+    return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
 
   @Override
   public List<Description> visit(ClassOrInterfaceDeclaration n, Analyzer arg) {
-    String fullName = n.getFullyQualifiedName().orElseThrow();
     List<String> baseTypes = new ArrayList<>();
     baseTypes.addAll(resolve(n.getExtendedTypes()));
     baseTypes.addAll(resolve(n.getImplementedTypes()));
 
     return List.of(new TypeDescription(
-        n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS, fullName, baseTypes,
-        ctors(n, arg), methods(n, arg), attributes(n, arg)));
+        n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
+        n.getFullyQualifiedName().orElseThrow(),
+        baseTypes,
+        select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
+        select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
+        visit(n.getAnnotations(), arg)));
   }
 
   @Override
   public List<Description> visit(RecordDeclaration n, Analyzer arg) {
-    String fullName = n.getFullyQualifiedName().orElseThrow();
-    List<String> baseTypes = resolve(n.getImplementedTypes());
-
     return List.of(new TypeDescription(
-        TypeType.STRUCT, fullName, baseTypes,
-        ctors(n, arg), methods(n, arg), attributes(n, arg)));
+        TypeType.STRUCT,
+        n.getFullyQualifiedName().orElseThrow(),
+        resolve(n.getImplementedTypes()),
+        select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
+        select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
+        visit(n.getAnnotations(), arg)));
   }
 
   @Override
   public List<Description> visit(EnumDeclaration n, Analyzer arg) {
-    String fullName = n.getFullyQualifiedName().orElseThrow();
-    List<String> baseTypes = resolve(n.getImplementedTypes());
-
     return List.of(new TypeDescription(
-        TypeType.ENUM, fullName, baseTypes,
-        ctors(n, arg), methods(n, arg), attributes(n, arg)));
+        TypeType.ENUM,
+        n.getFullyQualifiedName().orElseThrow(),
+        resolve(n.getImplementedTypes()),
+        select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
+        select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
+        visit(n.getAnnotations(), arg)));
   }
 
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
-    String name = n.getNameAsString();
-    String retType = resolve(n.getType());
-
     return List.of(new MethodDescription(
-        new MemberDescription(name, attributes(n, arg)),
-        retType, parameters(n, arg), List.of()));
+        new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
+        resolve(n.getType()),
+        visit(n.getParameters(), arg),
+        List.of()));
   }
 
   @Override
   public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
-    String name = n.getNameAsString();
-
     return List.of(new ConstructorDescription(
-        new MemberDescription(name, attributes(n, arg)),
-        parameters(n, arg), List.of()));
+        new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
+        visit(n.getParameters(), arg),
+        List.of()));
   }
 
   @Override
   public List<Description> visit(Parameter n, Analyzer arg) {
-    return List.of(
-        new ParameterDescription(resolve(n.getType()), n.getNameAsString(), attributes(n, arg)));
+    return List.of(new ParameterDescription(
+        resolve(n.getType()),
+        n.getNameAsString(),
+        visit(n.getAnnotations(), arg)));
   }
 
   private List<Description> visitAnnotation(AnnotationExpr n, List<Description> args) {
