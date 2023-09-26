@@ -18,7 +18,19 @@ public record TypeDescription(
 
     @JsonProperty("BaseTypes")
     @JsonInclude(Include.NON_EMPTY)
-    List<String> baseTypes
+    List<String> baseTypes,
+
+    @JsonProperty("Methods")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> methods
 ) implements Description {
+
+  public TypeDescription(TypeType type, String fullName) {
+    this(type, fullName, List.of());
+  }
+
+  public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
+    this(type, fullName, baseTypes, List.of());
+  }
 
 }
