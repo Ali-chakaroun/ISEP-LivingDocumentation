@@ -7,13 +7,20 @@ import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.ReturnDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
 import java.util.List;
@@ -31,6 +38,15 @@ class AnalysisVisitorTest {
 
   private List<Description> parse(String code) {
     return parser.parse(code).getResult().orElseThrow().accept(new AnalysisVisitor(solver), null);
+  }
+
+  private List<Description> parseFragment(String fragment) {
+    String source = String.format("class Test { int test() { %s } }", fragment);
+    List<Description> unit = parse(source);
+    List<Description> methods = ((TypeDescription)unit.get(0)).methods();
+    List<Description> statements = ((MethodDescription)methods.get(0)).statements();
+    assertNotEquals(statements, List.of());
+    return statements;
   }
 
   @Test
@@ -120,5 +136,86 @@ class AnalysisVisitorTest {
             new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
                 new AttributeArgumentDescription("value", "java.lang.String", "\"unchecked\"")))))),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
+  }
+
+  @Test
+  void return_statement() {
+    assertIterableEquals(
+        List.of(new ReturnDescription()),
+        parseFragment("return;"));
+
+    assertIterableEquals(
+        List.of(new ReturnDescription("1 + 2")),
+        parseFragment("return 1 + 2;"));
+  }
+
+  @Test
+  void if_statement() {
+    assertIterableEquals(
+        List.of(new IfDescription(List.of(
+            new IfElseSection("true", List.of(new ReturnDescription("1")))))),
+        parseFragment("if (true) return 1;"));
+
+    assertIterableEquals(
+        List.of(new IfDescription(List.of(
+            new IfElseSection("true", List.of(new ReturnDescription("1"))),
+            new IfElseSection(null, List.of(new ReturnDescription("2")))))),
+        parseFragment("if (true) return 1; else return 2;"));
+
+    assertIterableEquals(
+        List.of(new IfDescription(List.of(
+            new IfElseSection("true", List.of(new ReturnDescription("1"))),
+            new IfElseSection("false", List.of(new ReturnDescription("2")))))),
+        parseFragment("if (true) return 1; else if (false) return 2;"));
+
+    assertIterableEquals(
+        List.of(new IfDescription(List.of(
+            new IfElseSection("true", List.of(new ReturnDescription("1"))),
+            new IfElseSection("false", List.of(new ReturnDescription("2"))),
+            new IfElseSection(null, List.of(new ReturnDescription("4")))))),
+        parseFragment("if (true) return 1; else if (false) return 2; else return 4;"));
+
+    assertIterableEquals(
+        List.of(new IfDescription(List.of(
+            new IfElseSection("true", List.of(new ReturnDescription("1"))),
+            new IfElseSection("false", List.of(new ReturnDescription("2"))),
+            new IfElseSection(null, List.of(new ReturnDescription("4")))))),
+        parseFragment("if (true) return 1; else if (false) return 2; else return 4;"));
+  }
+
+  @Test
+  void foreach_statement() {
+    assertIterableEquals(
+        List.of(new ForEachDescription("Object x : xs", List.of(new ReturnDescription("1")))),
+        parseFragment("for (Object x : xs) { return 1; }"));
+  }
+
+  @Test
+  void switch_statement() {
+    String fragment = """
+        switch (bongo) {
+          case 1:
+            return 2;
+          case 3:
+          case 4:
+            return 5;
+          default:
+            return 6;
+        }
+        """;
+    assertIterableEquals(
+        List.of(new SwitchDescription("bongo", List.of(
+            new SwitchSection(List.of("1"), List.of(new ReturnDescription("2"))),
+            new SwitchSection(List.of("3"), List.of()),
+            new SwitchSection(List.of("4"), List.of(new ReturnDescription("5"))),
+            new SwitchSection(List.of("default"), List.of(new ReturnDescription("6")))))),
+        parseFragment(fragment));
+  }
+
+  @Test
+  void assign_expr() {
+    assertIterableEquals(
+        List.of(new AssignmentDescription("john", "=", "paul")),
+        parseFragment("john = paul;"));
   }
 }
