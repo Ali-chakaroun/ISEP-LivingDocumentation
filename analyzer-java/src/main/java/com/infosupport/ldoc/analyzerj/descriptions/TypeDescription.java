@@ -20,6 +20,10 @@ public record TypeDescription(
     @JsonInclude(Include.NON_EMPTY)
     List<String> baseTypes,
 
+    @JsonProperty("Constructors")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> constructors,
+
     @JsonProperty("Methods")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> methods
@@ -30,7 +34,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, fullName, baseTypes, List.of());
+    this(type, fullName, baseTypes, List.of(), List.of());
   }
 
 }
