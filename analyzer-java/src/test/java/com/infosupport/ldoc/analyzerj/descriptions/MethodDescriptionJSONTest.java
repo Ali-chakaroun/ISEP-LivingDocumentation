@@ -35,8 +35,8 @@ class MethodDescriptionJSONTest {
                 new MemberDescription("mies"),
                 "org.example.Gans",
                 List.of(
-                    new ParameterDescription("Zeef", "gijs"),
-                    new ParameterDescription("Muis", "jip")),
+                    new ParameterDescription("Zeef", "gijs", List.of()),
+                    new ParameterDescription("Muis", "jip", List.of())),
                 List.of())));
   }
 

@@ -17,7 +17,7 @@ class ConstructorDescriptionJSONTest {
         mapper.readTree("{\"Name\":\"Foo\",\"Parameters\":[{\"Name\":\"bar\",\"Type\":\"Baz\"}]}"),
         mapper.valueToTree(new ConstructorDescription(
             new MemberDescription("Foo"),
-            List.of(new ParameterDescription("Baz", "bar")), List.of()))
+            List.of(new ParameterDescription("Baz", "bar", List.of())), List.of()))
     );
   }
 }

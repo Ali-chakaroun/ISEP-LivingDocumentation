@@ -26,7 +26,11 @@ public record TypeDescription(
 
     @JsonProperty("Methods")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> methods
+    List<Description> methods,
+
+    @JsonProperty("Attributes")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> attributes
 ) implements Description {
 
   public TypeDescription(TypeType type, String fullName) {
@@ -34,7 +38,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, fullName, baseTypes, List.of(), List.of());
+    this(type, fullName, baseTypes, List.of(), List.of(), List.of());
   }
 
 }

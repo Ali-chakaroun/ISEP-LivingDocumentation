@@ -7,13 +7,22 @@ import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
+import com.github.javaparser.ast.expr.MemberValuePair;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
+import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
+import com.github.javaparser.ast.nodeTypes.NodeWithAnnotations;
 import com.github.javaparser.ast.nodeTypes.NodeWithMembers;
 import com.github.javaparser.ast.nodeTypes.NodeWithParameters;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.GenericListVisitorAdapter;
 import com.github.javaparser.resolution.SymbolResolver;
+import com.github.javaparser.resolution.declarations.ResolvedAnnotationDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
@@ -64,15 +73,24 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return parameters;
   }
 
+  private <T extends Node> List<Description> attributes(NodeWithAnnotations<T> n, Analyzer arg) {
+    List<Description> attributes = new ArrayList<>();
+    for (AnnotationExpr annotation : n.getAnnotations()) {
+      attributes.addAll(annotation.accept(this, arg));
+    }
+    return attributes;
+  }
+
   @Override
   public List<Description> visit(ClassOrInterfaceDeclaration n, Analyzer arg) {
-    TypeType type = n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS;
     String fullName = n.getFullyQualifiedName().orElseThrow();
     List<String> baseTypes = new ArrayList<>();
     baseTypes.addAll(resolve(n.getExtendedTypes()));
     baseTypes.addAll(resolve(n.getImplementedTypes()));
 
-    return List.of(new TypeDescription(type, fullName, baseTypes, ctors(n, arg), methods(n, arg)));
+    return List.of(new TypeDescription(
+        n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS, fullName, baseTypes,
+        ctors(n, arg), methods(n, arg), attributes(n, arg)));
   }
 
   @Override
@@ -80,8 +98,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     String fullName = n.getFullyQualifiedName().orElseThrow();
     List<String> baseTypes = resolve(n.getImplementedTypes());
 
-    return List.of(
-        new TypeDescription(TypeType.STRUCT, fullName, baseTypes, ctors(n, arg), methods(n, arg)));
+    return List.of(new TypeDescription(
+        TypeType.STRUCT, fullName, baseTypes,
+        ctors(n, arg), methods(n, arg), attributes(n, arg)));
   }
 
   @Override
@@ -89,8 +108,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     String fullName = n.getFullyQualifiedName().orElseThrow();
     List<String> baseTypes = resolve(n.getImplementedTypes());
 
-    return List.of(
-        new TypeDescription(TypeType.ENUM, fullName, baseTypes, ctors(n, arg), methods(n, arg)));
+    return List.of(new TypeDescription(
+        TypeType.ENUM, fullName, baseTypes,
+        ctors(n, arg), methods(n, arg), attributes(n, arg)));
   }
 
   @Override
@@ -98,20 +118,57 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     String name = n.getNameAsString();
     String retType = resolve(n.getType());
 
-    return List.of(
-        new MethodDescription(new MemberDescription(name), retType, parameters(n, arg), List.of()));
+    return List.of(new MethodDescription(
+        new MemberDescription(name, attributes(n, arg)),
+        retType, parameters(n, arg), List.of()));
   }
 
   @Override
   public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
     String name = n.getNameAsString();
 
-    return List.of(
-        new ConstructorDescription(new MemberDescription(name), parameters(n, arg), List.of()));
+    return List.of(new ConstructorDescription(
+        new MemberDescription(name, attributes(n, arg)),
+        parameters(n, arg), List.of()));
   }
 
   @Override
   public List<Description> visit(Parameter n, Analyzer arg) {
-    return List.of(new ParameterDescription(resolve(n.getType()), n.getNameAsString()));
+    return List.of(
+        new ParameterDescription(resolve(n.getType()), n.getNameAsString(), attributes(n, arg)));
+  }
+
+  private List<Description> visitAnnotation(AnnotationExpr n, List<Description> args) {
+    var type = resolver.resolveDeclaration(n, ResolvedAnnotationDeclaration.class);
+
+    return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
+  }
+
+  @Override
+  public List<Description> visit(MarkerAnnotationExpr n, Analyzer arg) {
+    return visitAnnotation(n, List.of());
+  }
+
+  @Override
+  public List<Description> visit(SingleMemberAnnotationExpr n, Analyzer arg) {
+    List<Description> args = List.of(new AttributeArgumentDescription(
+        "value",
+        n.getMemberValue().calculateResolvedType().describe(),
+        n.getMemberValue().toString()));
+    return visitAnnotation(n, args);
+  }
+
+  @Override
+  public List<Description> visit(NormalAnnotationExpr n, Analyzer arg) {
+    List<Description> args = super.visit(n, arg);
+    return visitAnnotation(n, args);
+  }
+
+  @Override
+  public List<Description> visit(MemberValuePair n, Analyzer arg) {
+    return List.of(new AttributeArgumentDescription(
+        n.getNameAsString(),
+        n.getValue().calculateResolvedType().describe(),
+        n.getValue().toString()));
   }
 }
