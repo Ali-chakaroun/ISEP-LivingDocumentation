@@ -32,7 +32,8 @@ public class Analyzer {
         CompilationUnit compilationUnit = result.getResult().orElseThrow();
         AnalysisVisitor visitor = new AnalysisVisitor(solver);
 
-        descriptions.addAll(compilationUnit.accept(visitor, this));
+        List<Description> visited = compilationUnit.accept(visitor, this);
+        descriptions.addAll(visited);
       }
     }
 

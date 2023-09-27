@@ -10,8 +10,10 @@ import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.RecordDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.MemberValuePair;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.stmt.ForEachStmt;
@@ -25,6 +27,7 @@ import com.github.javaparser.ast.visitor.GenericListVisitorAdapter;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.resolution.declarations.ResolvedAnnotationDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
+import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
@@ -33,6 +36,7 @@ import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
+import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
@@ -216,5 +220,20 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   public List<Description> visit(AssignExpr n, Analyzer arg) {
     return List.of(
         new AssignmentDescription(n.getTarget().toString(), "=", n.getValue().toString()));
+  }
+
+  @Override
+  public List<Description> visit(MethodCallExpr n, Analyzer arg) {
+    List<Description> arguments = new ArrayList<>();
+    for (Expression argument : n.getArguments()) {
+      String type = resolver.calculateType(argument).describe();
+      String text = argument.toString();
+      arguments.add(new ArgumentDescription(type, text));
+    }
+
+    return List.of(new InvocationDescription(
+        n.getScope().map(s -> resolver.calculateType(s).describe()).orElse("?"),
+        n.getNameAsString(),
+        arguments));
   }
 }

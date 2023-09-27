@@ -7,6 +7,7 @@ import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
@@ -15,6 +16,7 @@ import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
+import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
@@ -217,5 +219,13 @@ class AnalysisVisitorTest {
     assertIterableEquals(
         List.of(new AssignmentDescription("john", "=", "paul")),
         parseFragment("john = paul;"));
+  }
+
+  @Test
+  void method_call_expr() {
+    assertIterableEquals(
+        List.of(new InvocationDescription("java.io.PrintStream", "println", List.of(
+            new ArgumentDescription("java.lang.String", "\"Hello!\"")))),
+        parseFragment("System.out.println(\"Hello!\");"));
   }
 }
