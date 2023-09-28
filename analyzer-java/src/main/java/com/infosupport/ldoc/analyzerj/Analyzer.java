@@ -1,6 +1,7 @@
 package com.infosupport.ldoc.analyzerj;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.resolution.SymbolResolver;
@@ -21,7 +22,7 @@ public class Analyzer {
   }
 
   public void analyze(AnalysisJob job) throws IOException {
-    ProjectRoot projectRoot = new SymbolSolverCollectionStrategy().collect(job.project);
+    ProjectRoot projectRoot = new SymbolSolverCollectionStrategy().collect(job.project());
     List<Description> descriptions = new ArrayList<>();
 
     for (SourceRoot sourceRoot : projectRoot.getSourceRoots()) {
@@ -37,6 +38,9 @@ public class Analyzer {
       }
     }
 
-    objectMapper.writeValue(job.output.toFile(), descriptions);
+    ObjectWriter writer = job.pretty()
+        ? objectMapper.writerWithDefaultPrettyPrinter()
+        : objectMapper.writer();
+    writer.writeValue(job.output().toFile(), descriptions);
   }
 }
