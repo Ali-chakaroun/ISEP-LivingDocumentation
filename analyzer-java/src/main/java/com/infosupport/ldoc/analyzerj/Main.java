@@ -14,7 +14,8 @@ public class Main {
 
   public static final Options OPTIONS = new Options()
       .addRequiredOption(null, "output", true, "The file path to save the output JSON to.")
-      .addRequiredOption(null, "project", true, "The root directory of the project to analyze.");
+      .addRequiredOption(null, "project", true, "The root directory of the project to analyze.")
+      .addOption("p", "pretty", false, "Indent (pretty-print) JSON output.");
 
   private static AnalysisJob jobFromArgs(String[] args) throws ParseException {
     CommandLineParser parser = new DefaultParser();
@@ -22,7 +23,8 @@ public class Main {
 
     return new AnalysisJob(
         Path.of(commandLine.getOptionValue("project")),
-        Path.of(commandLine.getOptionValue("output")));
+        Path.of(commandLine.getOptionValue("output")),
+        commandLine.hasOption("pretty"));
   }
 
   public static void main(String[] args) throws IOException {
