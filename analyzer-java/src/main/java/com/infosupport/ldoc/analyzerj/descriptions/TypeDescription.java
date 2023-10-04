@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public record TypeDescription(
@@ -19,7 +20,9 @@ public record TypeDescription(
     @JsonProperty("BaseTypes")
     @JsonInclude(Include.NON_EMPTY)
     List<String> baseTypes,
-
+    @JsonProperty("DocumentationComments")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> comments,
     @JsonProperty("Constructors")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> constructors,
@@ -34,11 +37,11 @@ public record TypeDescription(
 ) implements Description {
 
   public TypeDescription(TypeType type, String fullName) {
-    this(type, fullName, List.of());
+    this(type, fullName,List.of());
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, fullName, baseTypes, List.of(), List.of(), List.of());
+    this(type, fullName,baseTypes,List.of(), List.of(), List.of(), List.of());
   }
 
 }

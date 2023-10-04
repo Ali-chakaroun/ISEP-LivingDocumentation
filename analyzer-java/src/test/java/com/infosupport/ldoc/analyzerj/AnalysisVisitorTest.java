@@ -102,7 +102,7 @@ class AnalysisVisitorTest {
   @Test
   void constructor_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), List.of(), List.of(
             new ConstructorDescription(
                 new MemberDescription("Bongo"),
                 List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
@@ -115,10 +115,11 @@ class AnalysisVisitorTest {
   @Test
   void method_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), List.of(), List.of(), List.of(
           new MethodDescription(
               new MemberDescription("does"),
               "Example",
+                  List.of(),
               List.of(
                   new ParameterDescription("java.lang.Object", "a", List.of()),
                   new ParameterDescription("java.lang.String", "b", List.of())),
@@ -129,12 +130,12 @@ class AnalysisVisitorTest {
   @Test
   void attribute_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Z", List.of(), List.of(), List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, "Z", List.of(), List.of(), List.of(), List.of(), List.of(
             new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "X", List.of(), List.of(), List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, "X", List.of(), List.of(), List.of(), List.of(), List.of(
             new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
                 new AttributeArgumentDescription("value", "java.lang.String", "\"unchecked\"")))))),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
