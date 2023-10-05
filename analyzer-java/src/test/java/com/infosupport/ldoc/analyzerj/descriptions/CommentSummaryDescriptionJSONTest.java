@@ -10,28 +10,29 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CommentSummaryDescriptionJSONTest {
-    private final ObjectMapper mapper = new ObjectMapper();
 
-    @Test
-    void Check_for_comments() throws IOException {
-        // Create a Map<String, String>
-        Map<String, String> keyValueMap = new LinkedHashMap<>();
+  private final ObjectMapper mapper = new ObjectMapper();
 
-        // Add key-value pairs to the map
-        keyValueMap.put("N", "first integer value");
-        keyValueMap.put("Y", "second integer value");
+  @Test
+  void Check_for_comments() throws IOException {
+    // Create a Map<String, String>
+    Map<String, String> keyValueMap = new LinkedHashMap<>();
 
-        String example = """
+    // Add key-value pairs to the map
+    keyValueMap.put("N", "first integer value");
+    keyValueMap.put("Y", "second integer value");
+
+    String example = """
         {
+          "Remarks": "tread carefully.",
+          "Returns": "An integer.",
           "Summary": "add two values",
-          "params": {\s
+          "Params": {\s
              "N": "first integer value" ,
              "Y": "second integer value" }
         }
         """;
-        assertEquals(
-                mapper.readTree(example),
-                mapper.valueToTree(
-                        new CommentSummaryDescription(null,null,"add two values",keyValueMap,null)));
-    }
+    assertEquals(mapper.readTree(example), mapper.valueToTree(
+        new CommentSummaryDescription("tread carefully.", "An integer.", "add two values", keyValueMap, null)));
+  }
 }

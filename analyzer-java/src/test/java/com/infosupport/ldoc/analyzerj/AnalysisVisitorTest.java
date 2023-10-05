@@ -32,8 +32,8 @@ class AnalysisVisitorTest {
   private List<Description> parseFragment(String fragment) {
     String source = String.format("class Test { int test() { %s } }", fragment);
     List<Description> unit = parse(source);
-    List<Description> methods = ((TypeDescription)unit.get(0)).methods();
-    List<Description> statements = ((MethodDescription)methods.get(0)).statements();
+    List<Description> methods = ((TypeDescription) unit.get(0)).methods();
+    List<Description> statements = ((MethodDescription) methods.get(0)).statements();
     assertNotEquals(statements, List.of());
     return statements;
   }
@@ -103,28 +103,31 @@ class AnalysisVisitorTest {
   void method_description() {
     assertIterableEquals(
         List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
-          new MethodDescription(
-              new MemberDescription("does"),
-              "Example",
-                  null,
-              List.of(
-                  new ParameterDescription("java.lang.Object", "a", List.of()),
-                  new ParameterDescription("java.lang.String", "b", List.of())),
-              List.of())), List.of())),
+            new MethodDescription(
+                new MemberDescription("does"),
+                "Example",
+                null,
+                List.of(
+                    new ParameterDescription("java.lang.Object", "a", List.of()),
+                    new ParameterDescription("java.lang.String", "b", List.of())),
+                List.of())), List.of())),
         parse("class Example { Example does(Object a, String b) {} }"));
   }
 
   @Test
   void attribute_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Z", List.of(), null, List.of(), List.of(), List.of(
-            new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
+        List.of(
+            new TypeDescription(TypeType.CLASS, "Z", List.of(), null, List.of(), List.of(), List.of(
+                new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "X", List.of(), null, List.of(), List.of(), List.of(
-            new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
-                new AttributeArgumentDescription("value", "java.lang.String", "\"unchecked\"")))))),
+        List.of(
+            new TypeDescription(TypeType.CLASS, "X", List.of(), null, List.of(), List.of(), List.of(
+                new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
+                    new AttributeArgumentDescription("value", "java.lang.String",
+                        "\"unchecked\"")))))),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 
@@ -216,47 +219,36 @@ class AnalysisVisitorTest {
             new ArgumentDescription("java.lang.String", "\"Hello!\"")))),
         parseFragment("System.out.println(\"Hello!\");"));
   }
+
   @Test
   void comment_tests() {
-    assertIterableEquals(
-            List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
-                    new MethodDescription(
-                            new MemberDescription("does"),
-                            "Example",
-                            new CommentSummaryDescription(null,null,"this method is an example",null,null),
-                            List.of(
-                                    new ParameterDescription("java.lang.Object", "a", List.of()),
-                                    new ParameterDescription("java.lang.String", "b", List.of())),
-                            List.of())), List.of())),
-            parse("""
-                    class Example {\s
-                    //this method is an example\s
-                    Example does(Object a, String b) {}\s
-                    }
-                    """));
     Map<String,String> exampleParams = new LinkedHashMap<>();
-    exampleParams.put("a","is an object");
-    exampleParams.put("b","is a string");
+    exampleParams.put("a", "is an object");
+    exampleParams.put("b", "is a string");
     assertIterableEquals(
-            List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
-                    new MethodDescription(
-                            new MemberDescription("does"),
-                            "Example",
-                            new CommentSummaryDescription(null,null,"this method is an example",exampleParams,null),
-                            List.of(
-                                    new ParameterDescription("java.lang.Object", "a", List.of()),
-                                    new ParameterDescription("java.lang.String", "b", List.of())),
-                            List.of())), List.of())),
-            parse("""
-                    class Example {
-                    /**\s
-                    *this method is an example\s
-                    *@param a is an object
-                    *@param b is a string
-                    */
-                    Example does(Object a, String b) {}\s
-                    }
-                    """));
+        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
+            new MethodDescription(
+                new MemberDescription("does"),
+                "Example",
+                new CommentSummaryDescription("this is are the remarks",
+                    "is Example", "this method is an example",
+                    exampleParams, null),
+                List.of(
+                    new ParameterDescription("java.lang.Object", "a", List.of()),
+                    new ParameterDescription("java.lang.String", "b", List.of())),
+                List.of())), List.of())),
+        parse("""
+            class Example {
+            /**\s
+            *this method is an example.
+            *this is are the remarks\s
+            *@param a is an object
+            *@param b is a string
+            *@return is Example
+            */
+            Example does(Object a, String b) {}\s
+            }
+            """));
 
   }
 }

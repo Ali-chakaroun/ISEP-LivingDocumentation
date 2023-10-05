@@ -7,22 +7,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
 public record CommentSummaryDescription(
-        @JsonProperty("Remarks")
-        @JsonInclude(Include.NON_EMPTY)
-        String remarks,
-        @JsonProperty("Returns")
-        @JsonInclude(Include.NON_EMPTY)
-        String returns,
-        @JsonProperty("Summary")
-        @JsonInclude(Include.NON_EMPTY)
-        String summary,
+    @JsonProperty("Remarks")
+    @JsonInclude(Include.NON_EMPTY)
+    String remarks,
+    @JsonProperty("Returns")
+    @JsonInclude(Include.NON_EMPTY)
+    String returns,
+    @JsonProperty("Summary")
+    @JsonInclude(Include.NON_EMPTY)
+    String summary,
 
-        @JsonProperty("params")
-        @JsonInclude(Include.NON_EMPTY)
-        Map<String, String> params,
-        @JsonProperty("TypeParams")
-        @JsonInclude(Include.NON_EMPTY)
-        Map<String, String> TypeParams
+    @JsonProperty("Params")
+    @JsonInclude(Include.NON_EMPTY)
+    Map<String, String> params,
+    @JsonProperty("TypeParams")
+    @JsonInclude(Include.NON_EMPTY)
+    Map<String, String> typeParams
 
 ) implements Description {
+
 }

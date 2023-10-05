@@ -33,8 +33,10 @@ class MethodDescriptionJSONTest {
               "Name": "mies",
               "ReturnType": "org.example.Gans",
               "DocumentationComments": {
-               "Summary": "add two values",
-                  "params": {
+                "Remarks": "tread carefully.",
+                  "Returns": "An integer.",
+                  "Summary": "add two values",
+                  "Params": {
                      "N": "first integer value" ,
                      "Y": "second integer value" }
               },
@@ -50,7 +52,7 @@ class MethodDescriptionJSONTest {
             new MethodDescription(
                 new MemberDescription("mies"),
                 "org.example.Gans",
-                    new CommentSummaryDescription(null,null,"add two values",keyValueMap,null),
+                    new CommentSummaryDescription("tread carefully.","An integer.","add two values",keyValueMap,null),
                 List.of(
                     new ParameterDescription("Zeef", "gijs", List.of()),
                     new ParameterDescription("Muis", "jip", List.of())),

@@ -37,11 +37,11 @@ public record TypeDescription(
 ) implements Description {
 
   public TypeDescription(TypeType type, String fullName) {
-    this(type, fullName,List.of());
+    this(type, fullName, List.of());
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, fullName,baseTypes,null, List.of(), List.of(), List.of());
+    this(type, fullName, baseTypes, null, List.of(), List.of(), List.of());
   }
 
 }
