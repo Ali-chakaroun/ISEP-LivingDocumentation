@@ -66,7 +66,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
                 n.getFullyQualifiedName().orElseThrow(),
                 baseTypes,
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get(), null) : new ArrayList<>(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
                 select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
                 select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
                 visit(n.getAnnotations(), arg)));
@@ -78,7 +78,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 TypeType.STRUCT,
                 n.getFullyQualifiedName().orElseThrow(),
                 resolve(n.getImplementedTypes()),
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get(), null) : new ArrayList<>(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
                 select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
                 select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
                 visit(n.getAnnotations(), arg)));
@@ -90,21 +90,22 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 TypeType.ENUM,
                 n.getFullyQualifiedName().orElseThrow(),
                 resolve(n.getImplementedTypes()),
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get(), null) : new ArrayList<>(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
                 select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
                 select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
                 visit(n.getAnnotations(), arg)));
     }
+    //visit method declaration.
     @Override
     public List<Description> visit(MethodDeclaration n, Analyzer arg) {
         return List.of(new MethodDescription(
                 new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
                 resolve(n.getType()),
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get(), null) : new ArrayList<>(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
                 visit(n.getParameters(), arg),
                 n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
     }
-
+    //visit constructor declaration
     @Override
     public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
         return List.of(new ConstructorDescription(
@@ -112,7 +113,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 visit(n.getParameters(), arg),
                 visit(n.getBody(), arg)));
     }
-
+    //visit parameter.
     @Override
     public List<Description> visit(Parameter n, Analyzer arg) {
         return List.of(new ParameterDescription(
@@ -169,7 +170,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         if (n.hasElseBranch()) {
             List<Description> alternative = n.getElseStmt().orElseThrow().accept(this, arg);
             /* Flatten if-else trees. In LivingDocumentation JSON, a big tree of if-else structures "goes
-            // with" the topmost if; instead of each if having one or two branches, we think of it having
+             with" the topmost if; instead of each if having one or two branches, we think of it having
             many branches. */
             if (n.hasCascadingIfStmt() && alternative.get(0) instanceof IfDescription alt) {
                 sections.addAll(alt.sections());
@@ -220,48 +221,28 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 n.getNameAsString(),
                 arguments));
     }
-    /*
-    These visit methods are form Javaparser AST, Javaparser comment visit methods only access comments
-    that are inside the method they ignore comments that are above methods and classes.
-    */
-    @Override
-    public List<Description> visit(BlockComment n, Analyzer arg) {
-        return List.of(new DocumentationCommenstDescription(List.of(new CommentSummaryDescription(commentHelperMethods.cleanComment(n.toString()), null, null))));
-    }
-    @Override
-    public List<Description> visit(LineComment n, Analyzer arg) {
-        return List.of(new DocumentationCommenstDescription(List.of(new CommentSummaryDescription(commentHelperMethods.cleanComment(n.toString()), null, null))));
-    }
-    @Override
-    public List<Description> visit(JavadocComment n, Analyzer arg) {
-        String commentText = n.toString();
-        String cleanText = commentHelperMethods.cleanComment(commentText);
-        String summary = commentHelperMethods.extractSummary(cleanText);
-        Map<String, String> paramDescriptions = commentHelperMethods.extractParamDescriptions(commentText);
 
-        CommentSummaryDescription commentDescription = new CommentSummaryDescription(
-                summary,
-                paramDescriptions, null
-        );
-
-        return List.of(new DocumentationCommenstDescription(List.of(commentDescription)));
-    }
     //These custom visit method is not related to JavaParser built in visit methods, but are needed to help with the JSON object creation.
     public List<Description> visit(BlockComment n) {
-        return List.of(new CommentSummaryDescription(commentHelperMethods.cleanComment(n.toString()), null, null));
+        return List.of(new CommentSummaryDescription(null,null,!n.getContent().isEmpty() ? n.getContent().strip() : null,null,null));
     }
     public List<Description> visit(LineComment n) {
-        return List.of(new CommentSummaryDescription(commentHelperMethods.cleanComment(n.toString()), null, null));
+        return List.of(new CommentSummaryDescription(null,null,!n.getContent().isEmpty() ? n.getContent().strip() : null, null, null));
     }
     public List<Description> visit(JavadocComment n) {
-        String commentText = n.toString();
-        String cleanText = commentHelperMethods.cleanComment(commentText);
-        String summary = commentHelperMethods.extractSummary(cleanText);
-        Map<String, String> paramDescriptions = commentHelperMethods.extractParamDescriptions(commentText);
-
+        StringBuilder remarks = new StringBuilder();
+        StringBuilder returns = new StringBuilder();
+        Map<String, String> commentParams = new LinkedHashMap<>();
+        Map<String, String> commentTypeParams = new LinkedHashMap<>();
+        String summary = commentHelperMethods.extractSummary(n);
+        Map<String, Map<String, String>> commentData = commentHelperMethods.extractParamDescriptions(n);
+        commentHelperMethods.processCommentData(commentData,remarks,returns,commentParams,commentTypeParams);
         CommentSummaryDescription commentDescription = new CommentSummaryDescription(
-                summary,
-                paramDescriptions, null
+                !remarks.isEmpty() ? remarks.toString() : null ,
+                !returns.isEmpty() ? returns.toString() : null,
+                !summary.isEmpty() ? summary : null,
+                !commentParams.isEmpty() ? commentParams : null,
+                !commentTypeParams.isEmpty() ? commentTypeParams : null
         );
 
         return List.of(commentDescription);

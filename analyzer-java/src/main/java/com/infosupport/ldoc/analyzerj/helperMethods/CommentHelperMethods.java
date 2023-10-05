@@ -5,15 +5,12 @@ import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.comments.LineComment;
 import com.infosupport.ldoc.analyzerj.AnalysisVisitor;
-import com.infosupport.ldoc.analyzerj.Analyzer;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CommentHelperMethods  {
 
@@ -25,59 +22,62 @@ public class CommentHelperMethods  {
 
     /**
      * This method takes a comment and assign it the proper visit method.
+     * and outputs it as a list.
      * @param n this is the comment that needs to be processed.
-     * @param arg this is the analyzer.
      * @return a list of Descriptions.
      */
-    public List<Description> getCommentType(Comment n, Analyzer arg) {
+    public List<Description> getCommentType(Comment n) {
         List<Description> commentType = new ArrayList<>();
         if (n != null) {
             if (n instanceof BlockComment) {
-                commentType.addAll(arg != null ? analyzer.visit(n.asBlockComment(), arg) : analyzer.visit(n.asBlockComment()));
+                commentType.addAll(analyzer.visit(n.asBlockComment()));
             } else if (n instanceof LineComment) {
-                commentType.addAll(arg != null ? analyzer.visit(n.asLineComment(), arg) : analyzer.visit(n.asLineComment()));
+                commentType.addAll(analyzer.visit(n.asLineComment()));
             } else if (n instanceof JavadocComment) {
-                commentType.addAll(arg != null ? analyzer.visit(n.asJavadocComment(), arg) : analyzer.visit(n.asJavadocComment()));
+                commentType.addAll(analyzer.visit(n.asJavadocComment()));
             }
         }
         return commentType;
     }
-    public String cleanComment(String commentText) {
-        // Split the comment into lines
-        String[] lines = commentText.split("\\r?\\n");
-        StringBuilder cleanedComment = new StringBuilder();
 
-        for (String line : lines) {
-            // Remove leading "*" characters after "/" or "\r\n"
-            String cleanedLine = line.replaceFirst("^(?:/|\\s*\\*)+", "");
-            cleanedComment.append(cleanedLine);
-        }
-
-        return cleanedComment.toString().trim();
+    public String extractSummary(JavadocComment commentText) {
+        return commentText.parse().getDescription().toText().replaceAll("\r\n"," ").strip();
     }
 
-    public String extractSummary(String commentText) {
-        // Use a regular expression to match everything before the first @
-        Pattern summaryPattern = Pattern.compile("^(.*?)@", Pattern.DOTALL);
-        Matcher matcher = summaryPattern.matcher(commentText);
-        if (matcher.find()) {
-            return matcher.group(1).trim(); // Trim to remove leading/trailing spaces
-        }
-        return "";
-    }
-
-    public Map<String, String> extractParamDescriptions(String commentText) {
-        Map<String, String> paramDescriptions = new LinkedHashMap<>();
-        // Use a regular expression to match @param lines
-        Pattern paramPattern = Pattern.compile("@param\\s+(\\w+)\\s+(.*)");
-        Matcher matcher = paramPattern.matcher(commentText);
-
-        while (matcher.find()) {
-            String paramName = matcher.group(1);
-            String paramDescription = matcher.group(2);
-
-            paramDescriptions.put(paramName, paramDescription);
+    public  Map<String, Map<String, String>> extractParamDescriptions(JavadocComment commentText) {
+        Map<String, Map<String, String>> paramDescriptions = new LinkedHashMap<>();
+        for (var results : commentText.parse().getBlockTags()) {
+            String tagType = results.getType().toString();
+            String paramName = results.getName().orElse("placeHolder");
+            String content = results.getContent().toText();
+            if (!paramDescriptions.containsKey(tagType)) {
+                paramDescriptions.put(tagType, new LinkedHashMap<>());
+            }
+            paramDescriptions.get(tagType).put(paramName, content);
         }
         return paramDescriptions;
+    }
+    //keeping the logic out of main analysisvisitor class
+    public void processCommentData(Map<String, Map<String, String>> commentData,
+                                          StringBuilder remarks,
+                                          StringBuilder returns,
+                                          Map<String, String> commentParams,
+                                          Map<String, String> commentTypeParams) {
+        for (Map.Entry<String, Map<String, String>> entry : commentData.entrySet()) {
+            String key = entry.getKey();
+            Map<String, String> innerMap = entry.getValue();
+
+            if ("RETURN".equals(key)) {
+                String returnValue = innerMap.values().stream().findFirst().orElse("");
+                returns.append(returnValue);
+            } else if ("AUTHOR".equals(key)) {
+                String authorValue = innerMap.values().stream().findFirst().orElse("");
+                remarks.append(authorValue);
+            } else if ("PARAM".equals(key)) {
+                commentParams.putAll(innerMap);
+            } else if ("TYPEPARAM".equals(key)) {
+                commentTypeParams.putAll(innerMap);
+            }
+        }
     }
 }

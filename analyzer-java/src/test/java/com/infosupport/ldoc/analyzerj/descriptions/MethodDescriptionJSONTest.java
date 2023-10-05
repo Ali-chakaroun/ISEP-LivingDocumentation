@@ -50,7 +50,7 @@ class MethodDescriptionJSONTest {
             new MethodDescription(
                 new MemberDescription("mies"),
                 "org.example.Gans",
-                    List.of(new CommentSummaryDescription("add two values",keyValueMap,null)),
+                    List.of(new CommentSummaryDescription(null,null,"add two values",keyValueMap,null)),
                 List.of(
                     new ParameterDescription("Zeef", "gijs", List.of()),
                     new ParameterDescription("Muis", "jip", List.of())),

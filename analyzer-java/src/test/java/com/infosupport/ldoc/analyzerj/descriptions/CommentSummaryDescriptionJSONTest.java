@@ -32,6 +32,6 @@ public class CommentSummaryDescriptionJSONTest {
         assertEquals(
                 mapper.readTree(example),
                 mapper.valueToTree(
-                        new CommentSummaryDescription("add two values",keyValueMap,null)));
+                        new CommentSummaryDescription(null,null,"add two values",keyValueMap,null)));
     }
 }
