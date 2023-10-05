@@ -223,15 +223,15 @@ class AnalysisVisitorTest {
   @Test
   void comment_tests() {
     Map<String,String> exampleParams = new LinkedHashMap<>();
-    exampleParams.put("a", "is an object");
-    exampleParams.put("b", "is a string");
+    exampleParams.put("a", "is an object.");
+    exampleParams.put("b", "is a string.");
     assertIterableEquals(
         List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
             new MethodDescription(
                 new MemberDescription("does"),
                 "Example",
-                new CommentSummaryDescription("this is are the remarks",
-                    "is Example", "this method is an example",
+                new CommentSummaryDescription("this is are the remarks.",
+                    "is Example.", "this method is an example.",
                     exampleParams, null),
                 List.of(
                     new ParameterDescription("java.lang.Object", "a", List.of()),
@@ -241,10 +241,10 @@ class AnalysisVisitorTest {
             class Example {
             /**\s
             *this method is an example.
-            *this is are the remarks\s
-            *@param a is an object
-            *@param b is a string
-            *@return is Example
+            *this is are the remarks.\s
+            *@param a is an object.
+            *@param b is a string.
+            *@return is Example.
             */
             Example does(Object a, String b) {}\s
             }
