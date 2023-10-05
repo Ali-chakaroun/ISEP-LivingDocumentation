@@ -26,18 +26,18 @@ class MethodDescriptionJSONTest {
     assertEquals(
         mapper.readTree("{\"Name\": \"aap\", \"ReturnType\": \"Noot\"}"),
         mapper.valueToTree(
-            new MethodDescription(new MemberDescription("aap"), "Noot",List.of(),List.of(), List.of())));
+            new MethodDescription(new MemberDescription("aap"), "Noot",null,List.of(), List.of())));
 
     String example = """
             {
               "Name": "mies",
               "ReturnType": "org.example.Gans",
-              "DocumentationComments": [{
+              "DocumentationComments": {
                "Summary": "add two values",
                   "params": {
                      "N": "first integer value" ,
                      "Y": "second integer value" }
-              }],
+              },
               "Parameters": [
                 { "Name": "gijs", "Type": "Zeef" },
                 { "Name": "jip", "Type": "Muis" }
@@ -50,7 +50,7 @@ class MethodDescriptionJSONTest {
             new MethodDescription(
                 new MemberDescription("mies"),
                 "org.example.Gans",
-                    List.of(new CommentSummaryDescription(null,null,"add two values",keyValueMap,null)),
+                    new CommentSummaryDescription(null,null,"add two values",keyValueMap,null),
                 List.of(
                     new ParameterDescription("Zeef", "gijs", List.of()),
                     new ParameterDescription("Muis", "jip", List.of())),

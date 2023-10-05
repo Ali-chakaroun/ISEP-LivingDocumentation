@@ -7,9 +7,7 @@ import com.github.javaparser.ast.comments.LineComment;
 import com.infosupport.ldoc.analyzerj.AnalysisVisitor;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CommentHelperMethods  {
@@ -26,15 +24,15 @@ public class CommentHelperMethods  {
      * @param n this is the comment that needs to be processed.
      * @return a list of Descriptions.
      */
-    public List<Description> getCommentType(Comment n) {
-        List<Description> commentType = new ArrayList<>();
+    public Description getCommentType(Comment n) {
+        Description commentType = null;
         if (n != null) {
             if (n instanceof BlockComment) {
-                commentType.addAll(analyzer.visit(n.asBlockComment()));
+                commentType = analyzer.visit(n.asBlockComment());
             } else if (n instanceof LineComment) {
-                commentType.addAll(analyzer.visit(n.asLineComment()));
+                commentType = analyzer.visit(n.asLineComment());
             } else if (n instanceof JavadocComment) {
-                commentType.addAll(analyzer.visit(n.asJavadocComment()));
+                commentType = analyzer.visit(n.asJavadocComment());
             }
         }
         return commentType;

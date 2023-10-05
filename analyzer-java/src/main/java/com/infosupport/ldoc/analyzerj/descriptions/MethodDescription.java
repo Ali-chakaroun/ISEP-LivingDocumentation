@@ -15,7 +15,7 @@ public record MethodDescription(
     String returnType,
     @JsonProperty("DocumentationComments")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> comments,
+    Description comments,
     @JsonProperty("Parameters")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> parameters,

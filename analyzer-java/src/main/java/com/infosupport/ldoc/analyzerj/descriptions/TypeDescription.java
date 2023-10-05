@@ -22,7 +22,7 @@ public record TypeDescription(
     List<String> baseTypes,
     @JsonProperty("DocumentationComments")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> comments,
+    Description comments,
     @JsonProperty("Constructors")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> constructors,
@@ -41,7 +41,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, fullName,baseTypes,List.of(), List.of(), List.of(), List.of());
+    this(type, fullName,baseTypes,null, List.of(), List.of(), List.of());
   }
 
 }

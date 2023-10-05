@@ -66,7 +66,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
                 n.getFullyQualifiedName().orElseThrow(),
                 baseTypes,
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : null,
                 select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
                 select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
                 visit(n.getAnnotations(), arg)));
@@ -78,7 +78,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 TypeType.STRUCT,
                 n.getFullyQualifiedName().orElseThrow(),
                 resolve(n.getImplementedTypes()),
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : null,
                 select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
                 select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
                 visit(n.getAnnotations(), arg)));
@@ -90,7 +90,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 TypeType.ENUM,
                 n.getFullyQualifiedName().orElseThrow(),
                 resolve(n.getImplementedTypes()),
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) :null,
                 select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
                 select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
                 visit(n.getAnnotations(), arg)));
@@ -101,7 +101,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         return List.of(new MethodDescription(
                 new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
                 resolve(n.getType()),
-                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : List.of(),
+                n.getComment().isPresent() ? commentHelperMethods.getCommentType(n.getComment().get()) : null,
                 visit(n.getParameters(), arg),
                 n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
     }
@@ -223,13 +223,13 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     }
 
     //These custom visit method is not related to JavaParser built in visit methods, but are needed to help with the JSON object creation.
-    public List<Description> visit(BlockComment n) {
-        return List.of(new CommentSummaryDescription(null,null,!n.getContent().isEmpty() ? n.getContent().strip() : null,null,null));
+    public Description visit(BlockComment n) {
+        return new CommentSummaryDescription(null,null,!n.getContent().isEmpty() ? n.getContent().strip() : null,null,null);
     }
-    public List<Description> visit(LineComment n) {
-        return List.of(new CommentSummaryDescription(null,null,!n.getContent().isEmpty() ? n.getContent().strip() : null, null, null));
+    public Description visit(LineComment n) {
+        return new CommentSummaryDescription(null,null,!n.getContent().isEmpty() ? n.getContent().strip() : null, null, null);
     }
-    public List<Description> visit(JavadocComment n) {
+    public Description visit(JavadocComment n) {
         StringBuilder remarks = new StringBuilder();
         StringBuilder returns = new StringBuilder();
         Map<String, String> commentParams = new LinkedHashMap<>();
@@ -245,7 +245,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 !commentTypeParams.isEmpty() ? commentTypeParams : null
         );
 
-        return List.of(commentDescription);
+        return commentDescription;
     }
 
 }
