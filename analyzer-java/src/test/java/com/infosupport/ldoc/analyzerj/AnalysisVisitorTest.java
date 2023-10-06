@@ -7,25 +7,12 @@ import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
-import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.Description;
-import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
-import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ReturnDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
-import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
+import com.infosupport.ldoc.analyzerj.descriptions.*;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 class AnalysisVisitorTest {
@@ -45,8 +32,8 @@ class AnalysisVisitorTest {
   private List<Description> parseFragment(String fragment) {
     String source = String.format("class Test { int test() { %s } }", fragment);
     List<Description> unit = parse(source);
-    List<Description> methods = ((TypeDescription)unit.get(0)).methods();
-    List<Description> statements = ((MethodDescription)methods.get(0)).statements();
+    List<Description> methods = ((TypeDescription) unit.get(0)).methods();
+    List<Description> statements = ((MethodDescription) methods.get(0)).statements();
     assertNotEquals(statements, List.of());
     return statements;
   }
@@ -102,7 +89,7 @@ class AnalysisVisitorTest {
   @Test
   void constructor_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), null, List.of(
             new ConstructorDescription(
                 new MemberDescription("Bongo"),
                 List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
@@ -115,28 +102,32 @@ class AnalysisVisitorTest {
   @Test
   void method_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), List.of(), List.of(
-          new MethodDescription(
-              new MemberDescription("does"),
-              "Example",
-              List.of(
-                  new ParameterDescription("java.lang.Object", "a", List.of()),
-                  new ParameterDescription("java.lang.String", "b", List.of())),
-              List.of())), List.of())),
+        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
+            new MethodDescription(
+                new MemberDescription("does"),
+                "Example",
+                null,
+                List.of(
+                    new ParameterDescription("java.lang.Object", "a", List.of()),
+                    new ParameterDescription("java.lang.String", "b", List.of())),
+                List.of())), List.of())),
         parse("class Example { Example does(Object a, String b) {} }"));
   }
 
   @Test
   void attribute_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Z", List.of(), List.of(), List.of(), List.of(
-            new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
+        List.of(
+            new TypeDescription(TypeType.CLASS, "Z", List.of(), null, List.of(), List.of(), List.of(
+                new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "X", List.of(), List.of(), List.of(), List.of(
-            new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
-                new AttributeArgumentDescription("value", "java.lang.String", "\"unchecked\"")))))),
+        List.of(
+            new TypeDescription(TypeType.CLASS, "X", List.of(), null, List.of(), List.of(), List.of(
+                new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
+                    new AttributeArgumentDescription("value", "java.lang.String",
+                        "\"unchecked\"")))))),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 
@@ -227,5 +218,37 @@ class AnalysisVisitorTest {
         List.of(new InvocationDescription("java.io.PrintStream", "println", List.of(
             new ArgumentDescription("java.lang.String", "\"Hello!\"")))),
         parseFragment("System.out.println(\"Hello!\");"));
+  }
+
+  @Test
+  void comment_tests() {
+    Map<String,String> exampleParams = new LinkedHashMap<>();
+    exampleParams.put("a", "is an object.");
+    exampleParams.put("b", "is a string.");
+    assertIterableEquals(
+        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
+            new MethodDescription(
+                new MemberDescription("does"),
+                "Example",
+                new CommentSummaryDescription("this is are the remarks.",
+                    "is Example.", "this method is an example.",
+                    exampleParams, null),
+                List.of(
+                    new ParameterDescription("java.lang.Object", "a", List.of()),
+                    new ParameterDescription("java.lang.String", "b", List.of())),
+                List.of())), List.of())),
+        parse("""
+            class Example {
+            /**\s
+            *this method is an example.
+            *this is are the remarks.\s
+            *@param a is an object.
+            *@param b is a string.
+            *@return is Example.
+            */
+            Example does(Object a, String b) {}\s
+            }
+            """));
+
   }
 }
