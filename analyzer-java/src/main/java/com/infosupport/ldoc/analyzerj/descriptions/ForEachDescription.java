@@ -14,8 +14,8 @@ public record ForEachDescription(
     List<Description> statements
 ) implements Description {
 
-  @JsonProperty("$type")
-  public String getType() {
+  @JsonProperty(value = "$type", index = -2)
+  public String type() {
     return "LivingDocumentation.ForEach, LivingDocumentation.Statements";
   }
 }

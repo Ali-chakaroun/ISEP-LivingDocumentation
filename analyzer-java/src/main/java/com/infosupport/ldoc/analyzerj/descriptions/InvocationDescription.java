@@ -17,8 +17,8 @@ public record InvocationDescription(
     List<Description> arguments
 ) implements Description {
 
-  @JsonProperty("$type")
-  public String getType() {
+  @JsonProperty(value = "$type", index = -2)
+  public String type() {
     return "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions";
   }
 }

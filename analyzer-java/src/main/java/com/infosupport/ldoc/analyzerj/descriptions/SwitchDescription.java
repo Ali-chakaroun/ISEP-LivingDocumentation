@@ -14,8 +14,8 @@ public record SwitchDescription(
     List<Description> sections
 ) implements Description {
 
-  @JsonProperty("$type")
-  public String getType() {
+  @JsonProperty(value = "$type", index = -2)
+  public String type() {
     return "LivingDocumentation.Switch, LivingDocumentation.Statements";
   }
 }

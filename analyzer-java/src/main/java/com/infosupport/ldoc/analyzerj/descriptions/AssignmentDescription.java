@@ -13,8 +13,8 @@ public record AssignmentDescription(
     String right
 ) implements Description {
 
-  @JsonProperty("$type")
-  public String getType() {
+  @JsonProperty(value = "$type", index = -2)
+  public String type() {
     return "LivingDocumentation.AssignmentDescription, LivingDocumentation.Descriptions";
   }
 }
