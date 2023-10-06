@@ -8,7 +8,7 @@ import java.util.List;
 public record IfDescription(
     @JsonProperty("Sections")
     @JsonInclude(Include.NON_EMPTY)
-    List<IfElseSection> sections
+    List<Description> sections
 ) implements Description {
 
   @JsonProperty(value = "$type", index = -2)
