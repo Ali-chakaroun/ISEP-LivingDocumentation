@@ -37,11 +37,9 @@ import java.util.function.Predicate;
 public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Analyzer> {
 
   private final SymbolResolver resolver;
-  private final CommentHelperMethods commentHelperMethods;
 
   public AnalysisVisitor(SymbolResolver resolver) {
     this.resolver = resolver;
-    this.commentHelperMethods = new CommentHelperMethods(this);
   }
 
   private String resolve(Type type) {
@@ -52,9 +50,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return types.stream().map(this::resolve).toList();
   }
 
-  /**
-   *   Like {@link #visit} but only returning descriptions for Nodes matching the given predicate.
-   */
+  /** Like {@link #visit} but only returning descriptions for Nodes matching the given predicate. */
   private <T extends Node> List<Description> select(List<T> nodes, Predicate<T> p, Analyzer arg) {
     return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
@@ -67,7 +63,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
     return List.of(new TypeDescription(n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
         n.getFullyQualifiedName().orElseThrow(), baseTypes,
-        n.getComment().isPresent() ? commentHelperMethods.getCommentTypeJavaDoc(n.getComment().get()) : null,
+        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
         visit(n.getAnnotations(), arg)));
@@ -77,7 +73,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   public List<Description> visit(RecordDeclaration n, Analyzer arg) {
     return List.of(new TypeDescription(TypeType.STRUCT, n.getFullyQualifiedName().orElseThrow(),
         resolve(n.getImplementedTypes()),
-        n.getComment().isPresent() ? commentHelperMethods.getCommentTypeJavaDoc(n.getComment().get()) : null,
+        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
         visit(n.getAnnotations(), arg)));
@@ -87,24 +83,22 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   public List<Description> visit(EnumDeclaration n, Analyzer arg) {
     return List.of(new TypeDescription(TypeType.ENUM, n.getFullyQualifiedName().orElseThrow(),
         resolve(n.getImplementedTypes()),
-        n.getComment().isPresent() ? commentHelperMethods.getCommentTypeJavaDoc(n.getComment().get()) : null,
+        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
         visit(n.getAnnotations(), arg)));
   }
 
-  //visit method declaration.
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
     return List.of(new MethodDescription(
         new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
         resolve(n.getType()),
-        n.getComment().isPresent() ? commentHelperMethods.getCommentTypeJavaDoc(n.getComment().get()) : null,
+        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         visit(n.getParameters(), arg),
         n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
   }
 
-  //visit constructor declaration
   @Override
   public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
     return List.of(new ConstructorDescription(
@@ -112,7 +106,6 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         visit(n.getParameters(), arg), visit(n.getBody(), arg)));
   }
 
-  //visit parameter.
   @Override
   public List<Description> visit(Parameter n, Analyzer arg) {
     return List.of(new ParameterDescription(resolve(n.getType()), n.getNameAsString(),
@@ -162,9 +155,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
     if (n.hasElseBranch()) {
       List<Description> alternative = n.getElseStmt().orElseThrow().accept(this, arg);
-            /* Flatten if-else trees. In LivingDocumentation JSON, a big tree of if-else structures "goes
-             with" the topmost if; instead of each if having one or two branches, we think of it having
-            many branches. */
+
+      /* Flatten if-else trees. In LivingDocumentation JSON, a big tree of if-else structures "goes
+       with" the topmost if; instead of each if having one or two branches, we think of it having
+      many branches. */
       if (n.hasCascadingIfStmt() && alternative.get(0) instanceof IfDescription alt) {
         sections.addAll(alt.sections());
       } else {
@@ -214,24 +208,25 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getNameAsString(), arguments));
   }
 
-  /**
-   * These custom visit method is not related to JavaParser built in visit methods. But are needed
-   * to help with the JSON object creation.
-   */
-  public Description visit(JavadocComment n) {
+  @Override
+  public List<Description> visit(JavadocComment n, Analyzer arg) {
     StringBuilder returns = new StringBuilder();
     Map<String, String> commentParams = new LinkedHashMap<>();
     Map<String, String> commentTypeParams = new LinkedHashMap<>();
-    // this regex splits the sentence into 2 if it ends with a . is followed by empty space.
-    String[] sentences = commentHelperMethods.extractSummary(n).split("\\.\\s+", 2);
-    // give back the . that is removed by the split.
+    // This regex splits the sentence into 2 if it ends with a . is followed by empty space.
+    String[] sentences = CommentHelperMethods.extractSummary(n).split("\\.\\s+", 2);
+    // Give back the . that is removed by the split.
     String summary = (sentences.length > 0) ? sentences[0]+"." : null;
     String remarks = (sentences.length > 1) ? sentences[1] : null;
-    Map<String, Map<String, String>> commentData = commentHelperMethods.extractParamDescriptions(n);
-    commentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);
-    return new CommentSummaryDescription(remarks, !returns.isEmpty() ? returns.toString() : null,
-        summary, !commentParams.isEmpty() ? commentParams : null,
-        !commentTypeParams.isEmpty() ? commentTypeParams : null);
+    Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
+    CommentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);
+    return List.of(
+        new CommentSummaryDescription(
+            remarks,
+            !returns.isEmpty() ? returns.toString() : null,
+            summary,
+            !commentParams.isEmpty() ? commentParams : null,
+            !commentTypeParams.isEmpty() ? commentTypeParams : null));
   }
 
 }

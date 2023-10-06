@@ -1,39 +1,17 @@
 package com.infosupport.ldoc.analyzerj.helperMethods;
 
-import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.JavadocComment;
-import com.infosupport.ldoc.analyzerj.AnalysisVisitor;
-import com.infosupport.ldoc.analyzerj.descriptions.Description;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CommentHelperMethods {
 
-  private final AnalysisVisitor analysisVisitor;
-
-  public CommentHelperMethods(AnalysisVisitor analyzer) {
-    this.analysisVisitor = analyzer;
-  }
-
-  /**
-   * This method checks if the comment is of type JavaDoc.
-   * Handle only JavaDoc comments.
-   * @param n this is the comment that needs to be processed.
-   * @return Description.
-   */
-  public Description getCommentTypeJavaDoc(Comment n) {
-    if (n instanceof JavadocComment) {
-      return analysisVisitor.visit(n.asJavadocComment());
-    }
-    return null;
-  }
-
-  public String extractSummary(JavadocComment commentText) {
+  public static String extractSummary(JavadocComment commentText) {
     return commentText.parse().getDescription().toText().strip();
   }
 
-  public Map<String, Map<String, String>> extractParamDescriptions(JavadocComment commentText) {
+  public static Map<String, Map<String, String>> extractParamDescriptions(JavadocComment commentText) {
     Map<String, Map<String, String>> paramDescriptions = new LinkedHashMap<>();
     for (var results : commentText.parse().getBlockTags()) {
       String tagType = results.getType().toString();
@@ -47,8 +25,8 @@ public class CommentHelperMethods {
     return paramDescriptions;
   }
 
-  //keeping the logic out of main analysisvisitor class
-  public void processCommentData(Map<String, Map<String, String>> commentData,
+  // Keeping this logic out of main analysisvisitor class.
+  public static void processCommentData(Map<String, Map<String, String>> commentData,
       StringBuilder returns,
       Map<String, String> commentParams,
       Map<String, String> commentTypeParams) {
