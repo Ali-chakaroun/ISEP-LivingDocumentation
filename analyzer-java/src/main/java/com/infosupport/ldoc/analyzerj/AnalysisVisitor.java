@@ -155,7 +155,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   @Override
   public List<Description> visit(IfStmt n, Analyzer arg) {
-    List<IfElseSection> sections = new ArrayList<>();
+    List<Description> sections = new ArrayList<>();
     String condition = n.getCondition().toString();
     List<Description> consequent = n.getThenStmt().accept(this, arg);
     sections.add(new IfElseSection(condition, consequent));
