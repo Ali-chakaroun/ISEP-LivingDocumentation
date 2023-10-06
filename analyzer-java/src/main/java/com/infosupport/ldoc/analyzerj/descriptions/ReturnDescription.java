@@ -14,8 +14,8 @@ public record ReturnDescription(
     this(null);
   }
 
-  @JsonProperty("$type")
-  public String getType() {
+  @JsonProperty(value = "$type", index = -2)
+  public String type() {
     return "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions";
   }
 }
