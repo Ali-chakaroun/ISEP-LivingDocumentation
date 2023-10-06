@@ -9,7 +9,6 @@ import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 import com.infosupport.ldoc.analyzerj.descriptions.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -222,33 +221,28 @@ class AnalysisVisitorTest {
 
   @Test
   void comment_tests() {
-    Map<String,String> exampleParams = new LinkedHashMap<>();
-    exampleParams.put("a", "is an object.");
-    exampleParams.put("b", "is a string.");
     assertIterableEquals(
         List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
             new MethodDescription(
                 new MemberDescription("does"),
                 "Example",
-                new CommentSummaryDescription("this is are the remarks.",
-                    "is Example.", "this method is an example.",
-                    exampleParams, null),
+                new CommentSummaryDescription("These are the remarks.",
+                    "an Example.", "This method is an example.",
+                    Map.of("a", "is an object.", "b", "is a string."), null),
                 List.of(
                     new ParameterDescription("java.lang.Object", "a", List.of()),
                     new ParameterDescription("java.lang.String", "b", List.of())),
                 List.of())), List.of())),
         parse("""
             class Example {
-            /**\s
-            *this method is an example.
-            *this is are the remarks.\s
-            *@param a is an object.
-            *@param b is a string.
-            *@return is Example.
-            */
-            Example does(Object a, String b) {}\s
+              /**
+               * This method is an example. These are the remarks.
+               * @param a is an object.
+               * @param b is a string.
+               * @return an Example.
+               */
+              Example does(Object a, String b) {}
             }
             """));
-
   }
 }
