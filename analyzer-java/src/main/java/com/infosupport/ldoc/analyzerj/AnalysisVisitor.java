@@ -18,6 +18,7 @@ import com.github.javaparser.ast.expr.MemberValuePair;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
+import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
@@ -206,6 +207,13 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(new InvocationDescription(
         n.getScope().map(s -> resolver.calculateType(s).describe()).orElse("?"),
         n.getNameAsString(), arguments));
+  }
+
+  @Override
+  public List<Description> visit(CatchClause n, Analyzer arg) {
+    // Unlike the method we're overriding, we ignore catch clause comments and parameters.
+    List<Description> out = n.getBody().accept(this, arg);
+    return (out != null) ? out : List.of();
   }
 
   @Override

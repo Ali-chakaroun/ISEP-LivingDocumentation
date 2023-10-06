@@ -220,6 +220,14 @@ class AnalysisVisitorTest {
   }
 
   @Test
+  void catch_clause_parameters_ignored() {
+    // Regression test for issue #34. The "Exception e" should not be regarded as a parameter.
+    assertIterableEquals(
+        List.of(new ReturnDescription("1")),
+        parseFragment("try { } catch (Exception e) { return 1; }"));
+  }
+
+  @Test
   void comment_tests() {
     assertIterableEquals(
         List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
