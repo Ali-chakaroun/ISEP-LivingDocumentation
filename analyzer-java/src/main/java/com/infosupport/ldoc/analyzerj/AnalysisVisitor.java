@@ -139,7 +139,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   @Override
   public List<Description> visit(MemberValuePair n, Analyzer arg) {
     return List.of(new AttributeArgumentDescription(n.getNameAsString(),
-        n.getValue().calculateResolvedType().describe(), n.getValue().toString()));
+        resolver.calculateType(n.getValue()).describe(), n.getValue().toString()));
   }
 
   @Override
