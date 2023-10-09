@@ -6,12 +6,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CommentHelperMethods {
-
   public static String extractSummary(JavadocComment commentText) {
     return commentText.parse().getDescription().toText().strip();
   }
 
-  public static Map<String, Map<String, String>> extractParamDescriptions(JavadocComment commentText) {
+  public static Map<String, Map<String, String>> extractParamDescriptions(
+      JavadocComment commentText) {
     Map<String, Map<String, String>> paramDescriptions = new LinkedHashMap<>();
     for (var results : commentText.parse().getBlockTags()) {
       String tagType = results.getType().toString();
@@ -37,10 +37,32 @@ public class CommentHelperMethods {
         String returnValue = innerMap.values().stream().findFirst().orElse("");
         returns.append(returnValue);
       } else if ("PARAM".equals(key)) {
-        commentParams.putAll(innerMap);
-      } else if ("TYPEPARAM".equals(key)) {
-        commentTypeParams.putAll(innerMap);
+        for (Map.Entry<String, String> paramEntry : innerMap.entrySet()) {
+          String paramKey = paramEntry.getKey();
+          String paramValue = paramEntry.getValue();
+          // Check if the key is enclosed in angle brackets
+          if (isTypeParam(paramKey)) {
+            commentTypeParams.put(extractInnerValues(paramKey), paramValue);
+          } else {
+            commentParams.put(paramKey, paramValue);
+          }
+        }
       }
     }
+  }
+
+  public static Boolean isTypeParam(String input) {
+    return input.length() >= 2 && input.charAt(0) == '<' && input.charAt(input.length() - 1) == '>';
+  }
+
+  public static String extractInnerValues(String input) {
+    int startIndex = input.indexOf('<');
+    int endIndex = input.indexOf('>');
+
+    if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+      // Extract and return the content inside angle brackets
+      return input.substring(startIndex + 1, endIndex);
+    }
+    return null;
   }
 }

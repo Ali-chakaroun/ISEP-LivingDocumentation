@@ -22,15 +22,18 @@ public class CommentSummaryDescriptionJSONTest {
           "Params": {
             "N": "first integer value",
             "Y": "second integer value"
+          },
+          "TypeParams": {
+            "L": "of type list"
           }
         }
         """;
     assertEquals(
         mapper.readTree(example),
         mapper.valueToTree(
-          new CommentSummaryDescription(
-              "tread carefully.", "An integer.", "add two values",
-              Map.of("N", "first integer value", "Y", "second integer value"),
-              null)));
+            new CommentSummaryDescription(
+                "tread carefully.", "An integer.", "add two values",
+                Map.of("N", "first integer value", "Y", "second integer value"),
+                Map.of("L", "of type list"))));
   }
 }
