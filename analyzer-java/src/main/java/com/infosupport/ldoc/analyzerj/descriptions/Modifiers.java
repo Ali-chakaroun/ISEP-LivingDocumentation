@@ -1,6 +1,5 @@
 package com.infosupport.ldoc.analyzerj.descriptions;
 
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.TypeDeclaration;
 
 /**
@@ -9,7 +8,7 @@ import com.github.javaparser.ast.body.TypeDeclaration;
  * example 'async') or Java (like 'strictfp') are not included, but could be in the future. Values
  * (bitmasks) are taken from <code>LivingDocumentation.Abstractions/Modifier.cs</code>.
  */
-public enum ModifierDescription implements Description {
+public enum Modifiers {
   NONE(0),
   PUBLIC(1 << 1),
   PRIVATE(1 << 2),
@@ -22,7 +21,7 @@ public enum ModifierDescription implements Description {
 
   private final int mask;
 
-  ModifierDescription(int mask) {
+  Modifiers(int mask) {
     this.mask = mask;
   }
 
@@ -30,7 +29,7 @@ public enum ModifierDescription implements Description {
     return mask;
   }
 
-  public static ModifierDescription valueOf(Modifier modifier) {
+  public static Modifiers valueOf(com.github.javaparser.ast.Modifier modifier) {
     boolean onType = modifier.getParentNode().map(n -> n instanceof TypeDeclaration).orElse(false);
 
     return switch (modifier.getKeyword()) {
@@ -43,9 +42,5 @@ public enum ModifierDescription implements Description {
       case NATIVE -> EXTERN;
       default -> NONE;
     };
-  }
-
-  public static int convert(Modifier modifier) {
-    return valueOf(modifier).mask();
   }
 }

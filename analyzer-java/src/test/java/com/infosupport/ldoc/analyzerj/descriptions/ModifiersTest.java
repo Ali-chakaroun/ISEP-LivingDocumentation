@@ -9,20 +9,20 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.type.PrimitiveType;
 import org.junit.jupiter.api.Test;
 
-class ModifierDescriptionTest {
+class ModifiersTest {
 
   @Test
   void modifier_with_no_equivalent_returns_none() {
     assertEquals(
-        ModifierDescription.NONE,
-        ModifierDescription.valueOf(Modifier.strictfpModifier()));
+        Modifiers.NONE,
+        Modifiers.valueOf(Modifier.strictfpModifier()));
   }
 
   @Test
   void modifier_with_direct_equivalent_returns_equivalent() {
     assertEquals(
-        ModifierDescription.PRIVATE,
-        ModifierDescription.valueOf(Modifier.privateModifier()));
+        Modifiers.PRIVATE,
+        Modifiers.valueOf(Modifier.privateModifier()));
   }
 
   @Test
@@ -31,15 +31,15 @@ class ModifierDescriptionTest {
     ClassOrInterfaceDeclaration exampleClass = new ClassOrInterfaceDeclaration(
         NodeList.nodeList(Modifier.finalModifier()), false, "Example");
     assertEquals(
-        ModifierDescription.SEALED,
-        ModifierDescription.valueOf(exampleClass.getModifiers().getFirst().orElseThrow()));
+        Modifiers.SEALED,
+        Modifiers.valueOf(exampleClass.getModifiers().getFirst().orElseThrow()));
 
     // When the Java final modifier appears on a field, the meaning is closest to C# 'readonly'.
     FieldDeclaration exampleField = new FieldDeclaration(
         NodeList.nodeList(Modifier.finalModifier()),
         PrimitiveType.intType(), "someField");
     assertEquals(
-        ModifierDescription.READONLY,
-        ModifierDescription.valueOf(exampleField.getModifiers().getFirst().orElseThrow()));
+        Modifiers.READONLY,
+        Modifiers.valueOf(exampleField.getModifiers().getFirst().orElseThrow()));
   }
 }

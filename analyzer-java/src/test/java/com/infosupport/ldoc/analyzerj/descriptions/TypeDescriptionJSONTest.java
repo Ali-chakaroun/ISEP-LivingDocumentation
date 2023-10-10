@@ -37,7 +37,7 @@ class TypeDescriptionJSONTest {
         mapper.readTree("{\"Modifiers\": 1026, \"FullName\": \"Wilma\"}"),
         mapper.valueToTree(new TypeDescription(
             TypeType.CLASS,
-            ModifierDescription.PUBLIC.mask() | ModifierDescription.SEALED.mask(),
+            Modifiers.PUBLIC.mask() | Modifiers.SEALED.mask(),
             "Wilma",
             List.of(),
             null,

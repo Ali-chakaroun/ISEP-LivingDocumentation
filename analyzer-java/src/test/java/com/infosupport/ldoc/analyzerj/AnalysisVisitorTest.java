@@ -274,16 +274,16 @@ class AnalysisVisitorTest {
     var type = (TypeDescription)parsed.get(0);
     assertEquals(
         type.modifiers(),
-        ModifierDescription.PUBLIC.mask() | ModifierDescription.SEALED.mask());
+        Modifiers.PUBLIC.mask() | Modifiers.SEALED.mask());
 
     var consume = (MethodDescription)type.methods().get(0);
     assertEquals(
         consume.member().modifiers(),
-        ModifierDescription.PRIVATE.mask());
+        Modifiers.PRIVATE.mask());
 
     var prepare = (MethodDescription)type.methods().get(1);
     assertEquals(
         prepare.member().modifiers(),
-        ModifierDescription.PUBLIC.mask() | ModifierDescription.STATIC.mask());
+        Modifiers.PUBLIC.mask() | Modifiers.STATIC.mask());
   }
 }

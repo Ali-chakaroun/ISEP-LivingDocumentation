@@ -58,8 +58,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
 
+  /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
   private int combine(NodeList<Modifier> modifiers) {
-    return modifiers.stream().mapToInt(ModifierDescription::convert).reduce(0, (a, b) -> a | b);
+    return modifiers.stream().mapToInt(m -> Modifiers.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
 
   @Override
