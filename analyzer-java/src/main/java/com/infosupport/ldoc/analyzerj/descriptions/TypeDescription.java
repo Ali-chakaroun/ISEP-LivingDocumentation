@@ -14,6 +14,10 @@ public record TypeDescription(
     @JsonFormat(shape = Shape.NUMBER)
     TypeType type,
 
+    @JsonProperty("Modifiers")
+    @JsonInclude(Include.NON_DEFAULT)
+    int modifiers,
+
     @JsonProperty("FullName")
     String fullName,
 
@@ -41,7 +45,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, fullName, baseTypes, null, List.of(), List.of(), List.of());
+    this(type, 0, fullName, baseTypes, null, List.of(), List.of(), List.of());
   }
 
 }

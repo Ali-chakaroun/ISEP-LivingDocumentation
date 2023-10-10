@@ -32,5 +32,17 @@ class TypeDescriptionJSONTest {
     assertEquals(
         mapper.readTree("{\"Type\": 3, \"FullName\": \"Barney\"}"),
         mapper.valueToTree(new TypeDescription(TypeType.ENUM, "Barney", List.of())));
+
+    assertEquals(
+        mapper.readTree("{\"Modifiers\": 1026, \"FullName\": \"Wilma\"}"),
+        mapper.valueToTree(new TypeDescription(
+            TypeType.CLASS,
+            ModifierDescription.PUBLIC.mask() | ModifierDescription.SEALED.mask(),
+            "Wilma",
+            List.of(),
+            null,
+            List.of(),
+            List.of(),
+            List.of())));
   }
 }

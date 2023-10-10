@@ -1,7 +1,8 @@
 package com.infosupport.ldoc.analyzerj;
 
-import com.infosupport.ldoc.analyzerj.helperMethods.CommentHelperMethods;
+import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
@@ -31,6 +32,7 @@ import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.resolution.declarations.ResolvedAnnotationDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.infosupport.ldoc.analyzerj.descriptions.*;
+import com.infosupport.ldoc.analyzerj.helperMethods.CommentHelperMethods;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -56,14 +58,21 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
 
+  private int combine(NodeList<Modifier> modifiers) {
+    return modifiers.stream().mapToInt(ModifierDescription::convert).reduce(0, (a, b) -> a | b);
+  }
+
   @Override
   public List<Description> visit(ClassOrInterfaceDeclaration n, Analyzer arg) {
     List<String> baseTypes = new ArrayList<>();
     baseTypes.addAll(resolve(n.getExtendedTypes()));
     baseTypes.addAll(resolve(n.getImplementedTypes()));
 
-    return List.of(new TypeDescription(n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
-        n.getFullyQualifiedName().orElseThrow(), baseTypes,
+    return List.of(new TypeDescription(
+        n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
+        combine(n.getModifiers()),
+        n.getFullyQualifiedName().orElseThrow(),
+        baseTypes,
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
@@ -72,7 +81,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   @Override
   public List<Description> visit(RecordDeclaration n, Analyzer arg) {
-    return List.of(new TypeDescription(TypeType.STRUCT, n.getFullyQualifiedName().orElseThrow(),
+    return List.of(new TypeDescription(
+        TypeType.STRUCT,
+        combine(n.getModifiers()),
+        n.getFullyQualifiedName().orElseThrow(),
         resolve(n.getImplementedTypes()),
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
@@ -82,7 +94,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   @Override
   public List<Description> visit(EnumDeclaration n, Analyzer arg) {
-    return List.of(new TypeDescription(TypeType.ENUM, n.getFullyQualifiedName().orElseThrow(),
+    return List.of(new TypeDescription(
+        TypeType.ENUM,
+        combine(n.getModifiers()),
+        n.getFullyQualifiedName().orElseThrow(),
         resolve(n.getImplementedTypes()),
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
@@ -93,7 +108,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
     return List.of(new MethodDescription(
-        new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
+        new MemberDescription(
+            n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
         resolve(n.getType()),
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
         visit(n.getParameters(), arg),
@@ -103,7 +119,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   @Override
   public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
     return List.of(new ConstructorDescription(
-        new MemberDescription(n.getNameAsString(), visit(n.getAnnotations(), arg)),
+        new MemberDescription(
+            n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
         visit(n.getParameters(), arg), visit(n.getBody(), arg)));
   }
 

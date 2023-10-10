@@ -9,12 +9,16 @@ public record MemberDescription(
     @JsonProperty("Name")
     String name,
 
+    @JsonProperty("Modifiers")
+    @JsonInclude(Include.NON_DEFAULT)
+    int modifiers,
+
     @JsonProperty("Attributes")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> attributes
 ) implements Description {
 
   public MemberDescription(String name) {
-    this(name, List.of());
+    this(name, 0, List.of());
   }
 }

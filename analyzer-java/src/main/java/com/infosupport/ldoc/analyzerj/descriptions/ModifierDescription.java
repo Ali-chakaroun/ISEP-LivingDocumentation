@@ -2,15 +2,15 @@ package com.infosupport.ldoc.analyzerj.descriptions;
 
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.TypeDeclaration;
-import java.util.List;
 
 /**
  * Enumeration for different modifiers. The modifiers here are those that are defined by
  * LivingDocumentation and that have an equivalent in Java. Modifiers that only exist in C# (for
- * example 'async') or Java (like 'strictfp') are not included, but could be in the future.
- * Values are taken from <code>LivingDocumentation.Abstractions/Modifier.cs</code>.
+ * example 'async') or Java (like 'strictfp') are not included, but could be in the future. Values
+ * (bitmasks) are taken from <code>LivingDocumentation.Abstractions/Modifier.cs</code>.
  */
 public enum ModifierDescription implements Description {
+  NONE(0),
   PUBLIC(1 << 1),
   PRIVATE(1 << 2),
   PROTECTED(1 << 3),
@@ -20,28 +20,32 @@ public enum ModifierDescription implements Description {
   SEALED(1 << 10), /* Java: final (when referring to classes) */
   EXTERN(1 << 12); /* Java: native */
 
-  private final int value;
+  private final int mask;
 
-  ModifierDescription(int value) {
-    this.value = value;
+  ModifierDescription(int mask) {
+    this.mask = mask;
   }
 
-  public int value() {
-    return value;
+  public int mask() {
+    return mask;
   }
 
-  public static List<Description> of(Modifier modifier) {
+  public static ModifierDescription valueOf(Modifier modifier) {
     boolean onType = modifier.getParentNode().map(n -> n instanceof TypeDeclaration).orElse(false);
 
     return switch (modifier.getKeyword()) {
-      case PUBLIC -> List.of(PUBLIC);
-      case PROTECTED -> List.of(PROTECTED);
-      case PRIVATE -> List.of(PRIVATE);
-      case ABSTRACT -> List.of(ABSTRACT);
-      case STATIC -> List.of(STATIC);
-      case FINAL -> onType ? List.of(SEALED) : List.of(READONLY);
-      case NATIVE -> List.of(EXTERN);
-      default -> List.of();
+      case PUBLIC -> PUBLIC;
+      case PROTECTED -> PROTECTED;
+      case PRIVATE -> PRIVATE;
+      case ABSTRACT -> ABSTRACT;
+      case STATIC -> STATIC;
+      case FINAL -> onType ? SEALED : READONLY;
+      case NATIVE -> EXTERN;
+      default -> NONE;
     };
+  }
+
+  public static int convert(Modifier modifier) {
+    return valueOf(modifier).mask();
   }
 }
