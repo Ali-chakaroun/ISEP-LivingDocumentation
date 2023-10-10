@@ -52,7 +52,7 @@ public class CommentHelperMethods {
   }
 
   private static Boolean isTypeParam(String input) {
-    return input.length() >= 2 && input.startsWith("<") && input.endsWith(">");
+    return input.length() > 2 && input.startsWith("<") && input.endsWith(">");
   }
 
   private static String extractInnerValues(String input) {
