@@ -51,18 +51,12 @@ public class CommentHelperMethods {
     }
   }
 
-  public static Boolean isTypeParam(String input) {
-    return input.length() >= 2 && input.charAt(0) == '<' && input.charAt(input.length() - 1) == '>';
+  private static Boolean isTypeParam(String input) {
+    return input.length() >= 2 && input.startsWith("<") && input.endsWith(">");
   }
 
-  public static String extractInnerValues(String input) {
-    int startIndex = input.indexOf('<');
-    int endIndex = input.indexOf('>');
-
-    if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-      // Extract and return the content inside angle brackets
-      return input.substring(startIndex + 1, endIndex);
-    }
-    return null;
+  private static String extractInnerValues(String input) {
+    // Return the content inside angle brackets
+    return input.substring(1,input.length()-1);
   }
 }

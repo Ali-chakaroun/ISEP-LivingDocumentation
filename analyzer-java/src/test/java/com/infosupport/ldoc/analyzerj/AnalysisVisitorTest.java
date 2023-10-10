@@ -236,8 +236,8 @@ class AnalysisVisitorTest {
                 "Example",
                 new CommentSummaryDescription("These are the remarks.",
                     "an Example.", "This method is an example.",
-                    Map.of("a", "is an object.", "b", "is a string."),
-                    Map.of("L", "is a list.")),
+                    Map.of("a", "is an object.", "b", "is a string.","Map<input>", "map of strings."),
+                    Map.of("L", "is a list.","L<C>","list of characters.")),
                 List.of(
                     new ParameterDescription("java.lang.Object", "a", List.of()),
                     new ParameterDescription("java.lang.String", "b", List.of())),
@@ -248,7 +248,9 @@ class AnalysisVisitorTest {
                * This method is an example. These are the remarks.
                * @param a is an object.
                * @param b is a string.
+               * @param Map<input> map of strings.
                * @param <L> is a list.
+               * @param <L<C>> list of characters.
                * @return an Example.
                */
               Example does(Object a, String b) {}

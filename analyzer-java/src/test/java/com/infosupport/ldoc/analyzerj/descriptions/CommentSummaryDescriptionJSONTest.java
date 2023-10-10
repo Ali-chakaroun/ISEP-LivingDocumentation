@@ -21,10 +21,12 @@ public class CommentSummaryDescriptionJSONTest {
           "Summary": "add two values",
           "Params": {
             "N": "first integer value",
-            "Y": "second integer value"
+            "Y": "second integer value",
+            "Map<input>":"map of strings."
           },
           "TypeParams": {
-            "L": "of type list"
+            "L": "of type list.",
+            "L<C>": "list of characters."
           }
         }
         """;
@@ -33,7 +35,8 @@ public class CommentSummaryDescriptionJSONTest {
         mapper.valueToTree(
             new CommentSummaryDescription(
                 "tread carefully.", "An integer.", "add two values",
-                Map.of("N", "first integer value", "Y", "second integer value"),
-                Map.of("L", "of type list"))));
+                Map.of("N", "first integer value", "Y", "second integer value",
+                    "Map<input>", "map of strings."),
+                Map.of("L", "of type list.", "L<C>", "list of characters."))));
   }
 }
