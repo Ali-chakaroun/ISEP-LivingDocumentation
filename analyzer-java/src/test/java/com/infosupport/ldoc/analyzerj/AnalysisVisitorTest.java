@@ -88,7 +88,7 @@ class AnalysisVisitorTest {
   @Test
   void constructor_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Bongo", List.of(), null, List.of(
+        List.of(new TypeDescription(TypeType.CLASS, 0, "Bongo", List.of(), null, List.of(
             new ConstructorDescription(
                 new MemberDescription("Bongo"),
                 List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
@@ -101,32 +101,35 @@ class AnalysisVisitorTest {
   @Test
   void method_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, 0, "Zap", List.of(), null, List.of(), List.of(
             new MethodDescription(
                 new MemberDescription("does"),
-                "Example",
+                "Zap",
                 null,
                 List.of(
                     new ParameterDescription("java.lang.Object", "a", List.of()),
                     new ParameterDescription("java.lang.String", "b", List.of())),
                 List.of())), List.of())),
-        parse("class Example { Example does(Object a, String b) {} }"));
+        parse("class Zap { Zap does(Object a, String b) {} }"));
   }
 
   @Test
   void attribute_description() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, "Z", List.of(), null, List.of(), List.of(), List.of(
-                new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
+            new TypeDescription(TypeType.CLASS, 0, "Z", List.of(), null, List.of(), List.of(),
+                List.of(
+                    new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, "X", List.of(), null, List.of(), List.of(), List.of(
-                new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings", List.of(
-                    new AttributeArgumentDescription("value", "java.lang.String",
-                        "\"unchecked\"")))))),
+            new TypeDescription(TypeType.CLASS, 0, "X", List.of(), null, List.of(), List.of(),
+                List.of(
+                    new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings",
+                        List.of(
+                            new AttributeArgumentDescription("value", "java.lang.String",
+                                "\"unchecked\"")))))),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 
@@ -230,18 +233,19 @@ class AnalysisVisitorTest {
   @Test
   void comment_tests() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Example", List.of(), null, List.of(), List.of(
-            new MethodDescription(
-                new MemberDescription("does"),
-                "Example",
-                new CommentSummaryDescription("These are the remarks.",
-                    "an Example.", "This method is an example.",
-                    Map.of("a", "is an object.", "b", "is a string.","Map<input>", "map of strings."),
+        List.of(
+            new TypeDescription(TypeType.CLASS, 0, "Example", List.of(), null, List.of(), List.of(
+                new MethodDescription(
+                    new MemberDescription("does"),
+                    "Example",
+                    new CommentSummaryDescription("These are the remarks.",
+                        "an Example.", "This method is an example.",
+                        Map.of("a", "is an object.", "b", "is a string.","Map<input>", "map of strings."),
                     Map.of("L", "is a list.","L<C>","list of characters.")),
-                List.of(
-                    new ParameterDescription("java.lang.Object", "a", List.of()),
-                    new ParameterDescription("java.lang.String", "b", List.of())),
-                List.of())), List.of())),
+                    List.of(
+                        new ParameterDescription("java.lang.Object", "a", List.of()),
+                        new ParameterDescription("java.lang.String", "b", List.of())),
+                    List.of())), List.of())),
         parse("""
             class Example {
               /**
@@ -256,5 +260,30 @@ class AnalysisVisitorTest {
               Example does(Object a, String b) {}
             }
             """));
+  }
+
+  @Test
+  void class_and_method_modifiers() {
+    List<Description> parsed = parse("""
+        public final class Sandwich {
+          private strictfp float consume() {}
+          public static Sandwich prepare() {}
+        }
+        """);
+
+    var type = (TypeDescription)parsed.get(0);
+    assertEquals(
+        type.modifiers(),
+        Modifiers.PUBLIC.mask() | Modifiers.SEALED.mask());
+
+    var consume = (MethodDescription)type.methods().get(0);
+    assertEquals(
+        consume.member().modifiers(),
+        Modifiers.PRIVATE.mask());
+
+    var prepare = (MethodDescription)type.methods().get(1);
+    assertEquals(
+        prepare.member().modifiers(),
+        Modifiers.PUBLIC.mask() | Modifiers.STATIC.mask());
   }
 }
