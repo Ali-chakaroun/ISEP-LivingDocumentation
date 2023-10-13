@@ -12,4 +12,11 @@
     <module>analyzer-java</module>
     <module>jacoco-report-aggregator</module>
   </modules>
+
+  <properties>
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.basedir}/jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
+  </properties>
+
 </project>
