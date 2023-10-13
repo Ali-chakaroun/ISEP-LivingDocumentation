@@ -31,14 +31,6 @@
         <groupId>com.infosupport.livingdocumentation</groupId>
         <artifactId>ldj-maven-plugin</artifactId>
         <version>1-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>livingdocumentation</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
