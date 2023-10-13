@@ -34,4 +34,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ali-chakaroun_ISEP-LivingDocumentation -Dsonar.organization=isep-livingdocumentation -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.jacoco.xmlReportPaths=jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Ali-chakaroun_ISEP-LivingDocumentation -Dsonar.organization=isep-livingdocumentation -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.jacoco.xmlReportPaths=./jacoco-report-aggregate/target/site/jacoco-aggregate/jacoco.xml
