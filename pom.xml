@@ -7,7 +7,10 @@
   <artifactId>livingdocumentation-java</artifactId>
   <version>1-SNAPSHOT</version>
   <packaging>pom</packaging>
-
+  <properties>
+    <sonar.organization>isep-livingdocumentation</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+  </properties>
   <modules>
     <module>analyzer-java</module>
   </modules>
