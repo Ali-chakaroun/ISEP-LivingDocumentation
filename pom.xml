@@ -10,5 +10,6 @@
 
   <modules>
     <module>analyzer-java</module>
+    <module>jacoco-report-aggregator</module>
   </modules>
 </project>
