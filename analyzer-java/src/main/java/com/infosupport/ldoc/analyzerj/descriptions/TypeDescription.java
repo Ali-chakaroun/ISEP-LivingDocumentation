@@ -45,7 +45,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, Modifiers.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of());
+    this(type, Modifier.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of());
   }
 
 }
