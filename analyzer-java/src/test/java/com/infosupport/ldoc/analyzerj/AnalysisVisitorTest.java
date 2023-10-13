@@ -249,7 +249,8 @@ class AnalysisVisitorTest {
         parse("""
             class Example {
               /**
-               * This method is an example.<remarks> These are the remarks.
+               * This method is an example.
+               * These are the remarks.
                * @param a is an object.
                * @param b is a string.
                * @param Map<input> map of strings.

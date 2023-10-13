@@ -239,10 +239,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     StringBuilder returns = new StringBuilder();
     Map<String, String> commentParams = new LinkedHashMap<>();
     Map<String, String> commentTypeParams = new LinkedHashMap<>();
-    // This regex splits the sentence into 2 if it ends with a . is followed by empty space.
-    String[] sentences = CommentHelperMethods.extractSummary(n).split("<remarks>", 2);
-    // Give back the . that is removed by the split.
-    String summary = (sentences.length > 0) ? sentences[0].strip() : null;
+    // This regex splits the sentence into 2 at the first dot(.) it finds.
+    String[] sentences = CommentHelperMethods.extractSummary(n).split("\\.", 2);
+    // Add a dot(.) at the end if it is missing.
+    String summary = (sentences.length > 0) ? sentences[0].strip().concat(".") : null;
     String remarks = (sentences.length > 1) ? sentences[1].strip() : null;
     Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
     CommentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);
