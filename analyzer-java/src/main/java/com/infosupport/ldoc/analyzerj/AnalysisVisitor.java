@@ -1,6 +1,5 @@
 package com.infosupport.ldoc.analyzerj;
 
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
@@ -59,8 +58,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   }
 
   /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
-  private int combine(NodeList<Modifier> modifiers) {
-    return modifiers.stream().mapToInt(m -> Modifiers.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
+  private int combine(NodeList<com.github.javaparser.ast.Modifier> modifiers) {
+    return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
 
   @Override
