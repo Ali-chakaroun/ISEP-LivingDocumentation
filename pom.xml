@@ -10,5 +10,6 @@
 
   <modules>
     <module>analyzer-java</module>
+    <module>analyzer-kotlin</module>
   </modules>
 </project>
