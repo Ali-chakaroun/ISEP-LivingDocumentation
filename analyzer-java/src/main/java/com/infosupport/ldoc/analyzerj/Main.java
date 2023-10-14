@@ -3,6 +3,7 @@ package com.infosupport.ldoc.analyzerj;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -27,6 +28,7 @@ public class Main {
     return new AnalysisJob(
         Path.of(commandLine.getOptionValue("project")),
         Path.of(commandLine.getOptionValue("output")),
+        List.of(),
         commandLine.hasOption("pretty"));
   }
 

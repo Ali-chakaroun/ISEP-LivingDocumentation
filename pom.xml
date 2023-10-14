@@ -10,5 +10,7 @@
 
   <modules>
     <module>analyzer-java</module>
+    <module>ldj-maven-plugin</module>
+    <module>ldj-maven-plugin-example</module>
   </modules>
 </project>
