@@ -8,7 +8,7 @@ import com.github.javaparser.ast.body.TypeDeclaration;
  * example 'async') or Java (like 'strictfp') are not included, but could be in the future. Values
  * (bitmasks) are taken from <code>LivingDocumentation.Abstractions/Modifier.cs</code>.
  */
-public enum Modifiers {
+public enum Modifier {
   NONE(0),
   PUBLIC(1 << 1),
   PRIVATE(1 << 2),
@@ -21,7 +21,7 @@ public enum Modifiers {
 
   private final int mask;
 
-  Modifiers(int mask) {
+  Modifier(int mask) {
     this.mask = mask;
   }
 
@@ -29,7 +29,7 @@ public enum Modifiers {
     return mask;
   }
 
-  public static Modifiers valueOf(com.github.javaparser.ast.Modifier modifier) {
+  public static Modifier valueOf(com.github.javaparser.ast.Modifier modifier) {
     boolean onType = modifier.getParentNode().map(n -> n instanceof TypeDeclaration).orElse(false);
 
     return switch (modifier.getKeyword()) {
