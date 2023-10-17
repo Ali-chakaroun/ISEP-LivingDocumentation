@@ -239,7 +239,7 @@ class AnalysisVisitorTest {
                     new MemberDescription("does"),
                     "Example",
                     new CommentSummaryDescription("These are the remarks.",
-                        "an Example.", "This method is an example.",
+                        "an Example.", "This method is an example.main<>.",
                         Map.of("a", "is an object.", "b", "is a string.","Map<input>", "map of strings."),
                     Map.of("L", "is a list.","L<C>","list of characters.")),
                     List.of(
@@ -249,7 +249,8 @@ class AnalysisVisitorTest {
         parse("""
             class Example {
               /**
-               * This method is an example. These are the remarks.
+               * This method is an example.main<>.
+               * These are the remarks.
                * @param a is an object.
                * @param b is a string.
                * @param Map<input> map of strings.
