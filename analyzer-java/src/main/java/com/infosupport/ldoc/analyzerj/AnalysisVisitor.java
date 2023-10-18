@@ -2,13 +2,7 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.BodyDeclaration;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.*;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
@@ -74,6 +68,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getFullyQualifiedName().orElseThrow(),
         baseTypes,
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+        select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
         visit(n.getAnnotations(), arg)));
@@ -87,6 +82,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getFullyQualifiedName().orElseThrow(),
         resolve(n.getImplementedTypes()),
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+        select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
         visit(n.getAnnotations(), arg)));
@@ -100,11 +96,27 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getFullyQualifiedName().orElseThrow(),
         resolve(n.getImplementedTypes()),
         n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+        select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
         visit(n.getAnnotations(), arg)));
   }
 
+  @Override
+  public List<Description> visit (FieldDeclaration n, Analyzer arg) {
+    String initializer = null;
+    if ( n.getVariable(0).getInitializer().isPresent()) {
+      initializer = n.getVariable(0).getInitializer().get().asLiteralStringValueExpr().getValue();
+    }
+    return List.of(
+            new FieldDescription(
+                    new MemberDescription(n.getVariable(0).getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
+                    resolve(n.getCommonType()),
+                    initializer,
+                    n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)
+            )
+    );
+  }
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
     return List.of(new MethodDescription(

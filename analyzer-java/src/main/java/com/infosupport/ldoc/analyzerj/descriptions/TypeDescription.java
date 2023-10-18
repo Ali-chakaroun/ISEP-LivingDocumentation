@@ -27,6 +27,11 @@ public record TypeDescription(
     @JsonProperty("DocumentationComments")
     @JsonInclude(Include.NON_EMPTY)
     Description comments,
+
+    @JsonProperty("Fields")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> fields,
+
     @JsonProperty("Constructors")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> constructors,
@@ -45,7 +50,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, Modifier.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of());
+    this(type, Modifier.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of(), List.of());
   }
 
 }
