@@ -102,20 +102,36 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         visit(n.getAnnotations(), arg)));
   }
 
+  /**
+   * Generates a list of field descriptions
+   *  Note that a FieldDeclaration may contain multiple variables (i.e., int a, b = 10; or even int a = 10, b = 5;)
+   *  These will be split as separate fields, note that the comment will be duplicated in this case.
+   * @param n node of type FieldDeclaration
+   * @param arg Analyzer to be used
+   * @return List of FieldDescriptions, one for each variable in the field.
+   */
   @Override
-  public List<Description> visit (FieldDeclaration n, Analyzer arg) {
-    String initializer = null;
-    if ( n.getVariable(0).getInitializer().isPresent()) {
-      initializer = n.getVariable(0).getInitializer().get().asLiteralStringValueExpr().getValue();
+  public List<Description> visit(FieldDeclaration n, Analyzer arg) {
+    List<Description> fieldDescriptions = new ArrayList<Description>();
+
+    for (VariableDeclarator variable : n.getVariables()) {
+      // Get the initializer as a literal String (i.e., without quotation marks)
+      //    when null, will be ignored by the JsonInclude
+      String initializer = null;
+      Expression exp;
+      if (( exp = variable.getInitializer().orElse(null)) != null) {
+        initializer = exp.asLiteralStringValueExpr().getValue();
+      }
+
+      fieldDescriptions.add(new FieldDescription(
+              new MemberDescription(variable.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
+              resolve(variable.getType()),
+              initializer,
+              n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)
+      ));
     }
-    return List.of(
-            new FieldDescription(
-                    new MemberDescription(n.getVariable(0).getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
-                    resolve(n.getCommonType()),
-                    initializer,
-                    n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)
-            )
-    );
+
+    return fieldDescriptions;
   }
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
