@@ -1,6 +1,5 @@
 package com.infosupport.ldoc.analyzerj;
 
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
@@ -59,8 +58,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   }
 
   /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
-  private int combine(NodeList<Modifier> modifiers) {
-    return modifiers.stream().mapToInt(m -> Modifiers.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
+  private int combine(NodeList<com.github.javaparser.ast.Modifier> modifiers) {
+    return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
 
   @Override
@@ -239,11 +238,11 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     StringBuilder returns = new StringBuilder();
     Map<String, String> commentParams = new LinkedHashMap<>();
     Map<String, String> commentTypeParams = new LinkedHashMap<>();
-    // This regex splits the sentence into 2 if it ends with a . is followed by empty space.
+    // This regex splits the sentence into 2 at the first dot(.) followed by a space.
     String[] sentences = CommentHelperMethods.extractSummary(n).split("\\.\\s+", 2);
-    // Give back the . that is removed by the split.
-    String summary = (sentences.length > 0) ? sentences[0]+"." : null;
-    String remarks = (sentences.length > 1) ? sentences[1] : null;
+    // Add a dot(.) at the end if it is missing.
+    String summary = (sentences.length > 0) ? sentences[0].strip().concat(".") : null;
+    String remarks = (sentences.length > 1) ? sentences[1].strip() : null;
     Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
     CommentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);
     return List.of(

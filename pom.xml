@@ -10,5 +10,8 @@
 
   <modules>
     <module>analyzer-java</module>
+    <module>jacoco-report-aggregator</module>
+    <module>ldj-maven-plugin</module>
+    <module>ldj-maven-plugin-example</module>
   </modules>
 </project>

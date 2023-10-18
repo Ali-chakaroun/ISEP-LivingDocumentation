@@ -19,7 +19,7 @@ class MethodDescriptionJSONTest {
         mapper.readTree("{\"Modifiers\": 4, \"Name\": \"aap\", \"ReturnType\": \"Noot\"}"),
         mapper.valueToTree(
             new MethodDescription(
-                new MemberDescription("aap", Modifiers.PRIVATE.mask(), List.of()),
+                new MemberDescription("aap", Modifier.PRIVATE.mask(), List.of()),
                 "Noot", null, List.of(), List.of())));
 
     String example = """
