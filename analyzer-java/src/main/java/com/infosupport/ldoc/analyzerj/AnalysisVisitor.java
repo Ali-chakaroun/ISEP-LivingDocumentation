@@ -112,7 +112,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
    */
   @Override
   public List<Description> visit(FieldDeclaration n, Analyzer arg) {
-    List<Description> fieldDescriptions = new ArrayList<Description>();
+    List<Description> fieldDescriptions = new ArrayList<>();
 
     for (VariableDeclarator variable : n.getVariables()) {
       // Get the initializer as a literal String (i.e., without quotation marks)
