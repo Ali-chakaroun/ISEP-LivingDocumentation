@@ -88,7 +88,7 @@ class AnalysisVisitorTest {
   @Test
   void constructor_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, 0, "Bongo", List.of(), null, List.of(
+        List.of(new TypeDescription(TypeType.CLASS, 0, "Bongo", List.of(), null, List.of(), List.of(
             new ConstructorDescription(
                 new MemberDescription("Bongo"),
                 List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
@@ -101,7 +101,7 @@ class AnalysisVisitorTest {
   @Test
   void method_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, 0, "Zap", List.of(), null, List.of(), List.of(
+        List.of(new TypeDescription(TypeType.CLASS, 0, "Zap", List.of(), null, List.of(), List.of(), List.of(
             new MethodDescription(
                 new MemberDescription("does"),
                 "Zap",
@@ -117,14 +117,14 @@ class AnalysisVisitorTest {
   void attribute_description() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, 0, "Z", List.of(), null, List.of(), List.of(),
+            new TypeDescription(TypeType.CLASS, 0, "Z", List.of(), null, List.of(), List.of(), List.of(),
                 List.of(
                     new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, 0, "X", List.of(), null, List.of(), List.of(),
+            new TypeDescription(TypeType.CLASS, 0, "X", List.of(), null, List.of(), List.of(), List.of(),
                 List.of(
                     new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings",
                         List.of(
@@ -234,7 +234,7 @@ class AnalysisVisitorTest {
   void comment_tests() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, 0, "Example", List.of(), null, List.of(), List.of(
+            new TypeDescription(TypeType.CLASS, 0, "Example", List.of(), null, List.of(), List.of(), List.of(
                 new MethodDescription(
                     new MemberDescription("does"),
                     "Example",
