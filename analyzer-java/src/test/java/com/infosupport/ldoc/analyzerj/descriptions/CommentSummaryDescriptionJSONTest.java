@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CommentSummaryDescriptionJSONTest {
+class CommentSummaryDescriptionJSONTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
