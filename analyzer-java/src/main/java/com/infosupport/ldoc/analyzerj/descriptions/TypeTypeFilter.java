@@ -8,4 +8,8 @@ public class TypeTypeFilter {
   public boolean equals(Object obj) {
     return obj instanceof TypeType && Objects.equals(TypeType.CLASS, obj);
   }
+  @Override
+  public int hashCode(){
+    return 31 * Objects.hashCode(TypeType.CLASS);
+  }
 }
