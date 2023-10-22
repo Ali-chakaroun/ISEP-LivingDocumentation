@@ -1,13 +1,13 @@
 package com.infosupport.ldoc.analyzerj.descriptions;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class IfDescriptionJSONTest {
+class IfDescriptionJsonTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
@@ -19,23 +19,19 @@ class IfDescriptionJSONTest {
           "Sections": [
             {
               "Condition": "true",
-              "Statements": [
-                {
-                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
-                  "Expression": "1"
-                }
-              ]
+              "Statements": [{
+                "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                "Expression": "1"
+              }]
             },
             {
               "Condition": "false"
             },
             {
-              "Statements": [
-                {
-                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
-                  "Expression": "2"
-                }
-              ]
+              "Statements": [{
+                "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                "Expression": "2"
+              }]
             }
           ]
         }
