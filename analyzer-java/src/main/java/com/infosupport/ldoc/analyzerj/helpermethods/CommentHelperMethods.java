@@ -20,7 +20,9 @@ public class CommentHelperMethods {
       String tagType = results.getType().toString();
       String paramName = results.getName().orElse("placeHolder");
       String content = results.getContent().toText();
-      paramDescriptions.computeIfAbsent(tagType, k -> new LinkedHashMap<>());
+      if (!paramDescriptions.containsKey(tagType)) {
+        paramDescriptions.put(tagType, new LinkedHashMap<>());
+      }
       paramDescriptions.get(tagType).put(paramName, content);
     }
     return paramDescriptions;
