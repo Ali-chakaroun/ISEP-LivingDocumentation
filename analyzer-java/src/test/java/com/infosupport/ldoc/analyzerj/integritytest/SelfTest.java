@@ -15,7 +15,8 @@ class SelfTest {
   public void testMain() throws IOException {
     String outputJson = "result.json";
     String projectRoot = System.getProperty("user.dir");
-    String projectDirectory = projectRoot + File.separator + "src" + File.separator + "main" + File.separator + "java";
+    String projectDirectory =
+        projectRoot + File.separator + "src" + File.separator + "main" + File.separator + "java";
     String[] args = {"--output", outputJson, "--project", projectDirectory};
     Main.main(args);
     File outputFile = new File(outputJson);
