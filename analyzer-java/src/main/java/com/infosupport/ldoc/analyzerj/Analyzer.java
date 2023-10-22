@@ -26,7 +26,7 @@ public class Analyzer {
   }
 
   private TypeSolver typeSolverFor(AnalysisJob job) throws IOException {
-    var typeSolverBuilder = new TypeSolverBuilder().withSourceCode(job.project());
+    var typeSolverBuilder = new TypeSolverBuilder();
 
     for (String cp : job.classpath()) {
       if (cp.toLowerCase().endsWith(".jar")) {
@@ -34,7 +34,7 @@ public class Analyzer {
       }
     }
 
-    return typeSolverBuilder.withCurrentClassloader().build();
+    return typeSolverBuilder.withCurrentClassloader().withSourceCode(job.project()).build();
   }
 
   public void analyze(AnalysisJob job) throws IOException {
