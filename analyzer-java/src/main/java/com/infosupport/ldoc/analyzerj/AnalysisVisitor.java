@@ -31,7 +31,7 @@ import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.resolution.declarations.ResolvedAnnotationDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
 import com.infosupport.ldoc.analyzerj.descriptions.*;
-import com.infosupport.ldoc.analyzerj.helper_methods.CommentHelperMethods;
+import com.infosupport.ldoc.analyzerj.helpermethods.CommentHelperMethods;
 
 import java.util.*;
 import java.util.function.Predicate;
