@@ -9,7 +9,5 @@ public class TypeTypeFilter {
     return obj instanceof TypeType && Objects.equals(TypeType.CLASS, obj);
   }
   @Override
-  public int hashCode(){
-    return 31 * Objects.hashCode(TypeType.CLASS);
-  }
+  public int hashCode(){ return 0; }
 }
