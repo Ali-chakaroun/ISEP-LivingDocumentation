@@ -1,7 +1,6 @@
 package com.infosupport.ldoc.analyzerj.helpermethods;
 
 import com.github.javaparser.ast.comments.JavadocComment;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,6 +59,6 @@ public class CommentHelperMethods {
 
   private static String extractInnerValues(String input) {
     // Return the content inside angle brackets
-    return input.substring(1,input.length()-1);
+    return input.substring(1, input.length() - 1);
   }
 }
