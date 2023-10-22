@@ -1,4 +1,4 @@
-package com.infosupport.ldoc.analyzerj.helper_methods;
+package com.infosupport.ldoc.analyzerj.helpermethods;
 
 import com.github.javaparser.ast.comments.JavadocComment;
 
