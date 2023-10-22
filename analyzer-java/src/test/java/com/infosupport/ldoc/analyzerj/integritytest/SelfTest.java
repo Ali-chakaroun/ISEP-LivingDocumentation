@@ -14,7 +14,8 @@ class SelfTest {
   @SuppressWarnings("ResultOfMethodCallIgnored")
   public void testMain() throws IOException {
     String outputJson = "result.json";
-    String projectDirectory = "..\\analyzer-java\\src\\main\\java";
+    String projectRoot = System.getProperty("user.dir");
+    String projectDirectory = projectRoot + "\\src\\main\\java";
     String[] args = {"--output", outputJson, "--project", projectDirectory};
     Main.main(args);
     File outputFile = new File(outputJson);
