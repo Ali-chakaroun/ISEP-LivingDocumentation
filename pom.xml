@@ -13,6 +13,7 @@
     <module>jacoco-report-aggregator</module>
     <module>ldj-maven-plugin</module>
     <module>ldj-maven-plugin-example</module>
+    <module>ldj-spring-amqp-example</module>
   </modules>
 
   <build>
