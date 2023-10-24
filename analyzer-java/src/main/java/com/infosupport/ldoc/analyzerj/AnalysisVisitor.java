@@ -149,6 +149,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   public List<Description> visit(FieldDeclaration n, Analyzer arg) {
     List<Description> fieldDescriptions = new ArrayList<>();
 
+
     for (VariableDeclarator variable : n.getVariables()) {
       // Get the initializer as a literal String (i.e., without quotation marks)
       //    when null, will be ignored by the JsonInclude

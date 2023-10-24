@@ -6,14 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
-import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
@@ -320,11 +318,12 @@ class AnalysisVisitorTest {
     List<Description> parsed = parse("""
             class Person {
                 private String name = "Hai";
-                public int age, age2 = 18; 
+                /** Test javadoc */
+                public int age, age2 = 18;
                 public Person(String name, int age) {
                   this.name = name;
                   this.age = age;
-                }    
+                }
                 public boolean isAdult() {
                   return this.age > 18;
                 }
@@ -333,13 +332,32 @@ class AnalysisVisitorTest {
 
 
     TypeDescription description = (TypeDescription) parsed.get(0);
-    Stream<FieldDescription> fieldDescriptions = description.fields().stream().map(d -> (FieldDescription) d);
+    List<FieldDescription> fieldDescriptions = description.fields().stream().map(d -> (FieldDescription) d).toList();
 
     FieldDescription nameField = new FieldDescription(
-            new MemberDescription("name", 0, null),
-            "String",
-            null,
+            new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+            "java.lang.String",
+            "Hai",
             null
     );
+
+    CommentSummaryDescription comment = new CommentSummaryDescription(null, null, "Test javadoc.", null, null);
+
+    FieldDescription age1Field = new FieldDescription(
+            new MemberDescription("age", Modifier.PUBLIC.mask(), List.of()),
+            "int",
+            null,
+            comment
+    );
+
+    FieldDescription age2Field = new FieldDescription(
+            new MemberDescription("age2", Modifier.PUBLIC.mask(), List.of()),
+            "int",
+            "18",
+            comment
+    );
+    List<FieldDescription> expectedFields = List.of(nameField, age1Field, age2Field);
+
+    assertIterableEquals(expectedFields, fieldDescriptions);
   }
 }
