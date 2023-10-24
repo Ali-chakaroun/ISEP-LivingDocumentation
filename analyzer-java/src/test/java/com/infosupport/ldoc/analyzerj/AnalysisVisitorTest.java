@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
@@ -11,6 +12,7 @@ import com.infosupport.ldoc.analyzerj.descriptions.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
@@ -286,5 +288,33 @@ class AnalysisVisitorTest {
     assertEquals(
         Modifier.PUBLIC.mask() | Modifier.STATIC.mask(),
         prepare.member().modifiers());
+  }
+
+  @Test
+  void field_members_in_classes() {
+    List<Description> parsed = parse("""
+            class Person {
+                private String name = "Hai";
+                public int age, age2 = 18; 
+                public Person(String name, int age) {
+                  this.name = name;
+                  this.age = age;
+                }    
+                public boolean isAdult() {
+                  return this.age > 18;
+                }
+            }
+            """);
+
+
+    TypeDescription description = (TypeDescription) parsed.get(0);
+    Stream<FieldDescription> fieldDescriptions = description.fields().stream().map(d -> (FieldDescription) d);
+
+    FieldDescription nameField = new FieldDescription(
+            new MemberDescription("name", 0, null),
+            "String",
+            null,
+            null
+    );
   }
 }
