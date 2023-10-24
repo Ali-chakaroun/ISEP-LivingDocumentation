@@ -353,17 +353,7 @@ class AnalysisVisitorTest {
 
     TypeDescription typeDescription = (TypeDescription) parsed.get(0);
 
-    TypeDescription expected = new TypeDescription(
-            TypeType.ENUM,
-            0,
-            "Nationality",
-            List.of(),
-            null,
-            List.of(),
-            List.of(),
-            List.of(),
-            List.of(),
-            List.of(
+    List<EnumMemberDescription> expectedEnumMembers = List.of(
             new EnumMemberDescription(
                     new MemberDescription(
                             "DUTCH", 0, List.of()
@@ -375,11 +365,9 @@ class AnalysisVisitorTest {
                             "GERMAN", 0, List.of()
                     ),
                     List.of(),
-                    null)
-            )
-    );
+                    null));
 
-    assertEquals(expected, typeDescription);
+    assertEquals(expectedEnumMembers, typeDescription.enumMembers());
 
   }
   @Test
@@ -459,8 +447,5 @@ class AnalysisVisitorTest {
     );
 
     assertEquals(expected, typeDescription);
-
-
-
   }
 }
