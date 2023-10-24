@@ -106,7 +106,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg)));
+        visit(n.getAnnotations(), arg), List.of()));
   }
 
   @Override
@@ -120,7 +120,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg)));
+        visit(n.getAnnotations(), arg), List.of()));
   }
 
   @Override
@@ -134,7 +134,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg)));
+        visit(n.getAnnotations(), arg), List.of()));
   }
 
   /**

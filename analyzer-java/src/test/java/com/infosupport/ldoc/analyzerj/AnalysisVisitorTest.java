@@ -115,7 +115,7 @@ class AnalysisVisitorTest {
                 new MemberDescription("Bongo"),
                 List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
                 List.of())
-        ), List.of(), List.of())),
+        ), List.of(), List.of(), List.of())),
         parse("class Bongo { Bongo(Object z) {} }")
     );
   }
@@ -131,7 +131,7 @@ class AnalysisVisitorTest {
                 List.of(
                     new ParameterDescription("java.lang.Object", "a", List.of()),
                     new ParameterDescription("java.lang.String", "b", List.of())),
-                List.of())), List.of())),
+                List.of())), List.of(), List.of())),
         parse("class Zap { Zap does(Object a, String b) {} }"));
   }
 
@@ -141,7 +141,7 @@ class AnalysisVisitorTest {
         List.of(
             new TypeDescription(TypeType.CLASS, 0, "Z", List.of(), null, List.of(), List.of(), List.of(),
                 List.of(
-                    new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
+                    new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())), List.of())),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
@@ -151,7 +151,7 @@ class AnalysisVisitorTest {
                     new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings",
                         List.of(
                             new AttributeArgumentDescription("value", "java.lang.String",
-                                "\"unchecked\"")))))),
+                                "\"unchecked\"")))), List.of())),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 
@@ -270,7 +270,7 @@ class AnalysisVisitorTest {
                     List.of(
                         new ParameterDescription("java.lang.Object", "a", List.of()),
                         new ParameterDescription("java.lang.String", "b", List.of())),
-                    List.of())), List.of())),
+                    List.of())), List.of(), List.of())),
         parse("""
             class Example {
               /**

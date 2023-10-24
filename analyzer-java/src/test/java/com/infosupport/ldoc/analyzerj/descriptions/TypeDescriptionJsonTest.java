@@ -44,6 +44,6 @@ class TypeDescriptionJsonTest {
             List.of(),
             List.of(),
             List.of(),
-            List.of())));
+            List.of(), List.of())));
   }
 }

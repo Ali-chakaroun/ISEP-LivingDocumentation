@@ -41,7 +41,12 @@ public record TypeDescription(
 
     @JsonProperty("Attributes")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> attributes
+    List<Description> attributes,
+
+    @JsonProperty("EnumMembers")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> enumMembers
+
 ) implements Description {
 
   public TypeDescription(TypeType type, String fullName) {
@@ -49,7 +54,7 @@ public record TypeDescription(
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, Modifier.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of(), List.of());
+    this(type, Modifier.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of(), List.of(), List.of());
   }
 
 }
