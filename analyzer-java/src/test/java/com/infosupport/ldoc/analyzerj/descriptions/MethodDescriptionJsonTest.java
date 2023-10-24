@@ -1,15 +1,14 @@
 package com.infosupport.ldoc.analyzerj.descriptions;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 
-class MethodDescriptionJSONTest {
+class MethodDescriptionJsonTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
