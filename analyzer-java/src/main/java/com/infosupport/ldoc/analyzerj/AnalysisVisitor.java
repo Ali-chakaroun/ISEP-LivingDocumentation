@@ -111,7 +111,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   }
 
   /**
-   * Create a list of EnumMemberDescriptions.
+   * Create a list of EnumMemberDescriptions from the JavaParser EnumConstantDeclaration.
+   *  Sets the member description modifiers to None as Java does not have modifiers for Enum literals.
    * @param n node of type FieldDeclaration
    * @param arg Analyzer to be used
    * @return List of EnumMemberDescriptions.
@@ -126,7 +127,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     }
 
     return List.of(new EnumMemberDescription(
-            new MemberDescription(n.getNameAsString(), 0, visit(n.getAnnotations(), arg)),
+            new MemberDescription(n.getNameAsString(), Modifier.NONE.mask(), visit(n.getAnnotations(), arg)),
                     arguments,
                     n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)
             )
