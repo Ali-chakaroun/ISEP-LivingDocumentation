@@ -2,15 +2,7 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.BodyDeclaration;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.EnumDeclaration;
-import com.github.javaparser.ast.body.FieldDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.RecordDeclaration;
-import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
@@ -32,27 +24,7 @@ import com.github.javaparser.ast.visitor.GenericListVisitorAdapter;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.resolution.declarations.ResolvedAnnotationDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
-import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.Description;
-import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
-import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.Modifier;
-import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ReturnDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
-import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
+import com.infosupport.ldoc.analyzerj.descriptions.*;
 import com.infosupport.ldoc.analyzerj.helpermethods.CommentHelperMethods;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -134,7 +106,29 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
         select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg), List.of()));
+        visit(n.getAnnotations(), arg),
+        visit(n.getEntries(), arg)));
+  }
+
+  /**
+   *
+   * @return
+   */
+  public List<Description> visit(EnumConstantDeclaration n, Analyzer arg) {
+    List<Description> arguments = new ArrayList<>();
+
+    for (Expression argument : n.getArguments()) {
+      String type = resolver.calculateType(argument).describe();
+      String value = argument.toString();
+      arguments.add(new ArgumentDescription(type, value));
+    }
+
+    return List.of(new EnumMemberDescription(
+            new MemberDescription(n.getNameAsString(), 0, visit(n.getAnnotations(), arg)),
+                    arguments,
+                    n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)
+            )
+    );
   }
 
   /**
@@ -169,6 +163,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
     return fieldDescriptions;
   }
+
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
     return List.of(new MethodDescription(
