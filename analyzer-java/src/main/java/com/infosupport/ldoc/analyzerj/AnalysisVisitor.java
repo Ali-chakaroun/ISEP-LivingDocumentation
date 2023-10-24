@@ -2,8 +2,14 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.comments.*;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
@@ -24,10 +30,31 @@ import com.github.javaparser.ast.visitor.GenericListVisitorAdapter;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.resolution.declarations.ResolvedAnnotationDeclaration;
 import com.github.javaparser.resolution.types.ResolvedType;
-import com.infosupport.ldoc.analyzerj.descriptions.*;
-import com.infosupport.ldoc.analyzerj.helperMethods.CommentHelperMethods;
-
-import java.util.*;
+import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
+import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.Modifier;
+import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.ReturnDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
+import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
+import com.infosupport.ldoc.analyzerj.helpermethods.CommentHelperMethods;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Analyzer> {
@@ -54,6 +81,11 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
   private int combine(NodeList<com.github.javaparser.ast.Modifier> modifiers) {
     return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
+  }
+
+  private List<Description> visitAnnotation(AnnotationExpr n, List<Description> args) {
+    var type = resolver.resolveDeclaration(n, ResolvedAnnotationDeclaration.class);
+    return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
   }
 
   @Override
@@ -156,11 +188,6 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   public List<Description> visit(Parameter n, Analyzer arg) {
     return List.of(new ParameterDescription(resolve(n.getType()), n.getNameAsString(),
         visit(n.getAnnotations(), arg)));
-  }
-
-  private List<Description> visitAnnotation(AnnotationExpr n, List<Description> args) {
-    var type = resolver.resolveDeclaration(n, ResolvedAnnotationDeclaration.class);
-    return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
   }
 
   @Override

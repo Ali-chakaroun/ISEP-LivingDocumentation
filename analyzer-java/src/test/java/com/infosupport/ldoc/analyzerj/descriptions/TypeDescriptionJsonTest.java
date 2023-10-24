@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class TypeDescriptionJSONTest {
+class TypeDescriptionJsonTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 

@@ -1,6 +1,8 @@
 package com.infosupport.ldoc.analyzerj;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParserConfiguration;
@@ -8,8 +10,26 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
-import com.infosupport.ldoc.analyzerj.descriptions.*;
-
+import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
+import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.Modifier;
+import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.ReturnDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
+import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -242,8 +262,11 @@ class AnalysisVisitorTest {
                     "Example",
                     new CommentSummaryDescription("These are the remarks.",
                         "an Example.", "This method is an example.main<>.",
-                        Map.of("a", "is an object.", "b", "is a string.","Map<input>", "map of strings."),
-                    Map.of("L", "is a list.","L<C>","list of characters.")),
+                        Map.of(
+                            "a", "is an object.",
+                            "b", "is a string.",
+                            "Map<input>", "map of strings."),
+                        Map.of("L", "is a list.", "L<C>", "list of characters.")),
                     List.of(
                         new ParameterDescription("java.lang.Object", "a", List.of()),
                         new ParameterDescription("java.lang.String", "b", List.of())),
@@ -274,17 +297,17 @@ class AnalysisVisitorTest {
         }
         """);
 
-    var type = (TypeDescription)parsed.get(0);
+    var type = (TypeDescription) parsed.get(0);
     assertEquals(
         Modifier.PUBLIC.mask() | Modifier.SEALED.mask(),
         type.modifiers());
 
-    var consume = (MethodDescription)type.methods().get(0);
+    var consume = (MethodDescription) type.methods().get(0);
     assertEquals(
         Modifier.PRIVATE.mask(),
         consume.member().modifiers());
 
-    var prepare = (MethodDescription)type.methods().get(1);
+    var prepare = (MethodDescription) type.methods().get(1);
     assertEquals(
         Modifier.PUBLIC.mask() | Modifier.STATIC.mask(),
         prepare.member().modifiers());
