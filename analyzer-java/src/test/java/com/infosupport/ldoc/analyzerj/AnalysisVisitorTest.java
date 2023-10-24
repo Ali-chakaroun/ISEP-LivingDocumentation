@@ -10,6 +10,11 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.resolution.SymbolResolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeSolver;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
@@ -17,6 +22,7 @@ import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
@@ -30,10 +36,6 @@ import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 
 class AnalysisVisitorTest {
