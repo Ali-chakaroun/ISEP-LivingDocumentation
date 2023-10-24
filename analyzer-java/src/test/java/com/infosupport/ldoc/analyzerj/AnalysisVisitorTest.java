@@ -13,27 +13,7 @@ import com.github.javaparser.symbolsolver.resolution.typesolvers.ReflectionTypeS
 import java.util.List;
 import java.util.Map;
 
-import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.Description;
-import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
-import com.infosupport.ldoc.analyzerj.descriptions.InvocationDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.MemberDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.MethodDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.Modifier;
-import com.infosupport.ldoc.analyzerj.descriptions.ParameterDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.ReturnDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.SwitchDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
-import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
+import com.infosupport.ldoc.analyzerj.descriptions.*;
 import org.junit.jupiter.api.Test;
 
 class AnalysisVisitorTest {
@@ -359,5 +339,128 @@ class AnalysisVisitorTest {
     List<FieldDescription> expectedFields = List.of(nameField, age1Field, age2Field);
 
     assertIterableEquals(expectedFields, fieldDescriptions);
+  }
+
+
+  @Test
+  void enum_members() {
+    List<Description> parsed = parse("""
+      enum Nationality {
+        DUTCH,
+        GERMAN;
+      }
+      """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    TypeDescription expected = new TypeDescription(
+            TypeType.ENUM,
+            0,
+            "Nationality",
+            List.of(),
+            null,
+            List.of(),
+            List.of(),
+            List.of(),
+            List.of(),
+            List.of(
+            new EnumMemberDescription(
+                    new MemberDescription(
+                            "DUTCH", 0, List.of()
+                    ),
+                    List.of(),
+                    null),
+            new EnumMemberDescription(
+                    new MemberDescription(
+                            "GERMAN", 0, List.of()
+                    ),
+                    List.of(),
+                    null)
+            )
+    );
+
+    assertEquals(expected, typeDescription);
+
+  }
+  @Test
+  void enum_members_with_arguments() {
+    List<Description> parsed = parse("""
+                    enum Nationality {
+                           DUTCH(5),
+                           GERMAN(10);
+                     
+                           int counter;
+                     
+                           Nationality(int val) {
+                             this.counter=val;
+                           }
+                         }
+                  """);
+
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    TypeDescription expected = new TypeDescription(
+            TypeType.ENUM,
+            0,
+            "Nationality",
+            List.of(),
+            null,
+            List.of(new FieldDescription(
+                    new MemberDescription("counter", Modifier.NONE.mask(), List.of()),
+                    "int",
+                    null,
+                    null
+            )),
+            List.of(
+                    new ConstructorDescription(
+                            new MemberDescription("Nationality"),
+                            List.of(
+                                    new ParameterDescription(
+                                            "int",
+                                            "val",
+                                            List.of()
+                                    )
+                            ),
+                            List.of(
+                                    new AssignmentDescription(
+                                            "this.counter",
+                                            "=",
+                                            "val"
+                                    )
+                            )
+                    )
+            ),
+            List.of(),
+            List.of(),
+            List.of(
+                    new EnumMemberDescription(
+                            new MemberDescription(
+                                    "DUTCH", 0, List.of()
+                            ),
+                            List.of(
+                                    new ArgumentDescription(
+                                            "int",
+                                            "5"
+                                    )
+                            ),
+                            null),
+                    new EnumMemberDescription(
+                            new MemberDescription(
+                                    "GERMAN", 0, List.of()
+                            ),
+                            List.of(
+                                    new ArgumentDescription(
+                                            "int",
+                                            "10"
+                                    )),
+                            null)
+            )
+    );
+
+    assertEquals(expected, typeDescription);
+
+
+
   }
 }
