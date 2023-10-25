@@ -46,11 +46,11 @@ class CommentHelperMethodsTest {
 
   @Test
   void process_comment_data_test() {
-    Map<String, Map<String, String>> commentData = new HashMap<>();
     Map<String, String> paramData = new HashMap<>();
     paramData.put("param1", "Description of param1.");
     paramData.put("param2", "Description of param2.");
     paramData.put("<L<param3>>", "list of param3.");
+    Map<String, Map<String, String>> commentData = new HashMap<>();
     commentData.put("PARAM", paramData);
     commentData.put("RETURN", Map.of("", "return a string."));
     StringBuilder returns = new StringBuilder();
