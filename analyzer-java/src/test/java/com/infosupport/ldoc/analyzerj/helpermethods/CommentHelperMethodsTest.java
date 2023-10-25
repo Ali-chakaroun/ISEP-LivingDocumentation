@@ -46,9 +46,6 @@ class CommentHelperMethodsTest {
 
   @Test
   void process_comment_data_test() {
-    StringBuilder returns = new StringBuilder();
-    Map<String, String> commentParams = new LinkedHashMap<>();
-    Map<String, String> commentTypeParams = new LinkedHashMap<>();
     Map<String, Map<String, String>> commentData = new HashMap<>();
     Map<String, String> paramData = new HashMap<>();
     paramData.put("param1", "Description of param1.");
@@ -56,6 +53,9 @@ class CommentHelperMethodsTest {
     paramData.put("<L<param3>>", "list of param3.");
     commentData.put("PARAM", paramData);
     commentData.put("RETURN", Map.of("", "return a string."));
+    StringBuilder returns = new StringBuilder();
+    Map<String, String> commentParams = new LinkedHashMap<>();
+    Map<String, String> commentTypeParams = new LinkedHashMap<>();
     processCommentData(commentData, returns, commentParams, commentTypeParams);
     assertEquals("Description of param1.", commentParams.get("param1"));
     assertEquals("Description of param2.", commentParams.get("param2"));
