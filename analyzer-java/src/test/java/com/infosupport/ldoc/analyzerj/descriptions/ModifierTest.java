@@ -14,6 +14,7 @@ class ModifierTest {
   void modifier_with_public_equivalent_returns_equivalent() {
 
   }
+
   @Test
   void modifier_with_no_equivalent_returns_none() {
     assertEquals(
