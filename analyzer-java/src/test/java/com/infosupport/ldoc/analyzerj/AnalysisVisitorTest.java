@@ -396,7 +396,7 @@ class AnalysisVisitorTest {
         new FieldDescription(
             new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
             "java.lang.String",
-            "Hai",
+            "\"Hai\"",
             null);
 
     CommentSummaryDescription comment =
