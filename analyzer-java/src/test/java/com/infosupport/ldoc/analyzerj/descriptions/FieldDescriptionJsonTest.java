@@ -68,4 +68,27 @@ public class FieldDescriptionJsonTest {
                 null,
                 null)));
   }
+
+  @Test
+  void initializer_is_method_call()  throws IOException {
+    String expected =
+            """
+                    {
+                    "Type": "float",
+                    "Name": "name",
+                    "Modifiers": 4,
+                    "Initializer": "System.currentTimeMillis()"
+                    }
+                    """;
+    assertEquals(
+            mapper.readTree(expected),
+            mapper.valueToTree(
+                    new FieldDescription(
+                            new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+                            "float",
+                            "System.currentTimeMillis()",
+                            null)));
+  }
+
+
 }

@@ -189,7 +189,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       String initializer = null;
       Expression exp;
       if ((exp = variable.getInitializer().orElse(null)) != null) {
-        initializer = exp.asLiteralStringValueExpr().getValue();
+        initializer = exp.toString();
       }
 
       fieldDescriptions.add(
