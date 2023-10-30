@@ -5,6 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CommentHelperMethods {
+
+  private CommentHelperMethods() {
+    // Private constructor to prevent instantiation
+  }
+
   public static String extractSummary(JavadocComment commentText) {
     return commentText.parse().getDescription().toText().strip();
   }
