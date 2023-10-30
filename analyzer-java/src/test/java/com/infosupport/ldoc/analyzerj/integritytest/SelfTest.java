@@ -13,7 +13,7 @@ class SelfTest {
   @Test
   @SuppressWarnings("ResultOfMethodCallIgnored")
   void testMain() throws IOException {
-    String outputJson = "result.json";
+    String outputJson = "parserTest.json";
     String projectRoot = System.getProperty("user.dir");
     String projectDirectory =
         projectRoot + File.separator + "src" + File.separator + "main" + File.separator + "java";
