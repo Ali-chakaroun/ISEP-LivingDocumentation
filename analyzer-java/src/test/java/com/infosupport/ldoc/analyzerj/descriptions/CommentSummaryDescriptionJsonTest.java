@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-public class CommentSummaryDescriptionJsonTest {
+class CommentSummaryDescriptionJsonTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 

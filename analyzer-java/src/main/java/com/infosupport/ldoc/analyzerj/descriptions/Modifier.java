@@ -30,7 +30,7 @@ public enum Modifier {
   }
 
   public static Modifier valueOf(com.github.javaparser.ast.Modifier modifier) {
-    boolean onType = modifier.getParentNode().map(n -> n instanceof TypeDeclaration).orElse(false);
+    boolean onType = modifier.getParentNode().map(TypeDeclaration.class::isInstance).orElse(false);
 
     return switch (modifier.getKeyword()) {
       case PUBLIC -> PUBLIC;
