@@ -78,12 +78,16 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return types.stream().map(this::resolve).toList();
   }
 
-  /** Like {@link #visit} but only returning descriptions for Nodes matching the given predicate. */
+  /**
+   * Like {@link #visit} but only returning descriptions for Nodes matching the given predicate.
+   */
   private <T extends Node> List<Description> select(List<T> nodes, Predicate<T> p, Analyzer arg) {
     return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
 
-  /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
+  /**
+   * Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers.
+   */
   private int combine(NodeList<com.github.javaparser.ast.Modifier> modifiers) {
     return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
@@ -147,9 +151,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   /**
    * Create a list of EnumMemberDescriptions from the JavaParser EnumConstantDeclaration. Sets the
-   * member description modifiers to None as Java does not have modifiers for Enum literals.
+   * member description modifiers to Public as Java does not have modifiers for Enum literals but
+   * are public by design.
    *
-   * @param n node of type FieldDeclaration
+   * @param n   node of type FieldDeclaration
    * @param arg Analyzer to be used
    * @return List of EnumMemberDescriptions.
    */
@@ -176,7 +181,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
    * variables (i.e., int a, b = 10; or even int a = 10, b = 5;) These will be split as separate
    * fields, note that the comment will be duplicated in this case.
    *
-   * @param n node of type FieldDeclaration
+   * @param n   node of type FieldDeclaration
    * @param arg Analyzer to be used
    * @return List of FieldDescriptions, one for each variable in the field.
    */
