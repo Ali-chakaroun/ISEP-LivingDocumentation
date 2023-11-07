@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class EnumMemberDescriptionTest {
+class EnumMemberDescriptionTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
