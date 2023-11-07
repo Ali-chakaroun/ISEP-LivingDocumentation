@@ -165,7 +165,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(
         new EnumMemberDescription(
             new MemberDescription(
-                n.getNameAsString(), Modifier.NONE.mask(), visit(n.getAnnotations(), arg)),
+                n.getNameAsString(), Modifier.PUBLIC.mask(), visit(n.getAnnotations(), arg)),
             arguments,
             n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
   }

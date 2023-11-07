@@ -429,9 +429,9 @@ class AnalysisVisitorTest {
     List<EnumMemberDescription> expectedEnumMembers =
         List.of(
             new EnumMemberDescription(
-                new MemberDescription("DUTCH", 0, List.of()), List.of(), null),
+                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(), null),
             new EnumMemberDescription(
-                new MemberDescription("GERMAN", 0, List.of()), List.of(), null));
+                new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(), null));
 
     assertEquals(expectedEnumMembers, typeDescription.enumMembers());
   }
@@ -477,11 +477,11 @@ class AnalysisVisitorTest {
             List.of(),
             List.of(
                 new EnumMemberDescription(
-                    new MemberDescription("DUTCH", 0, List.of()),
+                    new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
                     List.of(new ArgumentDescription("int", "5")),
                     null),
                 new EnumMemberDescription(
-                    new MemberDescription("GERMAN", 0, List.of()),
+                    new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
                     List.of(new ArgumentDescription("int", "10")),
                     null)));
 
