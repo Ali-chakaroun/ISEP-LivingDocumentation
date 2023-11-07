@@ -252,16 +252,16 @@ class AnalysisVisitorTest {
   void switch_statement() {
     String fragment =
         """
-        switch (bongo) {
-          case 1:
-            return 2;
-          case 3:
-          case 4:
-            return 5;
-          default:
-            return 6;
-        }
-        """;
+            switch (bongo) {
+              case 1:
+                return 2;
+              case 3:
+              case 4:
+                return 5;
+              default:
+                return 6;
+            }
+            """;
     assertIterableEquals(
         List.of(
             new SwitchDescription(
@@ -332,20 +332,20 @@ class AnalysisVisitorTest {
                 List.of())),
         parse(
             """
-            class Example {
-              /**
-               * This method is an example.main<>.
-               * These are the remarks.
-               * @param a is an object.
-               * @param b is a string.
-               * @param Map<input> map of strings.
-               * @param <L> is a list.
-               * @param <L<C>> list of characters.
-               * @return an Example.
-               */
-              Example does(Object a, String b) {}
-            }
-            """));
+                class Example {
+                  /**
+                   * This method is an example.main<>.
+                   * These are the remarks.
+                   * @param a is an object.
+                   * @param b is a string.
+                   * @param Map<input> map of strings.
+                   * @param <L> is a list.
+                   * @param <L<C>> list of characters.
+                   * @return an Example.
+                   */
+                  Example does(Object a, String b) {}
+                }
+                """));
   }
 
   @Test
@@ -353,11 +353,11 @@ class AnalysisVisitorTest {
     List<Description> parsed =
         parse(
             """
-        public final class Sandwich {
-          private strictfp float consume() {}
-          public static Sandwich prepare() {}
-        }
-        """);
+                public final class Sandwich {
+                  private strictfp float consume() {}
+                  public static Sandwich prepare() {}
+                }
+                """);
 
     var type = (TypeDescription) parsed.get(0);
     assertEquals(Modifier.PUBLIC.mask() | Modifier.SEALED.mask(), type.modifiers());
@@ -374,19 +374,19 @@ class AnalysisVisitorTest {
     List<Description> parsed =
         parse(
             """
-            class Person {
-                private String name = "Hai";
-                /** Test javadoc */
-                public int age, age2 = 18;
-                public Person(String name, int age) {
-                  this.name = name;
-                  this.age = age;
+                class Person {
+                    private String name = "Hai";
+                    /** Test javadoc */
+                    public int age, age2 = 18;
+                    public Person(String name, int age) {
+                      this.name = name;
+                      this.age = age;
+                    }
+                    public boolean isAdult() {
+                      return this.age > 18;
+                    }
                 }
-                public boolean isAdult() {
-                  return this.age > 18;
-                }
-            }
-            """);
+                """);
 
     TypeDescription description = (TypeDescription) parsed.get(0);
     List<FieldDescription> fieldDescriptions =
@@ -417,12 +417,12 @@ class AnalysisVisitorTest {
   @Test
   void enum_members() {
     List<Description> parsed =
-            parse("""
-              enum Nationality {
-                DUTCH,
-                GERMAN;
-              }
-          """);
+        parse("""
+                enum Nationality {
+                  DUTCH,
+                  GERMAN;
+                }
+            """);
 
     TypeDescription typeDescription = (TypeDescription) parsed.get(0);
 
@@ -431,7 +431,8 @@ class AnalysisVisitorTest {
             new EnumMemberDescription(
                 new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(), null),
             new EnumMemberDescription(
-                new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(), null));
+                new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(),
+                null));
 
     assertEquals(expectedEnumMembers, typeDescription.enumMembers());
   }
@@ -441,17 +442,17 @@ class AnalysisVisitorTest {
     List<Description> parsed =
         parse(
             """
-                    enum Nationality {
-                           DUTCH(5),
-                           GERMAN(10);
+                  enum Nationality {
+                         DUTCH(5),
+                         GERMAN(10);
 
-                           int counter;
+                         int counter;
 
-                           Nationality(int val) {
-                             this.counter=val;
-                           }
+                         Nationality(int val) {
+                           this.counter=val;
                          }
-                  """);
+                       }
+                """);
 
     TypeDescription typeDescription = (TypeDescription) parsed.get(0);
 
