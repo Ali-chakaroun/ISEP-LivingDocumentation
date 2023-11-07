@@ -153,6 +153,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
    * @param arg Analyzer to be used
    * @return List of EnumMemberDescriptions.
    */
+  @Override
   public List<Description> visit(EnumConstantDeclaration n, Analyzer arg) {
     List<Description> arguments = new ArrayList<>();
 
