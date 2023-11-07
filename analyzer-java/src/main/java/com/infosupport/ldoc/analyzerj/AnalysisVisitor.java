@@ -154,7 +154,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
    * member description modifiers to Public as Java does not have modifiers for Enum literals but
    * are public by design.
    *
-   * @param n   node of type FieldDeclaration
+   * @param n   node of type EnumConstantDeclaration
    * @param arg Analyzer to be used
    * @return List of EnumMemberDescriptions.
    */
