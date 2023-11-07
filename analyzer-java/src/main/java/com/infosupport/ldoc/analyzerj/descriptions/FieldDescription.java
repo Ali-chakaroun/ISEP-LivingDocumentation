@@ -6,19 +6,19 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 public record FieldDescription(
 
-        @JsonUnwrapped
-        MemberDescription member,
+    @JsonUnwrapped
+    MemberDescription member,
 
-        @JsonProperty("Type")
-        String type,
+    @JsonProperty("Type")
+    String type,
 
-        @JsonProperty("Initializer")
-        @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        String initialValue,
+    @JsonProperty("Initializer")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    String initialValue,
 
-        @JsonProperty("DocumentationComments")
-        @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        Description comments
+    @JsonProperty("DocumentationComments")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    Description comments
 
 ) implements Description {
 
