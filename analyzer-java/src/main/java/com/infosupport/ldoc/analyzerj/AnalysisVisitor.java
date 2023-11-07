@@ -186,11 +186,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     for (VariableDeclarator variable : n.getVariables()) {
       // Get the initializer as a literal String (i.e., without quotation marks)
       //    when null, will be ignored by the JsonInclude
-      String initializer = null;
-      Expression exp;
-      if ((exp = variable.getInitializer().orElse(null)) != null) {
-        initializer = exp.toString();
-      }
+      String initializer = variable.getInitializer().map(Object::toString).orElse(null);
 
       fieldDescriptions.add(
           new FieldDescription(
