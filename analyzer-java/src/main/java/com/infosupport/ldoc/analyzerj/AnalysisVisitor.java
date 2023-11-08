@@ -57,18 +57,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+/**
+ * AnalysisVisitor converts a JavaParser parse tree into a list of {@link Description} objects. The
+ * resulting Descriptions may in turn have lists of children, forming a tree. Only the subset of the
+ * AST that is relevant for LivingDocumentation is described. Types are resolved to their fully
+ * qualified names.
+ */
 public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Analyzer> {
 
   private final SymbolResolver resolver;
 
+  /** Construct an AnalysisVisitor that uses the given SymbolResolver to find the names of types. */
   public AnalysisVisitor(SymbolResolver resolver) {
     this.resolver = resolver;
   }
 
+  /** Resolves the given type to a String with its fully-qualified class name. */
   private String resolve(Type type) {
     return resolver.toResolvedType(type, ResolvedType.class).describe();
   }
 
+  /** Resolves all the given class or interface types to their fully-qualified names, as String. */
   private List<String> resolve(List<ClassOrInterfaceType> types) {
     return types.stream().map(this::resolve).toList();
   }
@@ -83,11 +92,13 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
 
+  /** Describes an annotation (Java) as an Attribute (LivingDocumentation) with given arguments. */
   private List<Description> visitAnnotation(AnnotationExpr n, List<Description> args) {
     var type = resolver.resolveDeclaration(n, ResolvedAnnotationDeclaration.class);
     return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
   }
 
+  /** Describes a class or interface (Java) as a Type with TypeType CLASS or INTERFACE. */
   @Override
   public List<Description> visit(ClassOrInterfaceDeclaration n, Analyzer arg) {
     List<String> baseTypes = new ArrayList<>();
@@ -105,6 +116,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         visit(n.getAnnotations(), arg)));
   }
 
+  /** Describes a record class (Java) as a Type with TypeType STRUCT. */
   @Override
   public List<Description> visit(RecordDeclaration n, Analyzer arg) {
     return List.of(new TypeDescription(
@@ -118,6 +130,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         visit(n.getAnnotations(), arg)));
   }
 
+  /** Describes an enum type (Java) as a Type with TypeType ENUM. */
   @Override
   public List<Description> visit(EnumDeclaration n, Analyzer arg) {
     return List.of(new TypeDescription(
@@ -131,6 +144,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         visit(n.getAnnotations(), arg)));
   }
 
+  /** Describes a method. */
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
     return List.of(new MethodDescription(
@@ -142,6 +156,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
   }
 
+  /** Describes a constructor. */
   @Override
   public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
     return List.of(new ConstructorDescription(
@@ -150,17 +165,23 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         visit(n.getParameters(), arg), visit(n.getBody(), arg)));
   }
 
+  /** Describes a method or constructor (formal) parameter. */
   @Override
   public List<Description> visit(Parameter n, Analyzer arg) {
     return List.of(new ParameterDescription(resolve(n.getType()), n.getNameAsString(),
         visit(n.getAnnotations(), arg)));
   }
 
+  /** Describes an annotation without arguments, as an {@link AttributeDescription}. */
   @Override
   public List<Description> visit(MarkerAnnotationExpr n, Analyzer arg) {
     return visitAnnotation(n, List.of());
   }
 
+  /**
+   * Describes an annotation with one argument, which is always named 'value' by convention, as an
+   * {@link AttributeDescription}.
+   */
   @Override
   public List<Description> visit(SingleMemberAnnotationExpr n, Analyzer arg) {
     List<Description> args = List.of(new AttributeArgumentDescription("value",
@@ -168,23 +189,32 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return visitAnnotation(n, args);
   }
 
+  /**
+   * Describes an annotation that has one or more member-value pair arguments (so a 'normal'
+   * annotation) as an {@link AttributeDescription}.
+   */
   @Override
   public List<Description> visit(NormalAnnotationExpr n, Analyzer arg) {
     List<Description> args = super.visit(n, arg);
     return visitAnnotation(n, args);
   }
 
+  /**
+   * Describes an annotation argument member-value pair as an {@link AttributeArgumentDescription}.
+   */
   @Override
   public List<Description> visit(MemberValuePair n, Analyzer arg) {
     return List.of(new AttributeArgumentDescription(n.getNameAsString(),
         resolver.calculateType(n.getValue()).describe(), n.getValue().toString()));
   }
 
+  /** Describes a <code>return</code> statement, including the returned expression if present. */
   @Override
   public List<Description> visit(ReturnStmt n, Analyzer arg) {
     return List.of(new ReturnDescription(n.getExpression().map(Node::toString).orElse(null)));
   }
 
+  /** Describes an <code>if</code> statement or tree of <code>if</code> statements. */
   @Override
   public List<Description> visit(IfStmt n, Analyzer arg) {
     List<Description> sections = new ArrayList<>();
@@ -196,8 +226,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       List<Description> alternative = n.getElseStmt().orElseThrow().accept(this, arg);
 
       /* Flatten if-else trees. In LivingDocumentation JSON, a big tree of if-else structures "goes
-       with" the topmost if; instead of each if having one or two branches, we think of it having
-      many branches. */
+       * with" the topmost if; instead of each if having one or two branches, we think of it having
+       * many branches. */
       if (n.hasCascadingIfStmt() && alternative.get(0) instanceof IfDescription alt) {
         sections.addAll(alt.sections());
       } else {
@@ -208,18 +238,21 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(new IfDescription(sections));
   }
 
+  /** Describes a <code>for</code> for-each loop statement. */
   @Override
   public List<Description> visit(ForEachStmt n, Analyzer arg) {
     String head = String.format("%s : %s", n.getVariable(), n.getIterable());
     return List.of(new ForEachDescription(head, n.getBody().accept(this, arg)));
   }
 
+  /** Describes a <code>switch</code> statement, describing each of the cases in turn. */
   @Override
   public List<Description> visit(SwitchStmt n, Analyzer arg) {
     String head = n.getSelector().toString();
     return List.of(new SwitchDescription(head, n.getEntries().accept(this, arg)));
   }
 
+  /** Describe a single <code>switch</code> entry (JavaParser) or section (LivingDocumentation). */
   @Override
   public List<Description> visit(SwitchEntry n, Analyzer arg) {
     List<String> labels = n.getLabels().stream().map(Node::toString).toList();
@@ -227,12 +260,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getStatements().accept(this, arg)));
   }
 
+  /** Describe a variable assignment. */
   @Override
   public List<Description> visit(AssignExpr n, Analyzer arg) {
     return List.of(
         new AssignmentDescription(n.getTarget().toString(), "=", n.getValue().toString()));
   }
 
+  /** Describe a method call as an {@link InvocationDescription}. */
   @Override
   public List<Description> visit(MethodCallExpr n, Analyzer arg) {
 
@@ -247,13 +282,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         n.getNameAsString(), arguments));
   }
 
+  /** Describe catch clause contents, skipping the list of caught exceptions (catch parameters). */
   @Override
   public List<Description> visit(CatchClause n, Analyzer arg) {
-    // Unlike the method we're overriding, we ignore catch clause comments and parameters.
     List<Description> out = n.getBody().accept(this, arg);
     return (out != null) ? out : List.of();
   }
 
+  /** Describe a doc comment as a {@link CommentSummaryDescription}. */
   @Override
   public List<Description> visit(JavadocComment n, Analyzer arg) {
     StringBuilder returns = new StringBuilder();
