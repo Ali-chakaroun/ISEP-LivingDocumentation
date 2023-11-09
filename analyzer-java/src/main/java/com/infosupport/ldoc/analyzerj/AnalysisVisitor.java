@@ -5,10 +5,13 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
@@ -37,6 +40,8 @@ import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.EnumMemberDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
@@ -73,12 +78,16 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return types.stream().map(this::resolve).toList();
   }
 
-  /** Like {@link #visit} but only returning descriptions for Nodes matching the given predicate. */
+  /**
+   * Like {@link #visit} but only returning descriptions for Nodes matching the given predicate.
+   */
   private <T extends Node> List<Description> select(List<T> nodes, Predicate<T> p, Analyzer arg) {
     return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
 
-  /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
+  /**
+   * Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers.
+   */
   private int combine(NodeList<com.github.javaparser.ast.Modifier> modifiers) {
     return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
@@ -94,66 +103,138 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     baseTypes.addAll(resolve(n.getExtendedTypes()));
     baseTypes.addAll(resolve(n.getImplementedTypes()));
 
-    return List.of(new TypeDescription(
-        n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
-        combine(n.getModifiers()),
-        n.getFullyQualifiedName().orElseThrow(),
-        baseTypes,
-        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-        select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
-        select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg)));
+    return List.of(
+        new TypeDescription(
+            n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
+            combine(n.getModifiers()),
+            n.getFullyQualifiedName().orElseThrow(),
+            baseTypes,
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
+            select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
+            select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
+            visit(n.getAnnotations(), arg),
+            List.of()));
   }
 
   @Override
   public List<Description> visit(RecordDeclaration n, Analyzer arg) {
-    return List.of(new TypeDescription(
-        TypeType.STRUCT,
-        combine(n.getModifiers()),
-        n.getFullyQualifiedName().orElseThrow(),
-        resolve(n.getImplementedTypes()),
-        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-        select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
-        select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg)));
+    return List.of(
+        new TypeDescription(
+            TypeType.STRUCT,
+            combine(n.getModifiers()),
+            n.getFullyQualifiedName().orElseThrow(),
+            resolve(n.getImplementedTypes()),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
+            select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
+            select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
+            visit(n.getAnnotations(), arg),
+            List.of()));
   }
 
   @Override
   public List<Description> visit(EnumDeclaration n, Analyzer arg) {
-    return List.of(new TypeDescription(
-        TypeType.ENUM,
-        combine(n.getModifiers()),
-        n.getFullyQualifiedName().orElseThrow(),
-        resolve(n.getImplementedTypes()),
-        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-        select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
-        select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-        visit(n.getAnnotations(), arg)));
+    return List.of(
+        new TypeDescription(
+            TypeType.ENUM,
+            combine(n.getModifiers()),
+            n.getFullyQualifiedName().orElseThrow(),
+            resolve(n.getImplementedTypes()),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
+            select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
+            select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
+            visit(n.getAnnotations(), arg),
+            visit(n.getEntries(), arg)));
+  }
+
+  /**
+   * Create a list of EnumMemberDescriptions from the JavaParser EnumConstantDeclaration. Sets the
+   * member description modifiers to Public as Java does not have modifiers for Enum literals but
+   * are public by design.
+   *
+   * @param n   node of type EnumConstantDeclaration
+   * @param arg Analyzer to be used
+   * @return List of EnumMemberDescriptions.
+   */
+  @Override
+  public List<Description> visit(EnumConstantDeclaration n, Analyzer arg) {
+    List<Description> arguments = new ArrayList<>();
+
+    for (Expression argument : n.getArguments()) {
+      String type = resolver.calculateType(argument).describe();
+      String value = argument.toString();
+      arguments.add(new ArgumentDescription(type, value));
+    }
+
+    return List.of(
+        new EnumMemberDescription(
+            new MemberDescription(
+                n.getNameAsString(), Modifier.PUBLIC.mask(), visit(n.getAnnotations(), arg)),
+            arguments,
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
+  }
+
+  /**
+   * Generates a list of field descriptions Note that a FieldDeclaration may contain multiple
+   * variables (i.e., int a, b = 10; or even int a = 10, b = 5;) These will be split as separate
+   * fields, note that the comment will be duplicated in this case.
+   *
+   * @param n   node of type FieldDeclaration
+   * @param arg Analyzer to be used
+   * @return List of FieldDescriptions, one for each variable in the field.
+   */
+  @Override
+  public List<Description> visit(FieldDeclaration n, Analyzer arg) {
+    List<Description> fieldDescriptions = new ArrayList<>();
+
+    for (VariableDeclarator variable : n.getVariables()) {
+      // Get the initializer as a literal String (i.e., without quotation marks)
+      //    when null, will be ignored by the JsonInclude
+      String initializer = variable.getInitializer().map(Object::toString).orElse(null);
+
+      fieldDescriptions.add(
+          new FieldDescription(
+              new MemberDescription(
+                  variable.getNameAsString(),
+                  combine(n.getModifiers()),
+                  visit(n.getAnnotations(), arg)),
+              resolve(variable.getType()),
+              initializer,
+              n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
+    }
+
+    return fieldDescriptions;
   }
 
   @Override
   public List<Description> visit(MethodDeclaration n, Analyzer arg) {
-    return List.of(new MethodDescription(
-        new MemberDescription(
-            n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
-        resolve(n.getType()),
-        n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-        visit(n.getParameters(), arg),
-        n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
+    return List.of(
+        new MethodDescription(
+            new MemberDescription(
+                n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
+            resolve(n.getType()),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            visit(n.getParameters(), arg),
+            n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
   }
 
   @Override
   public List<Description> visit(ConstructorDeclaration n, Analyzer arg) {
-    return List.of(new ConstructorDescription(
-        new MemberDescription(
-            n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
-        visit(n.getParameters(), arg), visit(n.getBody(), arg)));
+    return List.of(
+        new ConstructorDescription(
+            new MemberDescription(
+                n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
+            visit(n.getParameters(), arg),
+            visit(n.getBody(), arg)));
   }
 
   @Override
   public List<Description> visit(Parameter n, Analyzer arg) {
-    return List.of(new ParameterDescription(resolve(n.getType()), n.getNameAsString(),
-        visit(n.getAnnotations(), arg)));
+    return List.of(
+        new ParameterDescription(
+            resolve(n.getType()), n.getNameAsString(), visit(n.getAnnotations(), arg)));
   }
 
   @Override
@@ -163,8 +244,12 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   @Override
   public List<Description> visit(SingleMemberAnnotationExpr n, Analyzer arg) {
-    List<Description> args = List.of(new AttributeArgumentDescription("value",
-        resolver.calculateType(n.getMemberValue()).describe(), n.getMemberValue().toString()));
+    List<Description> args =
+        List.of(
+            new AttributeArgumentDescription(
+                "value",
+                resolver.calculateType(n.getMemberValue()).describe(),
+                n.getMemberValue().toString()));
     return visitAnnotation(n, args);
   }
 
@@ -176,8 +261,11 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   @Override
   public List<Description> visit(MemberValuePair n, Analyzer arg) {
-    return List.of(new AttributeArgumentDescription(n.getNameAsString(),
-        resolver.calculateType(n.getValue()).describe(), n.getValue().toString()));
+    return List.of(
+        new AttributeArgumentDescription(
+            n.getNameAsString(),
+            resolver.calculateType(n.getValue()).describe(),
+            n.getValue().toString()));
   }
 
   @Override
@@ -223,8 +311,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   @Override
   public List<Description> visit(SwitchEntry n, Analyzer arg) {
     List<String> labels = n.getLabels().stream().map(Node::toString).toList();
-    return List.of(new SwitchSection(labels.equals(List.of()) ? List.of("default") : labels,
-        n.getStatements().accept(this, arg)));
+    return List.of(
+        new SwitchSection(
+            labels.equals(List.of()) ? List.of("default") : labels,
+            n.getStatements().accept(this, arg)));
   }
 
   @Override
@@ -242,9 +332,11 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       String text = argument.toString();
       arguments.add(new ArgumentDescription(type, text));
     }
-    return List.of(new InvocationDescription(
-        n.getScope().map(s -> resolver.calculateType(s).describe()).orElse("?"),
-        n.getNameAsString(), arguments));
+    return List.of(
+        new InvocationDescription(
+            n.getScope().map(s -> resolver.calculateType(s).describe()).orElse("?"),
+            n.getNameAsString(),
+            arguments));
   }
 
   @Override
@@ -274,5 +366,4 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             !commentParams.isEmpty() ? commentParams : null,
             !commentTypeParams.isEmpty() ? commentTypeParams : null));
   }
-
 }

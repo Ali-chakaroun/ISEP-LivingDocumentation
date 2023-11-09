@@ -16,6 +16,8 @@ import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.EnumMemberDescription;
+import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.IfElseSection;
@@ -59,8 +61,7 @@ class AnalysisVisitorTest {
   @Test
   void type_description_for_class() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Foo")),
-        parse("class Foo {}"));
+        List.of(new TypeDescription(TypeType.CLASS, "Foo")), parse("class Foo {}"));
 
     assertIterableEquals(
         List.of(new TypeDescription(TypeType.CLASS, "some.example.Bar")),
@@ -78,8 +79,7 @@ class AnalysisVisitorTest {
   @Test
   void type_description_for_interface() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.INTERFACE, "Oogle")),
-        parse("interface Oogle {}"));
+        List.of(new TypeDescription(TypeType.INTERFACE, "Oogle")), parse("interface Oogle {}"));
 
     assertIterableEquals(
         List.of(new TypeDescription(TypeType.INTERFACE, "some.example.Foogle")),
@@ -107,28 +107,48 @@ class AnalysisVisitorTest {
   @Test
   void constructor_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, 0, "Bongo", List.of(), null, List.of(
-            new ConstructorDescription(
-                new MemberDescription("Bongo"),
-                List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
-                List.of())
-        ), List.of(), List.of())),
-        parse("class Bongo { Bongo(Object z) {} }")
-    );
+        List.of(
+            new TypeDescription(
+                TypeType.CLASS,
+                0,
+                "Bongo",
+                List.of(),
+                null,
+                List.of(),
+                List.of(
+                    new ConstructorDescription(
+                        new MemberDescription("Bongo"),
+                        List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
+                        List.of())),
+                List.of(),
+                List.of(),
+                List.of())),
+        parse("class Bongo { Bongo(Object z) {} }"));
   }
 
   @Test
   void method_description() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, 0, "Zap", List.of(), null, List.of(), List.of(
-            new MethodDescription(
-                new MemberDescription("does"),
+        List.of(
+            new TypeDescription(
+                TypeType.CLASS,
+                0,
                 "Zap",
+                List.of(),
                 null,
+                List.of(),
+                List.of(),
                 List.of(
-                    new ParameterDescription("java.lang.Object", "a", List.of()),
-                    new ParameterDescription("java.lang.String", "b", List.of())),
-                List.of())), List.of())),
+                    new MethodDescription(
+                        new MemberDescription("does"),
+                        "Zap",
+                        null,
+                        List.of(
+                            new ParameterDescription("java.lang.Object", "a", List.of()),
+                            new ParameterDescription("java.lang.String", "b", List.of())),
+                        List.of())),
+                List.of(),
+                List.of())),
         parse("class Zap { Zap does(Object a, String b) {} }"));
   }
 
@@ -136,64 +156,88 @@ class AnalysisVisitorTest {
   void attribute_description() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, 0, "Z", List.of(), null, List.of(), List.of(),
-                List.of(
-                    new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))),
+            new TypeDescription(
+                TypeType.CLASS,
+                0,
+                "Z",
+                List.of(),
+                null,
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())),
+                List.of())),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, 0, "X", List.of(), null, List.of(), List.of(),
+            new TypeDescription(
+                TypeType.CLASS,
+                0,
+                "X",
+                List.of(),
+                null,
+                List.of(),
+                List.of(),
+                List.of(),
                 List.of(
-                    new AttributeDescription("java.lang.SuppressWarnings", "SuppressWarnings",
+                    new AttributeDescription(
+                        "java.lang.SuppressWarnings",
+                        "SuppressWarnings",
                         List.of(
-                            new AttributeArgumentDescription("value", "java.lang.String",
-                                "\"unchecked\"")))))),
+                            new AttributeArgumentDescription(
+                                "value", "java.lang.String", "\"unchecked\"")))),
+                List.of())),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 
   @Test
   void return_statement() {
-    assertIterableEquals(
-        List.of(new ReturnDescription()),
-        parseFragment("return;"));
+    assertIterableEquals(List.of(new ReturnDescription()), parseFragment("return;"));
 
-    assertIterableEquals(
-        List.of(new ReturnDescription("1 + 2")),
-        parseFragment("return 1 + 2;"));
+    assertIterableEquals(List.of(new ReturnDescription("1 + 2")), parseFragment("return 1 + 2;"));
   }
 
   @Test
   void if_statement() {
     assertIterableEquals(
-        List.of(new IfDescription(List.of(
-            new IfElseSection("true", List.of(new ReturnDescription("1")))))),
+        List.of(
+            new IfDescription(
+                List.of(new IfElseSection("true", List.of(new ReturnDescription("1")))))),
         parseFragment("if (true) return 1;"));
 
     assertIterableEquals(
-        List.of(new IfDescription(List.of(
-            new IfElseSection("true", List.of(new ReturnDescription("1"))),
-            new IfElseSection(null, List.of(new ReturnDescription("2")))))),
+        List.of(
+            new IfDescription(
+                List.of(
+                    new IfElseSection("true", List.of(new ReturnDescription("1"))),
+                    new IfElseSection(null, List.of(new ReturnDescription("2")))))),
         parseFragment("if (true) return 1; else return 2;"));
 
     assertIterableEquals(
-        List.of(new IfDescription(List.of(
-            new IfElseSection("true", List.of(new ReturnDescription("1"))),
-            new IfElseSection("false", List.of(new ReturnDescription("2")))))),
+        List.of(
+            new IfDescription(
+                List.of(
+                    new IfElseSection("true", List.of(new ReturnDescription("1"))),
+                    new IfElseSection("false", List.of(new ReturnDescription("2")))))),
         parseFragment("if (true) return 1; else if (false) return 2;"));
 
     assertIterableEquals(
-        List.of(new IfDescription(List.of(
-            new IfElseSection("true", List.of(new ReturnDescription("1"))),
-            new IfElseSection("false", List.of(new ReturnDescription("2"))),
-            new IfElseSection(null, List.of(new ReturnDescription("4")))))),
+        List.of(
+            new IfDescription(
+                List.of(
+                    new IfElseSection("true", List.of(new ReturnDescription("1"))),
+                    new IfElseSection("false", List.of(new ReturnDescription("2"))),
+                    new IfElseSection(null, List.of(new ReturnDescription("4")))))),
         parseFragment("if (true) return 1; else if (false) return 2; else return 4;"));
 
     assertIterableEquals(
-        List.of(new IfDescription(List.of(
-            new IfElseSection("true", List.of(new ReturnDescription("1"))),
-            new IfElseSection("false", List.of(new ReturnDescription("2"))),
-            new IfElseSection(null, List.of(new ReturnDescription("4")))))),
+        List.of(
+            new IfDescription(
+                List.of(
+                    new IfElseSection("true", List.of(new ReturnDescription("1"))),
+                    new IfElseSection("false", List.of(new ReturnDescription("2"))),
+                    new IfElseSection(null, List.of(new ReturnDescription("4")))))),
         parseFragment("if (true) return 1; else if (false) return 2; else return 4;"));
   }
 
@@ -206,38 +250,44 @@ class AnalysisVisitorTest {
 
   @Test
   void switch_statement() {
-    String fragment = """
-        switch (bongo) {
-          case 1:
-            return 2;
-          case 3:
-          case 4:
-            return 5;
-          default:
-            return 6;
-        }
-        """;
+    String fragment =
+        """
+            switch (bongo) {
+              case 1:
+                return 2;
+              case 3:
+              case 4:
+                return 5;
+              default:
+                return 6;
+            }
+            """;
     assertIterableEquals(
-        List.of(new SwitchDescription("bongo", List.of(
-            new SwitchSection(List.of("1"), List.of(new ReturnDescription("2"))),
-            new SwitchSection(List.of("3"), List.of()),
-            new SwitchSection(List.of("4"), List.of(new ReturnDescription("5"))),
-            new SwitchSection(List.of("default"), List.of(new ReturnDescription("6")))))),
+        List.of(
+            new SwitchDescription(
+                "bongo",
+                List.of(
+                    new SwitchSection(List.of("1"), List.of(new ReturnDescription("2"))),
+                    new SwitchSection(List.of("3"), List.of()),
+                    new SwitchSection(List.of("4"), List.of(new ReturnDescription("5"))),
+                    new SwitchSection(List.of("default"), List.of(new ReturnDescription("6")))))),
         parseFragment(fragment));
   }
 
   @Test
   void assign_expr() {
     assertIterableEquals(
-        List.of(new AssignmentDescription("john", "=", "paul")),
-        parseFragment("john = paul;"));
+        List.of(new AssignmentDescription("john", "=", "paul")), parseFragment("john = paul;"));
   }
 
   @Test
   void method_call_expr() {
     assertIterableEquals(
-        List.of(new InvocationDescription("java.io.PrintStream", "println", List.of(
-            new ArgumentDescription("java.lang.String", "\"Hello!\"")))),
+        List.of(
+            new InvocationDescription(
+                "java.io.PrintStream",
+                "println",
+                List.of(new ArgumentDescription("java.lang.String", "\"Hello!\"")))),
         parseFragment("System.out.println(\"Hello!\");"));
   }
 
@@ -253,60 +303,189 @@ class AnalysisVisitorTest {
   void comment_tests() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(TypeType.CLASS, 0, "Example", List.of(), null, List.of(), List.of(
-                new MethodDescription(
-                    new MemberDescription("does"),
-                    "Example",
-                    new CommentSummaryDescription("These are the remarks.",
-                        "an Example.", "This method is an example.main<>.",
-                        Map.of(
-                            "a", "is an object.",
-                            "b", "is a string.",
-                            "Map<input>", "map of strings."),
-                        Map.of("L", "is a list.", "L<C>", "list of characters.")),
-                    List.of(
-                        new ParameterDescription("java.lang.Object", "a", List.of()),
-                        new ParameterDescription("java.lang.String", "b", List.of())),
-                    List.of())), List.of())),
-        parse("""
-            class Example {
-              /**
-               * This method is an example.main<>.
-               * These are the remarks.
-               * @param a is an object.
-               * @param b is a string.
-               * @param Map<input> map of strings.
-               * @param <L> is a list.
-               * @param <L<C>> list of characters.
-               * @return an Example.
-               */
-              Example does(Object a, String b) {}
-            }
-            """));
+            new TypeDescription(
+                TypeType.CLASS,
+                0,
+                "Example",
+                List.of(),
+                null,
+                List.of(),
+                List.of(),
+                List.of(
+                    new MethodDescription(
+                        new MemberDescription("does"),
+                        "Example",
+                        new CommentSummaryDescription(
+                            "These are the remarks.",
+                            "an Example.",
+                            "This method is an example.main<>.",
+                            Map.of(
+                                "a", "is an object.",
+                                "b", "is a string.",
+                                "Map<input>", "map of strings."),
+                            Map.of("L", "is a list.", "L<C>", "list of characters.")),
+                        List.of(
+                            new ParameterDescription("java.lang.Object", "a", List.of()),
+                            new ParameterDescription("java.lang.String", "b", List.of())),
+                        List.of())),
+                List.of(),
+                List.of())),
+        parse(
+            """
+                class Example {
+                  /**
+                   * This method is an example.main<>.
+                   * These are the remarks.
+                   * @param a is an object.
+                   * @param b is a string.
+                   * @param Map<input> map of strings.
+                   * @param <L> is a list.
+                   * @param <L<C>> list of characters.
+                   * @return an Example.
+                   */
+                  Example does(Object a, String b) {}
+                }
+                """));
   }
 
   @Test
   void class_and_method_modifiers() {
-    List<Description> parsed = parse("""
-        public final class Sandwich {
-          private strictfp float consume() {}
-          public static Sandwich prepare() {}
-        }
-        """);
+    List<Description> parsed =
+        parse(
+            """
+                public final class Sandwich {
+                  private strictfp float consume() {}
+                  public static Sandwich prepare() {}
+                }
+                """);
 
     var type = (TypeDescription) parsed.get(0);
-    assertEquals(
-        Modifier.PUBLIC.mask() | Modifier.SEALED.mask(),
-        type.modifiers());
+    assertEquals(Modifier.PUBLIC.mask() | Modifier.SEALED.mask(), type.modifiers());
 
     var consume = (MethodDescription) type.methods().get(0);
-    assertEquals(
-        Modifier.PRIVATE.mask(),
-        consume.member().modifiers());
+    assertEquals(Modifier.PRIVATE.mask(), consume.member().modifiers());
 
     var prepare = (MethodDescription) type.methods().get(1);
-    assertEquals(
-        Modifier.PUBLIC.mask() | Modifier.STATIC.mask(),
-        prepare.member().modifiers());
+    assertEquals(Modifier.PUBLIC.mask() | Modifier.STATIC.mask(), prepare.member().modifiers());
+  }
+
+  @Test
+  void field_members_in_classes() {
+    List<Description> parsed =
+        parse(
+            """
+                class Person {
+                    private String name = "Hai";
+                    /** Test javadoc */
+                    public int age, age2 = 18;
+                    public Person(String name, int age) {
+                      this.name = name;
+                      this.age = age;
+                    }
+                    public boolean isAdult() {
+                      return this.age > 18;
+                    }
+                }
+                """);
+
+    TypeDescription description = (TypeDescription) parsed.get(0);
+    List<FieldDescription> fieldDescriptions =
+        description.fields().stream().map(d -> (FieldDescription) d).toList();
+
+    FieldDescription nameField =
+        new FieldDescription(
+            new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+            "java.lang.String",
+            "\"Hai\"",
+            null);
+
+    CommentSummaryDescription comment =
+        new CommentSummaryDescription(null, null, "Test javadoc.", null, null);
+
+    FieldDescription age1Field =
+        new FieldDescription(
+            new MemberDescription("age", Modifier.PUBLIC.mask(), List.of()), "int", null, comment);
+
+    FieldDescription age2Field =
+        new FieldDescription(
+            new MemberDescription("age2", Modifier.PUBLIC.mask(), List.of()), "int", "18", comment);
+    List<FieldDescription> expectedFields = List.of(nameField, age1Field, age2Field);
+
+    assertIterableEquals(expectedFields, fieldDescriptions);
+  }
+
+  @Test
+  void enum_members() {
+    List<Description> parsed =
+        parse("""
+                enum Nationality {
+                  DUTCH,
+                  GERMAN;
+                }
+            """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    List<EnumMemberDescription> expectedEnumMembers =
+        List.of(
+            new EnumMemberDescription(
+                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(), null),
+            new EnumMemberDescription(
+                new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(),
+                null));
+
+    assertEquals(expectedEnumMembers, typeDescription.enumMembers());
+  }
+
+  @Test
+  void enum_members_with_arguments() {
+    List<Description> parsed =
+        parse(
+            """
+                  enum Nationality {
+                         DUTCH(5),
+                         GERMAN(10);
+
+                         int counter;
+
+                         Nationality(int val) {
+                           this.counter=val;
+                         }
+                       }
+                """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    TypeDescription expected =
+        new TypeDescription(
+            TypeType.ENUM,
+            0,
+            "Nationality",
+            List.of(),
+            null,
+            List.of(
+                new FieldDescription(
+                    new MemberDescription("counter", Modifier.NONE.mask(), List.of()),
+                    "int",
+                    null,
+                    null)),
+            List.of(
+                new ConstructorDescription(
+                    new MemberDescription("Nationality"),
+                    List.of(new ParameterDescription("int", "val", List.of())),
+                    List.of(new AssignmentDescription("this.counter", "=", "val")))),
+            List.of(),
+            List.of(),
+            List.of(
+                new EnumMemberDescription(
+                    new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
+                    List.of(new ArgumentDescription("int", "5")),
+                    null),
+                new EnumMemberDescription(
+                    new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
+                    List.of(new ArgumentDescription("int", "10")),
+                    null)));
+
+    assertEquals(expected, typeDescription);
   }
 }

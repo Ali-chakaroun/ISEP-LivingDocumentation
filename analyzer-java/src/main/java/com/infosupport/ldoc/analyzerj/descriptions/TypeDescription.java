@@ -23,9 +23,15 @@ public record TypeDescription(
     @JsonProperty("BaseTypes")
     @JsonInclude(Include.NON_EMPTY)
     List<String> baseTypes,
+
     @JsonProperty("DocumentationComments")
     @JsonInclude(Include.NON_EMPTY)
     Description comments,
+
+    @JsonProperty("Fields")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> fields,
+
     @JsonProperty("Constructors")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> constructors,
@@ -36,15 +42,29 @@ public record TypeDescription(
 
     @JsonProperty("Attributes")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> attributes
-) implements Description {
+    List<Description> attributes,
+
+    @JsonProperty("EnumMembers")
+    @JsonInclude(Include.NON_EMPTY)
+    List<Description> enumMembers)
+
+    implements Description {
 
   public TypeDescription(TypeType type, String fullName) {
     this(type, fullName, List.of());
   }
 
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {
-    this(type, Modifier.NONE.mask(), fullName, baseTypes, null, List.of(), List.of(), List.of());
+    this(
+        type,
+        Modifier.NONE.mask(),
+        fullName,
+        baseTypes,
+        null,
+        List.of(),
+        List.of(),
+        List.of(),
+        List.of(),
+        List.of());
   }
-
 }
