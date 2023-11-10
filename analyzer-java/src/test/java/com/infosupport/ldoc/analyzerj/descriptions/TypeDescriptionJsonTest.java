@@ -15,7 +15,7 @@ class TypeDescriptionJsonTest {
   void type_description_serializes_as_expected() throws IOException {
     assertEquals(
         mapper.readTree("{\"FullName\": \"com.example.Spam\"}"),
-        mapper.valueToTree(new TypeDescription(TypeType.CLASS, "com.example.Spam")));
+        mapper.valueToTree(new TypeDescription(TypeType.CLASS, "com.example.Spam", List.of())));
 
     assertEquals(
         mapper.readTree("{\"FullName\": \"foo.bar.Baz\", \"BaseTypes\": [\"snork\"]}"),
@@ -35,15 +35,9 @@ class TypeDescriptionJsonTest {
 
     assertEquals(
         mapper.readTree("{\"Modifiers\": 1026, \"FullName\": \"Wilma\"}"),
-        mapper.valueToTree(new TypeDescription(
-            TypeType.CLASS,
-            Modifier.PUBLIC.mask() | Modifier.SEALED.mask(),
-            "Wilma",
-            List.of(),
-            null,
-            List.of(),
-            List.of(),
-            List.of(),
-            List.of(), List.of())));
+        mapper.valueToTree(
+            new TypeDescription.Builder(TypeType.CLASS, "Wilma")
+                .withModifiers(Modifier.PUBLIC.mask() | Modifier.SEALED.mask())
+                .build()));
   }
 }

@@ -2,7 +2,6 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
@@ -11,6 +10,7 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.RecordDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Analyzer> {
 
@@ -71,18 +70,16 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   }
 
   private String resolve(Type type) {
-    return resolver.toResolvedType(type, ResolvedType.class).describe();
+    try {
+      return resolver.toResolvedType(type, ResolvedType.class).describe();
+    } catch (UnsupportedOperationException e) {
+      // References to records can not be resolved yet (issue #66); fall back to unqualified name
+      return type.toString();
+    }
   }
 
   private List<String> resolve(List<ClassOrInterfaceType> types) {
     return types.stream().map(this::resolve).toList();
-  }
-
-  /**
-   * Like {@link #visit} but only returning descriptions for Nodes matching the given predicate.
-   */
-  private <T extends Node> List<Description> select(List<T> nodes, Predicate<T> p, Analyzer arg) {
-    return nodes.stream().filter(p).flatMap(n -> n.accept(this, arg).stream()).toList();
   }
 
   /**
@@ -97,56 +94,42 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
   }
 
+  private TypeDescription.Builder typeBuilder(TypeType typeType,
+      TypeDeclaration<? extends TypeDeclaration<?>> n, Analyzer arg) {
+    String name = n.getFullyQualifiedName().orElseThrow();
+    Description comment = n.getComment().map(z -> z.accept(this, arg).get(0)).orElse(null);
+    return new TypeDescription.Builder(typeType, name)
+        .withModifiers(combine(n.getModifiers()))
+        .withComment(comment)
+        .withMembers(visit(n.getMembers(), arg))
+        .withAttributes(visit(n.getAnnotations(), arg));
+  }
+
   @Override
   public List<Description> visit(ClassOrInterfaceDeclaration n, Analyzer arg) {
+    TypeType typeType = n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS;
     List<String> baseTypes = new ArrayList<>();
     baseTypes.addAll(resolve(n.getExtendedTypes()));
     baseTypes.addAll(resolve(n.getImplementedTypes()));
 
-    return List.of(
-        new TypeDescription(
-            n.isInterface() ? TypeType.INTERFACE : TypeType.CLASS,
-            combine(n.getModifiers()),
-            n.getFullyQualifiedName().orElseThrow(),
-            baseTypes,
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-            select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
-            select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
-            select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-            visit(n.getAnnotations(), arg),
-            List.of()));
+    return List.of(typeBuilder(typeType, n, arg).withBaseTypes(baseTypes).build());
   }
 
   @Override
   public List<Description> visit(RecordDeclaration n, Analyzer arg) {
     return List.of(
-        new TypeDescription(
-            TypeType.STRUCT,
-            combine(n.getModifiers()),
-            n.getFullyQualifiedName().orElseThrow(),
-            resolve(n.getImplementedTypes()),
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-            select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
-            select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
-            select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-            visit(n.getAnnotations(), arg),
-            List.of()));
+        typeBuilder(TypeType.STRUCT, n, arg)
+            .withBaseTypes(resolve(n.getImplementedTypes()))
+            .build());
   }
 
   @Override
   public List<Description> visit(EnumDeclaration n, Analyzer arg) {
     return List.of(
-        new TypeDescription(
-            TypeType.ENUM,
-            combine(n.getModifiers()),
-            n.getFullyQualifiedName().orElseThrow(),
-            resolve(n.getImplementedTypes()),
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
-            select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
-            select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
-            select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
-            visit(n.getAnnotations(), arg),
-            visit(n.getEntries(), arg)));
+        typeBuilder(TypeType.ENUM, n, arg)
+            .withBaseTypes(resolve(n.getImplementedTypes()))
+            .withMembers(visit(n.getEntries(), arg))
+            .build());
   }
 
   /**
