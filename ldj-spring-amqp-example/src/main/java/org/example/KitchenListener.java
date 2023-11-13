@@ -9,12 +9,19 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
+/**
+ * Kitchen component. Listens on the 'kitchen' queue for new sandwiches to prepare. Once a sandwich
+ * is prepared, it is sent out for delivery on the 'delivery' queue.
+ */
 @Component
 @RabbitListener(queues = "kitchen")
 public class KitchenListener {
 
   private final Logger logger = LoggerFactory.getLogger(KitchenListener.class);
 
+  /**
+   * Called when a new sandwich order arrives.
+   */
   @RabbitHandler
   @SendTo("delivery")
   public DeliveryInstruction prepare(SandwichOrder order) {

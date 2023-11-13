@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * OrderController takes POST requests from the web interface and sends them on to the kitchen.
+ */
 @RestController
 public class OrderController {
 
