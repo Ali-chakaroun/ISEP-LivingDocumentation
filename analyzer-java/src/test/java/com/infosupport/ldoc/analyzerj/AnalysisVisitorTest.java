@@ -113,7 +113,7 @@ class AnalysisVisitorTest {
                 0,
                 "Bongo",
                 List.of(),
-                null,
+                new CommentSummaryDescription(),
                 List.of(),
                 List.of(
                     new ConstructorDescription(
@@ -135,14 +135,14 @@ class AnalysisVisitorTest {
                 0,
                 "Zap",
                 List.of(),
-                null,
+                new CommentSummaryDescription(),
                 List.of(),
                 List.of(),
                 List.of(
                     new MethodDescription(
                         new MemberDescription("does"),
                         "Zap",
-                        null,
+                        new CommentSummaryDescription(),
                         List.of(
                             new ParameterDescription("java.lang.Object", "a", List.of()),
                             new ParameterDescription("java.lang.String", "b", List.of())),
@@ -161,7 +161,7 @@ class AnalysisVisitorTest {
                 0,
                 "Z",
                 List.of(),
-                null,
+                new CommentSummaryDescription(),
                 List.of(),
                 List.of(),
                 List.of(),
@@ -176,7 +176,7 @@ class AnalysisVisitorTest {
                 0,
                 "X",
                 List.of(),
-                null,
+                new CommentSummaryDescription(),
                 List.of(),
                 List.of(),
                 List.of(),
@@ -308,7 +308,7 @@ class AnalysisVisitorTest {
                 0,
                 "Example",
                 List.of(),
-                null,
+                new CommentSummaryDescription(),
                 List.of(),
                 List.of(),
                 List.of(
@@ -397,7 +397,7 @@ class AnalysisVisitorTest {
             new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
             "java.lang.String",
             "\"Hai\"",
-            null);
+            new CommentSummaryDescription());
 
     CommentSummaryDescription comment =
         new CommentSummaryDescription(null, null, "Test javadoc.", null, null);
@@ -429,10 +429,10 @@ class AnalysisVisitorTest {
     List<EnumMemberDescription> expectedEnumMembers =
         List.of(
             new EnumMemberDescription(
-                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(), null),
+                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(), new CommentSummaryDescription()),
             new EnumMemberDescription(
                 new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(),
-                null));
+                new CommentSummaryDescription()));
 
     assertEquals(expectedEnumMembers, typeDescription.enumMembers());
   }
@@ -462,13 +462,13 @@ class AnalysisVisitorTest {
             0,
             "Nationality",
             List.of(),
-            null,
+            new CommentSummaryDescription(),
             List.of(
                 new FieldDescription(
                     new MemberDescription("counter", Modifier.NONE.mask(), List.of()),
                     "int",
                     null,
-                    null)),
+                    new CommentSummaryDescription())),
             List.of(
                 new ConstructorDescription(
                     new MemberDescription("Nationality"),
@@ -480,11 +480,11 @@ class AnalysisVisitorTest {
                 new EnumMemberDescription(
                     new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
                     List.of(new ArgumentDescription("int", "5")),
-                    null),
+                    new CommentSummaryDescription()),
                 new EnumMemberDescription(
                     new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
                     List.of(new ArgumentDescription("int", "10")),
-                    null)));
+                    new CommentSummaryDescription())));
 
     assertEquals(expected, typeDescription);
   }
