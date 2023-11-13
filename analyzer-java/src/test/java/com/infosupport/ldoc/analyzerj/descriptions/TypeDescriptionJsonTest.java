@@ -19,7 +19,8 @@ class TypeDescriptionJsonTest {
 
     assertEquals(
         mapper.readTree(
-            "{\"FullName\": \"foo.bar.Baz\", \"BaseTypes\": [\"snork\"], \"DocumentationComments\": {}}"),
+            "{\"FullName\": \"foo.bar.Baz\", \"BaseTypes\": [\"snork\"],"
+                + " \"DocumentationComments\": {}}"),
         mapper.valueToTree(new TypeDescription(TypeType.CLASS, "foo.bar.Baz", List.of("snork"))));
 
     assertEquals(
