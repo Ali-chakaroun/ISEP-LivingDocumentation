@@ -429,7 +429,8 @@ class AnalysisVisitorTest {
     List<EnumMemberDescription> expectedEnumMembers =
         List.of(
             new EnumMemberDescription(
-                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(), new CommentSummaryDescription()),
+                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(),
+                new CommentSummaryDescription()),
             new EnumMemberDescription(
                 new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(),
                 new CommentSummaryDescription()));
