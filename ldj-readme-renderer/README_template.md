@@ -50,6 +50,15 @@ line options:
 The analyzer can also be used as a Maven plugin (which is defined in [ldj-maven-plugin](/ldj-maven-plugin)).
 For an example on how to use the Maven plugin, see the `pom.xml` configuration in [ldj-maven-plugin-example](/ldj-maven-plugin-example).
 
+### State of analyzer
+
+The following Java language elements are currently included in the generated JSON:
+
+> [~implemented-visit-types]
+
+The links refer to the types as present in the [JavaParser](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.6/) library. 
+Note that the level of detail is not infinite; some nested constructs may be cut short and included as a string literal.
+
 ## Support Libraries
 
 There is currently no support library available. 
