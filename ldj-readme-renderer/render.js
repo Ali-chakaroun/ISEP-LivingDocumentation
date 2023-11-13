@@ -45,8 +45,8 @@ function getMarkdownLink(type) {
   return `[${displayName}](${JAVAPARSER_DOC_SITE}${relUrl}.html)`;
 }
 
-let visitor = json.filter((type) => type.FullName == 'com.infosupport.ldoc.analyzerj.AnalysisVisitor')[0];
-let parserTypes = visitor.Methods.filter((method) => method.Name == 'visit').map((method) => method.Parameters[0].Type);
+let visitor = json.filter((type) => type.FullName === 'com.infosupport.ldoc.analyzerj.AnalysisVisitor')[0];
+let parserTypes = visitor.Methods.filter((method) => method.Name === 'visit').map((method) => method.Parameters[0].Type);
 let implementedTypesList = parserTypes.map(getMarkdownLink).join(', ');
 
 // Combining everything
