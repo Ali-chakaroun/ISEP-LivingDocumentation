@@ -25,4 +25,7 @@ public record CommentSummaryDescription(
 
 ) implements Description {
 
+  public CommentSummaryDescription() {
+    this(null, null, null, null, null);
+  }
 }

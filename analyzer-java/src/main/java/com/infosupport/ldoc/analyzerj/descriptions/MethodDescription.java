@@ -12,7 +12,6 @@ public record MethodDescription(
     @JsonProperty("ReturnType")
     String returnType,
     @JsonProperty("DocumentationComments")
-    @JsonInclude(Include.NON_EMPTY)
     Description comments,
     @JsonProperty("Parameters")
     @JsonInclude(Include.NON_EMPTY)
@@ -22,4 +21,5 @@ public record MethodDescription(
     @JsonInclude(Include.NON_EMPTY)
     List<Description> statements
 ) implements Description {
+
 }

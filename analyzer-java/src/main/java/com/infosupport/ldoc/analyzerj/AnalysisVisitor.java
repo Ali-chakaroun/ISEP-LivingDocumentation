@@ -109,7 +109,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             combine(n.getModifiers()),
             n.getFullyQualifiedName().orElseThrow(),
             baseTypes,
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(
+                new CommentSummaryDescription()
+            ),
             select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
             select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
             select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
@@ -125,7 +127,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             combine(n.getModifiers()),
             n.getFullyQualifiedName().orElseThrow(),
             resolve(n.getImplementedTypes()),
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                .orElse(new CommentSummaryDescription()),
             select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
             select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
             select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
@@ -141,7 +144,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             combine(n.getModifiers()),
             n.getFullyQualifiedName().orElseThrow(),
             resolve(n.getImplementedTypes()),
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                .orElse(new CommentSummaryDescription()),
             select(n.getMembers(), BodyDeclaration::isFieldDeclaration, arg),
             select(n.getMembers(), BodyDeclaration::isConstructorDeclaration, arg),
             select(n.getMembers(), BodyDeclaration::isMethodDeclaration, arg),
@@ -173,7 +177,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             new MemberDescription(
                 n.getNameAsString(), Modifier.PUBLIC.mask(), visit(n.getAnnotations(), arg)),
             arguments,
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                .orElse(new CommentSummaryDescription())));
   }
 
   /**
@@ -202,7 +207,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                   visit(n.getAnnotations(), arg)),
               resolve(variable.getType()),
               initializer,
-              n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
+              n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                  .orElse(new CommentSummaryDescription())));
     }
 
     return fieldDescriptions;
@@ -215,7 +221,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             new MemberDescription(
                 n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
             resolve(n.getType()),
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                .orElse(new CommentSummaryDescription()),
             visit(n.getParameters(), arg),
             n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
   }

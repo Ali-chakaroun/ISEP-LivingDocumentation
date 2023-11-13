@@ -17,7 +17,6 @@ public record FieldDescription(
     String initialValue,
 
     @JsonProperty("DocumentationComments")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     Description comments
 
 ) implements Description {
