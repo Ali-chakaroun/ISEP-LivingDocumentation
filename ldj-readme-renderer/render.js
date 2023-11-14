@@ -9,6 +9,8 @@ const fs = require('node:fs');
 const process = require('node:process');
 
 const OUTPUT = `../README.md`;
+const README_TEMPLATE = 'README_template.md';
+const JAVAPARSER_DOC_SITE = 'https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/';
 
 const json = JSON.parse(fs.readFileSync(process.argv[2]));
 
@@ -36,8 +38,6 @@ function renderCmdOptions(d) {
 const cmdOptionsTable = CMD_LINE_TABLE_TEMPLATE.replace('~', () => renderCmdOptions(json));
 
 // Section rendering the implemented visited methods
-
-const JAVAPARSER_DOC_SITE = 'https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/';
 function getMarkdownLink(type) {
   let splitted = type.split('.');
   let displayName = splitted[splitted.length -1];
@@ -50,9 +50,8 @@ let parserTypes = visitor.Methods.filter((method) => method.Name === 'visit').ma
 let implementedTypesList = parserTypes.map(getMarkdownLink).join(', ');
 
 // Combining everything
-
 try {
-  let readmeTemplate = fs.readFileSync('README_template.md', 'utf8');
+  let readmeTemplate = fs.readFileSync(README_TEMPLATE, 'utf8');
   let finalReadme = readmeTemplate.replace('[~cmd-line-options]', cmdOptionsTable);
   finalReadme = finalReadme.replace('[~implemented-visit-types]', implementedTypesList);
   fs.writeFileSync(OUTPUT, finalReadme);
