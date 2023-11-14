@@ -37,7 +37,7 @@ const cmdOptionsTable = CMD_LINE_TABLE_TEMPLATE.replace('~', () => renderCmdOpti
 
 // Section rendering the implemented visited methods
 
-const JAVAPARSER_DOC_SITE = 'https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.6/';
+const JAVAPARSER_DOC_SITE = 'https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/';
 function getMarkdownLink(type) {
   let splitted = type.split('.');
   let displayName = splitted[splitted.length -1];
