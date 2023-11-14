@@ -4,16 +4,28 @@ import com.github.javaparser.ast.comments.JavadocComment;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CommentHelperMethods {
+/**
+ * CommentHelperMethods is a utility class with methods related to JavadocComment handling.
+ */
+public final class CommentHelperMethods {
 
   private CommentHelperMethods() {
     // Private constructor to prevent instantiation
   }
 
+  /**
+   * Returns the description of the given Javadoc comment, as text.
+   */
   public static String extractSummary(JavadocComment commentText) {
     return commentText.parse().getDescription().toText().strip();
   }
 
+  /**
+   * Extracts the contents of block tags like <code>@param</code> as strings. The resulting map has
+   * keys like "PARAM" (for <code>@param</code>) and "RETURN" (for <code>@return</code>) at the top
+   * level, and then the names and descriptions for each parameter. If there are no block tags, the
+   * resulting map is empty.
+   */
   public static Map<String, Map<String, String>> extractParamDescriptions(
       JavadocComment commentText) {
     Map<String, Map<String, String>> paramDescriptions = new LinkedHashMap<>();
@@ -29,8 +41,16 @@ public class CommentHelperMethods {
     return paramDescriptions;
   }
 
-  // Keeping this logic out of main analysisvisitor class.
-  public static void processCommentData(Map<String, Map<String, String>> commentData,
+  /**
+   * Separate the given comment into the shape expected by <code>CommentSummaryDescription</code>.
+   *
+   * @param commentData       a parameter description from <code>extractParamDescriptions</code>
+   * @param returns           if a return value is documented, it is appended here
+   * @param commentParams     if parameters are documented, this map is mutated to include them
+   * @param commentTypeParams if type parameters are documented, this map is mutated to add them
+   */
+  public static void processCommentData(
+      Map<String, Map<String, String>> commentData,
       StringBuilder returns,
       Map<String, String> commentParams,
       Map<String, String> commentTypeParams) {

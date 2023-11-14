@@ -17,6 +17,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
+/**
+ * LivingDocumentationMojo is a Maven plugin that runs the LivingDocumentation Java analyzer on the
+ * project being built. The output is written to <code>target/livingdocumentation.json</code>.
+ */
 @Mojo(
     name = "livingdocumentation",
     requiresDependencyResolution = ResolutionScope.COMPILE,
