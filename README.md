@@ -12,7 +12,7 @@ up-to-date.
 ## State of the project
 
 As of right now, this project is linked to a student assignment originating from the University of
-Twente and InfoSupport. The aim of the project is to make the [LivingDocumentation][ldoc] project
+Twente and Info Support. The aim of the project is to make the [LivingDocumentation][ldoc] project
 capable to handle multilingual projects. One aspect of this is to make LivingDocumentation
 available for the Java environment; which is the purpose of this repository.
 
