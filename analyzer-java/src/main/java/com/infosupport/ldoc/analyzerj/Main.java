@@ -11,6 +11,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+/** Command-line entry point to use the analyzer standalone (not through the Maven plugin). */
 public class Main {
 
   private static Options options() {
@@ -32,6 +33,7 @@ public class Main {
         commandLine.hasOption("pretty"));
   }
 
+  /** Entry point. */
   public static void main(String[] args) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     Analyzer analyzer = new Analyzer(objectMapper);
