@@ -36,17 +36,17 @@ class FieldDescriptionJsonTest {
         mapper.readTree(expected),
         mapper.valueToTree(
             new FieldDescription(
-                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(),
+                    new CommentSummaryDescription(
+                        "Tread carefully.",
+                        "An integer.",
+                        "Add two values.",
+                        Map.of(
+                            "N", "first integer value",
+                            "Y", "second integer value"),
+                        null)),
                 "java.lang.String",
-                "Hai",
-                new CommentSummaryDescription(
-                    "Tread carefully.",
-                    "An integer.",
-                    "Add two values.",
-                    Map.of(
-                        "N", "first integer value",
-                        "Y", "second integer value"),
-                    null))));
+                "Hai")));
   }
 
   @Test
@@ -56,18 +56,16 @@ class FieldDescriptionJsonTest {
             {
             "Type": "int",
             "Name": "name",
-            "Modifiers": 4,
-            "DocumentationComments": {}
+            "Modifiers": 4
             }
             """;
     assertEquals(
         mapper.readTree(expected),
         mapper.valueToTree(
             new FieldDescription(
-                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(), null),
                 "int",
-                null,
-                new CommentSummaryDescription())));
+                null)));
   }
 
   @Test
@@ -78,18 +76,16 @@ class FieldDescriptionJsonTest {
             "Type": "float",
             "Name": "name",
             "Modifiers": 4,
-            "Initializer": "System.currentTimeMillis()",
-            "DocumentationComments": {}
+            "Initializer": "System.currentTimeMillis()"
             }
             """;
     assertEquals(
         mapper.readTree(expected),
         mapper.valueToTree(
             new FieldDescription(
-                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(), null),
                 "float",
-                "System.currentTimeMillis()",
-                new CommentSummaryDescription())));
+                "System.currentTimeMillis()")));
   }
 
 
