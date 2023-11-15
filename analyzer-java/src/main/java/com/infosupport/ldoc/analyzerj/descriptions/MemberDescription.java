@@ -23,6 +23,6 @@ public record MemberDescription(
 ) implements Description {
 
   public MemberDescription(String name) {
-    this(name, 0, List.of(),null);
+    this(name, 0, List.of(), null);
   }
 }
