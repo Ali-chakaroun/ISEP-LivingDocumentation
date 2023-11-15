@@ -61,10 +61,10 @@ class AnalysisVisitorTest {
   @Test
   void type_description_for_class() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "Foo")), parse("class Foo {}"));
+        List.of(new TypeDescription(TypeType.CLASS, "Foo", List.of())), parse("class Foo {}"));
 
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.CLASS, "some.example.Bar")),
+        List.of(new TypeDescription(TypeType.CLASS, "some.example.Bar", List.of())),
         parse("package some.example; class Bar {}"));
 
     assertIterableEquals(
@@ -79,10 +79,11 @@ class AnalysisVisitorTest {
   @Test
   void type_description_for_interface() {
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.INTERFACE, "Oogle")), parse("interface Oogle {}"));
+        List.of(new TypeDescription(TypeType.INTERFACE, "Oogle", List.of())),
+        parse("interface Oogle {}"));
 
     assertIterableEquals(
-        List.of(new TypeDescription(TypeType.INTERFACE, "some.example.Foogle")),
+        List.of(new TypeDescription(TypeType.INTERFACE, "some.example.Foogle", List.of())),
         parse("package some.example; interface Foogle {}"));
 
     assertIterableEquals(
@@ -108,21 +109,13 @@ class AnalysisVisitorTest {
   void constructor_description() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(
-                TypeType.CLASS,
-                0,
-                "Bongo",
-                List.of(),
-                new CommentSummaryDescription(),
-                List.of(),
-                List.of(
+            new TypeDescription.Builder(TypeType.CLASS, "Bongo")
+                .withMembers(
                     new ConstructorDescription(
                         new MemberDescription("Bongo"),
                         List.of(new ParameterDescription("java.lang.Object", "z", List.of())),
-                        List.of())),
-                List.of(),
-                List.of(),
-                List.of())),
+                        List.of()))
+                .build()),
         parse("class Bongo { Bongo(Object z) {} }"));
   }
 
@@ -130,25 +123,17 @@ class AnalysisVisitorTest {
   void method_description() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(
-                TypeType.CLASS,
-                0,
-                "Zap",
-                List.of(),
-                new CommentSummaryDescription(),
-                List.of(),
-                List.of(),
-                List.of(
+            new TypeDescription.Builder(TypeType.CLASS, "Zap")
+                .withMembers(
                     new MethodDescription(
                         new MemberDescription("does"),
                         "Zap",
-                        new CommentSummaryDescription(),
+                        null,
                         List.of(
                             new ParameterDescription("java.lang.Object", "a", List.of()),
                             new ParameterDescription("java.lang.String", "b", List.of())),
-                        List.of())),
-                List.of(),
-                List.of())),
+                        List.of()))
+                .build()),
         parse("class Zap { Zap does(Object a, String b) {} }"));
   }
 
@@ -156,38 +141,25 @@ class AnalysisVisitorTest {
   void attribute_description() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(
-                TypeType.CLASS,
-                0,
-                "Z",
-                List.of(),
-                new CommentSummaryDescription(),
-                List.of(),
-                List.of(),
-                List.of(),
-                List.of(new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())),
-                List.of())),
+            new TypeDescription.Builder(TypeType.CLASS, "Z")
+                .withAttributes(
+                    List.of(
+                        new AttributeDescription("java.lang.Deprecated", "Deprecated", List.of())))
+                .build()),
         parse("@Deprecated class Z {}"));
 
     assertIterableEquals(
         List.of(
-            new TypeDescription(
-                TypeType.CLASS,
-                0,
-                "X",
-                List.of(),
-                new CommentSummaryDescription(),
-                List.of(),
-                List.of(),
-                List.of(),
-                List.of(
-                    new AttributeDescription(
-                        "java.lang.SuppressWarnings",
-                        "SuppressWarnings",
-                        List.of(
-                            new AttributeArgumentDescription(
-                                "value", "java.lang.String", "\"unchecked\"")))),
-                List.of())),
+            new TypeDescription.Builder(TypeType.CLASS, "X")
+                .withAttributes(
+                    List.of(
+                        new AttributeDescription(
+                            "java.lang.SuppressWarnings",
+                            "SuppressWarnings",
+                            List.of(
+                                new AttributeArgumentDescription(
+                                    "value", "java.lang.String", "\"unchecked\"")))))
+                .build()),
         parse("@SuppressWarnings(\"unchecked\") class X {}"));
   }
 
@@ -303,15 +275,8 @@ class AnalysisVisitorTest {
   void comment_tests() {
     assertIterableEquals(
         List.of(
-            new TypeDescription(
-                TypeType.CLASS,
-                0,
-                "Example",
-                List.of(),
-                new CommentSummaryDescription(),
-                List.of(),
-                List.of(),
-                List.of(
+            new TypeDescription.Builder(TypeType.CLASS, "Example")
+                .withMembers(
                     new MethodDescription(
                         new MemberDescription("does"),
                         "Example",
@@ -327,9 +292,8 @@ class AnalysisVisitorTest {
                         List.of(
                             new ParameterDescription("java.lang.Object", "a", List.of()),
                             new ParameterDescription("java.lang.String", "b", List.of())),
-                        List.of())),
-                List.of(),
-                List.of())),
+                        List.of()))
+                .build()),
         parse(
             """
                 class Example {
@@ -397,7 +361,7 @@ class AnalysisVisitorTest {
             new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
             "java.lang.String",
             "\"Hai\"",
-            new CommentSummaryDescription());
+            null);
 
     CommentSummaryDescription comment =
         new CommentSummaryDescription(null, null, "Test javadoc.", null, null);
@@ -416,26 +380,20 @@ class AnalysisVisitorTest {
 
   @Test
   void enum_members() {
-    List<Description> parsed =
-        parse("""
-                enum Nationality {
-                  DUTCH,
-                  GERMAN;
-                }
-            """);
-
-    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
-
-    List<EnumMemberDescription> expectedEnumMembers =
+    assertIterableEquals(
         List.of(
-            new EnumMemberDescription(
-                new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()), List.of(),
-                new CommentSummaryDescription()),
-            new EnumMemberDescription(
-                new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()), List.of(),
-                new CommentSummaryDescription()));
-
-    assertEquals(expectedEnumMembers, typeDescription.enumMembers());
+            new TypeDescription.Builder(TypeType.ENUM, "Nationality")
+                .withMembers(
+                    new EnumMemberDescription(
+                        new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
+                        List.of(),
+                        null),
+                    new EnumMemberDescription(
+                        new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
+                        List.of(),
+                        null))
+                .build()),
+        parse("enum Nationality { DUTCH, GERMAN; }"));
   }
 
   @Test
@@ -458,34 +416,26 @@ class AnalysisVisitorTest {
     TypeDescription typeDescription = (TypeDescription) parsed.get(0);
 
     TypeDescription expected =
-        new TypeDescription(
-            TypeType.ENUM,
-            0,
-            "Nationality",
-            List.of(),
-            new CommentSummaryDescription(),
-            List.of(
+        new TypeDescription.Builder(TypeType.ENUM, "Nationality")
+            .withMembers(
                 new FieldDescription(
                     new MemberDescription("counter", Modifier.NONE.mask(), List.of()),
                     "int",
                     null,
-                    new CommentSummaryDescription())),
-            List.of(
+                    null),
                 new ConstructorDescription(
                     new MemberDescription("Nationality"),
                     List.of(new ParameterDescription("int", "val", List.of())),
-                    List.of(new AssignmentDescription("this.counter", "=", "val")))),
-            List.of(),
-            List.of(),
-            List.of(
+                    List.of(new AssignmentDescription("this.counter", "=", "val"))),
                 new EnumMemberDescription(
                     new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
                     List.of(new ArgumentDescription("int", "5")),
-                    new CommentSummaryDescription()),
+                    null),
                 new EnumMemberDescription(
                     new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
                     List.of(new ArgumentDescription("int", "10")),
-                    new CommentSummaryDescription())));
+                    null))
+            .build();
 
     assertEquals(expected, typeDescription);
   }

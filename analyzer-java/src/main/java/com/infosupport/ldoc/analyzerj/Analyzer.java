@@ -17,14 +17,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Analyzer executes {@link AnalysisJob} instances. It walks the given source directory, parses each
+ * Java file, then uses the {@link AnalysisVisitor} to combine the resulting parse trees into a JSON
+ * output that follows LivingDocumentation conventions.
+ */
 public class Analyzer {
 
   private final ObjectMapper objectMapper;
 
+  /** Constructs an Analyzer with the given Jackson ObjectMapper. */
   public Analyzer(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Returns a type solver that can resolve from neighboring source code, the classpath provided in
+   * the {@link AnalysisJob}, and by reflection (which is required to resolve types like Object).
+   */
   private TypeSolver typeSolverFor(AnalysisJob job) throws IOException {
     var typeSolverBuilder = new TypeSolverBuilder();
 
@@ -37,6 +47,7 @@ public class Analyzer {
     return typeSolverBuilder.withCurrentClassloader().withSourceCode(job.project()).build();
   }
 
+  /** Execute the given job. An exception is thrown if a file can not be read or parsed. */
   public void analyze(AnalysisJob job) throws IOException {
     ParserConfiguration parserConfiguration = new ParserConfiguration()
         .setSymbolResolver(new JavaSymbolSolver(typeSolverFor(job)));
