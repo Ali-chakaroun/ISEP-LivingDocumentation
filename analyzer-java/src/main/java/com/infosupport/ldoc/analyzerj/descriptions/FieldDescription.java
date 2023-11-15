@@ -14,10 +14,7 @@ public record FieldDescription(
 
     @JsonProperty("Initializer")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    String initialValue,
-
-    @JsonProperty("DocumentationComments")
-    Description comments
+    String initialValue
 
 ) implements Description {
 

@@ -9,10 +9,10 @@ import java.util.List;
 public record MethodDescription(
     @JsonUnwrapped
     MemberDescription member,
+
     @JsonProperty("ReturnType")
     String returnType,
-    @JsonProperty("DocumentationComments")
-    Description comments,
+
     @JsonProperty("Parameters")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> parameters,
