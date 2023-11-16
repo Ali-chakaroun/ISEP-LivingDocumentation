@@ -22,7 +22,7 @@ public final class InvoiceGenerator {
    */
   @EventListener
   public InvoiceCreated handleOrderPaid(OrderPaid event) {
-    InvoiceCreated reaction = new InvoiceCreated();
+    InvoiceCreated reaction = new InvoiceCreated(event.order.hashCode());
     log.info("Order %s paid, created invoice %s".formatted(event.order, reaction.hashCode()));
     return reaction;
   }

@@ -6,4 +6,15 @@ package org.example.events;
  */
 public final class InvoiceCreated {
 
+  /**
+   * The number (hash code) of the order that this invoice is for.
+   */
+  public final long orderNumber;
+
+  /**
+   * Constructs (but does not yet publish) an InvoiceCreated event.
+   */
+  public InvoiceCreated(long orderNumber) {
+    this.orderNumber = orderNumber;
+  }
 }

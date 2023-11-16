@@ -2,7 +2,7 @@ package org.example.models;
 
 /**
  * A request for some quantity of sandwiches (which are assumed to be indistinguishable from each
- * other) to be shipped to some address.
+ * other) to be shipped to some address. The object's hashCode stands in for an order number.
  */
 public final class Order {
   private final int quantity;
