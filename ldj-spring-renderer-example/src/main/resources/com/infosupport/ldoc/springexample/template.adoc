@@ -1,4 +1,7 @@
-= Spring Event example
+= Spring Event Sandwich Example
+:nofooter:
+
+This "sandwich shop" "implementation" uses Spring `ApplicationEvent`, as follows:
 
 [plantuml,"diagram",svg]
 ----
@@ -15,6 +18,4 @@ hide footbox
 @enduml
 ----
 
-yabba
-
-babba
+For more information about application events, see https://docs.spring.io/spring-framework/reference/core/beans/context-introduction.html#context-functionality-events[the Spring Framework reference].
