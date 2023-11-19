@@ -44,7 +44,7 @@ public class SpringEventRenderer {
   /**
    * Recursively walks the given JSON node finding invocations of publishEvent on Context classes.
    */
-  List<Interaction> findPublishCalls(String sendingClass, String eventName, JsonNode node) {
+  static List<Interaction> findPublishCalls(String sendingClass, String eventName, JsonNode node) {
     List<Interaction> interactions = new ArrayList<>(0);
 
     if (node.path("$type").asText("").contains("InvocationDescription")
@@ -62,7 +62,7 @@ public class SpringEventRenderer {
     return interactions;
   }
 
-  List<Interaction> findInteractions(JsonNode root) {
+  static List<Interaction> findInteractions(JsonNode root) {
     List<Interaction> interactions = new ArrayList<>(0);
 
     for (JsonNode type : root) {
@@ -91,32 +91,34 @@ public class SpringEventRenderer {
       }
     }
 
+    interactions.sort(Comparator.comparing(Interaction::className));
+
     return interactions;
   }
 
   /**
    * Converts a fully-qualified class name into a plain class name.
    */
-  String stripName(String fqdn) {
+  static String stripName(String fqdn) {
     return fqdn.replaceAll("^.*\\.", "");
   }
 
   /**
    * Converts a fully-qualified class to a label that seems more human, with space-separated words.
    */
-  String humanizeName(String fqdn) {
+  static String humanizeName(String fqdn) {
     return String.join(" ", stripName(fqdn).split("(?<=\\p{Ll})(?=\\p{Lu})"));
   }
 
-  void renderParticipant(PrintWriter out, String name) {
+  static void renderParticipant(PrintWriter out, String name) {
     out.printf("participant \"%s\" as %s\n", humanizeName(name), name);
   }
 
-  void renderInteraction(PrintWriter out, String sender, String receiver, String event) {
+  static void renderInteraction(PrintWriter out, String sender, String receiver, String event) {
     out.printf("%s -[#ForestGreen]> %s : %s\n", sender, receiver, stripName(event));
   }
 
-  void renderInteractions(PrintWriter out, String sender, List<Interaction> interactions,
+  static void renderInteractions(PrintWriter out, String sender, List<Interaction> interactions,
       List<String> classes, String scope) {
     // This is O(spicy) but seems fast enough in our example.
     for (Interaction send : interactions) {
@@ -139,15 +141,13 @@ public class SpringEventRenderer {
   /**
    * Reads LivingDocumentation JSON from the input stream and writes Asciidoc to the output stream.
    */
-  public void render(InputStream in, OutputStream out, String template) throws IOException {
+  public static void render(InputStream in, OutputStream out, String template) throws IOException {
     JsonNode json = new ObjectMapper().readTree(in);
 
     StringWriter buffer = new StringWriter();
     PrintWriter bufferWriter = new PrintWriter(buffer, true);
 
     List<Interaction> interactions = findInteractions(json);
-    interactions.sort(Comparator.comparing(Interaction::className));
-
     List<String> classes = interactions.stream().map(Interaction::className).distinct().toList();
 
     for (String participant : classes) {
@@ -167,7 +167,7 @@ public class SpringEventRenderer {
   public static void main(String[] args) throws IOException {
     try (InputStream tplFile = SpringEventRenderer.class.getResourceAsStream("template.adoc")) {
       String template = new String(Objects.requireNonNull(tplFile).readAllBytes());
-      new SpringEventRenderer().render(System.in, System.out, template);
+      SpringEventRenderer.render(System.in, System.out, template);
     }
   }
 }
