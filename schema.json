@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/LivingDocumentation",
-  "title": "Intermediary JSON for LivingDocumetation",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Intermediary JSON for LivingDocumentation",
   "type": "array",
   "items": {
     "type": "object",
@@ -54,7 +54,7 @@
     "statements": {
       "type": "array",
       "items": {
-        "anyOf": [
+        "oneOf": [
           {
             "$ref": "#/$defs/forEach"
           },
@@ -103,11 +103,14 @@
         "Sections": {
           "type": "array",
           "items": {
-            "Condition": {
-              "type": "string"
-            },
-            "Statements": {
-              "$ref": "#/$defs/statements"
+            "type": "object",
+            "properties": {
+              "Condition": {
+                "type": "string"
+              },
+              "Statements": {
+                "$ref": "#/$defs/statements"
+              }
             }
           }
         }
@@ -129,14 +132,17 @@
         "Sections": {
           "type": "array",
           "items": {
-            "Labels": {
-              "type": "array",
-              "items": {
-                "type": "string"
+            "type": "object",
+            "properties": {
+              "Labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "Statements": {
+                "$ref": "#/$defs/statements"
               }
-            },
-            "Statements": {
-              "$ref": "#/$defs/statements"
             }
           }
         }
@@ -164,7 +170,6 @@
       },
       "additionalProperties": false,
       "required": [
-        "ContainingType",
         "Name"
       ]
     },
@@ -242,13 +247,28 @@
           "type": "string"
         },
         "Exceptions": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
         },
         "Params": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
         },
         "Permissions": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
         },
         "Remarks": {
           "type": "string"
@@ -257,17 +277,29 @@
           "type": "string"
         },
         "SeeAlsos": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
         },
         "Summary": {
           "type": "string"
         },
         "TypeParams": {
-          "type": "object"
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
+        },
+        "Value": {
+          "type": "string"
         }
       },
-      "additionalProperties": false,
-      "required": []
+      "additionalProperties": false
     },
     "attributes": {
       "type": "array",
@@ -306,8 +338,7 @@
         },
         "additionalProperties": false,
         "required": [
-          "Name",
-          "Type"
+          "Name"
         ]
       }
     },
@@ -325,7 +356,6 @@
         },
         "additionalProperties": false,
         "required": [
-          "Type",
           "Text"
         ]
       }
