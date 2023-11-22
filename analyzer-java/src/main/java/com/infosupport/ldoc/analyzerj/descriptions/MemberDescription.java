@@ -5,6 +5,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
+/**
+ * Description containing name, modifiers and annotations (attributes in .NET terms) for use by
+ * other descriptions.
+ *
+ * @param name       Name of the member (string).
+ * @param modifiers  {@link Modifier}s of the member.
+ * @param attributes List of annotations ({@Attributes}).
+ */
 public record MemberDescription(
     @JsonProperty("Name")
     String name,
@@ -18,6 +26,12 @@ public record MemberDescription(
     List<Description> attributes
 ) implements Description {
 
+  /**
+   * Constructor that takes only a name. The modifiers value is set to {@link Modifier#NONE}, list
+   * of attributes is empty.
+   *
+   * @param name Name of the member (string).
+   */
   public MemberDescription(String name) {
     this(name, 0, List.of());
   }
