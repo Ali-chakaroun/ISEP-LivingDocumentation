@@ -9,10 +9,12 @@
         "type": "string"
       },
       "Type": {
-        "type": "number"
+        "type": "integer",
+        "minimum": 0
       },
       "Modifiers": {
-        "type": "number"
+        "type": "integer",
+        "minimum": 0
       },
       "BaseTypes": {
         "type": "array",
@@ -224,7 +226,8 @@
             "type": "string"
           },
           "Modifiers": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           },
           "Attributes": {
             "$ref": "#/$defs/attributes"
@@ -375,7 +378,8 @@
             "$ref": "#/$defs/statements"
           },
           "Modifiers": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           },
           "Attributes": {
             "$ref": "#/$defs/attributes"
@@ -436,7 +440,8 @@
             "$ref": "#/$defs/attributes"
           },
           "Modifiers": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           },
           "DocumentationComments": {
             "$ref": "#/$defs/documentationComments"
@@ -460,7 +465,8 @@
             "type": "string"
           },
           "Modifiers": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           },
           "DocumentationComments": {
             "$ref": "#/$defs/documentationComments"
@@ -491,7 +497,8 @@
             "type": "string"
           },
           "Modifiers": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0
           },
           "DocumentationComments": {
             "$ref": "#/$defs/documentationComments"
@@ -521,7 +528,8 @@
             "type": "string"
           },
           "Modifiers": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 0
           },
           "DocumentationComments": {
             "$ref": "#/$defs/documentationComments"
