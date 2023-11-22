@@ -285,10 +285,10 @@ Each statement is one of the following options. The statement type is distinguis
 
 ##### Optional Keys:
 
-| Key        | Type                             | .NET                        | Java                        |
-|------------|----------------------------------|-----------------------------|-----------------------------|
-| Condition  | string                           | 'if' or 'else if' condition | 'if' or 'else if' condition |
-| Statements | array of [Statement](#statement) |                             |                             |
+| Key        | Type                             | .NET                                                                       | Java                                                                       |
+|------------|----------------------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| Condition  | string                           | 'if' or 'else if' condition, emtpy condition means it is an 'else' clause. | 'if' or 'else if' condition, emtpy condition means it is an 'else' clause. |
+| Statements | array of [Statement](#statement) |                                                                            |                                                                            |
 
 
 ### Switch
@@ -313,10 +313,10 @@ Each statement is one of the following options. The statement type is distinguis
 
 ##### Optional Keys:
 
-| Key        | Type                             | .NET        | Java        |
-|------------|----------------------------------|-------------|-------------|
-| Labels     | array of string                  | Case labels | Case labels |
-| Statements | array of [Statement](#statement) |             |             |
+| Key        | Type                             | .NET                                    | Java                                         |
+|------------|----------------------------------|-----------------------------------------|----------------------------------------------|
+| Labels     | array of string                  | Case labels, empty indicates 'default'. | Case labels, empty indicates 'default' case. |
+| Statements | array of [Statement](#statement) |                                         |                                              |
 
 
 ### Invocation
