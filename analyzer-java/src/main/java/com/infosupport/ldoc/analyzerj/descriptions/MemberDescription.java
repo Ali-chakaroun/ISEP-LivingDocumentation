@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param name       Name of the member (string).
  * @param modifiers  {@link Modifier}s of the member.
- * @param attributes List of annotations ({@Attributes}).
+ * @param attributes List of annotations ({@link AttributeDescription}).
  */
 public record MemberDescription(
     @JsonProperty("Name")
