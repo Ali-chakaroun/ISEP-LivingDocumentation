@@ -56,6 +56,10 @@ line options:
 The analyzer can also be used as a Maven plugin (which is defined in [ldj-maven-plugin](/ldj-maven-plugin)).
 For an example on how to use the Maven plugin, see the `pom.xml` configuration in [ldj-maven-plugin-example](/ldj-maven-plugin-example).
 
+> **Note:** As of right now, the Maven plugin is not published to a public Maven repository. 
+> If one would like to use the analyzer in the form of a plugin, one can manually install the plugin using Maven install.
+> After a manual install, the plugin can be used as defined in the [ldj-maven-plugin-example](/ldj-maven-plugin-example).
+
 ### State of analyzer
 
 A list of Java language features which are included in the analyzer can be found in the JSON schema documentation.
