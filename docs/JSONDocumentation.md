@@ -1,7 +1,7 @@
 
 # JSON documentation
 
-This document contains an overview of the possible keys in the intermediary JSON file. It also contains a brief explanation of the meaning of the key in the different programming languages the analyser accepts. Unless indicated otherwise, the terminology used is based on DOTNET.
+This document contains an overview of the possible keys in the intermediary JSON file. It also contains a brief explanation of the meaning of the key in the different programming languages the analyser accepts. Unless indicated otherwise, the terminology used is based on .NET.
 
 ## Member
 This is the top level element of the file.
@@ -15,9 +15,9 @@ Java
 
 ### Required keys:
 
-| Key      | Type   | .NET                                    | Java                                    |
-|----------|--------|-----------------------------------------|-----------------------------------------|
-| FullName | string | Name of the class/interface/struct/enum | Name of the class/interface/record/enum |
+| Key      | Type   | .NET                                                                           | Java                                                                              |
+|----------|--------|--------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| FullName | string | Name of the class/interface/struct/enum, includes the namespace (thus 'full'). | Name of the class/interface/record/enum, includes the package name (thus 'full'). |
 
 ### Optional keys:
 
@@ -64,10 +64,10 @@ The following modifiers are included:
 
 ### Required keys:
 
-| Key  | Type   | .NET              | Java              |
-|------|--------|-------------------|-------------------|
-| Name | string | Name of the field | Name of the field |
-| Type | string | Type of the field | Type of the field |
+| Key  | Type   | .NET                              | Java                              |
+|------|--------|-----------------------------------|-----------------------------------|
+| Name | string | Name of the field                 | Name of the field                 |
+| Type | string | Fully qualified type of the field | Fully qualified type of the field |
 
 ### Optional keys:
 
@@ -106,14 +106,14 @@ The following modifiers are included:
 
 ### Optional keys:
 
-| Key                   | Type                                             | .NET                                       | Java                         |
-|-----------------------|--------------------------------------------------|--------------------------------------------|------------------------------|
-| ReturnType            | string                                           |                                            |                              |
-| Parameters            | array of [Parameter](#parameter)                 |                                            |                              |
-| Statements            | array of [Statement](#statement)                 |                                            |                              |
-| Modifiers             | integer, minimum 0                               | See [Modifiers](#modifiers)                | See [Modifiers](#modifiers)  |
-| Attributes            | array of [Attribute](#attribute)                 |                                            | Annotations                  |
-| DocumentationComments | [DocumentationComments](#documentation-comments) | XML documentation comments                 | JavaDoc                      |
+| Key                   | Type                                             | .NET                                                                    | Java                                                                    |
+|-----------------------|--------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| ReturnType            | string                                           | For methods without a return type (void methods), this key is left out. | For methods without a return type (void methods), this key is left out. |
+| Parameters            | array of [Parameter](#parameter)                 |                                                                         |                                                                         |
+| Statements            | array of [Statement](#statement)                 |                                                                         |                                                                         |
+| Modifiers             | integer, minimum 0                               | See [Modifiers](#modifiers)                                             | See [Modifiers](#modifiers)                                             |
+| Attributes            | array of [Attribute](#attribute)                 |                                                                         | Annotations                                                             |
+| DocumentationComments | [DocumentationComments](#documentation-comments) | XML documentation comments                                              | JavaDoc                                                                 |
 
 
 ## Property
@@ -122,10 +122,10 @@ Not applicable for Java.
 
 ### Required keys:
 
-| Key  | Type   | .NET                 | Java |
-|------|--------|----------------------|------|
-| Name | string | Name of the property | N/A  |
-| Type | string | Type of the property | N/A  |
+| Key  | Type   | .NET                                 | Java |
+|------|--------|--------------------------------------|------|
+| Name | string | Name of the property                 | N/A  |
+| Type | string | Fully qualified type of the property | N/A  |
 
 
 ### Optional keys:
@@ -145,10 +145,10 @@ Note that the arguments in an attribute ([AttributeArgument](#attribute-argument
 
 ### Required keys:
 
-| Key  | Type   | .NET                  | Java                   |
-|------|--------|-----------------------|------------------------|
-| Name | string | Name of the attribute | Name of the annotation |
-| Type | string | Type of the attribute | Type of the annotation |
+| Key  | Type   | .NET                                  | Java                                   |
+|------|--------|---------------------------------------|----------------------------------------|
+| Name | string | Name of the attribute                 | Name of the annotation                 |
+| Type | string | Fully qualified type of the attribute | Fully qualified type of the annotation |
 
 
 ### Optional keys:
@@ -163,11 +163,11 @@ Argument object specifically designed for the arguments passed with an [Attribut
 
 ### Required keys:
 
-| Key   | Type   | .NET                  | Java                  |
-|-------|--------|-----------------------|-----------------------|
-| Name  | string | Name of the argument  | Name of the argument  |
-| Type  | string | Type of the argument  | Type of the argument  |
-| Value | string | Value of the argument | Value of the argument |
+| Key   | Type   | .NET                                 | Java                                                                                                          |
+|-------|--------|--------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| Name  | string | Name of the argument                 | Name of the argument. If no name is specified (for example, "@Foo(1234)"), the implicit name "value" is used. |
+| Type  | string | Fully qualified type of the argument | Fully qualified type of the argument                                                                          |
+| Value | string | Value of the argument                | Value of the argument                                                                                         |
 
 
 ## EnumMember
@@ -200,14 +200,14 @@ Not applicable for Java.
 
 ### Optional keys:
 
-| Key                   | Type                                              | .NET                           | Java |
-|-----------------------|---------------------------------------------------|--------------------------------|------|
-| Name                  | string                                            | Name of the event              | N/A  |
-| Type                  | string                                            | Type of the event              | N/A  |
-| Initializer           | string                                            | The initial value of the event | N/A  |
-| Modifiers             | integer, minimum 0                                | See [Modifiers](#modifiers)    | N/A  |
-| Attributes            | array of [Attribute](#attribute)                  |                                | N/A  |
-| DocumentationComments | [DocumentationComments](#documentation-comments)  | XML documentation comments     | N/A  |
+| Key                   | Type                                              | .NET                              | Java |
+|-----------------------|---------------------------------------------------|-----------------------------------|------|
+| Name                  | string                                            | Name of the event                 | N/A  |
+| Type                  | string                                            | Fully qualified type of the event | N/A  |
+| Initializer           | string                                            | The initial value of the event    | N/A  |
+| Modifiers             | integer, minimum 0                                | See [Modifiers](#modifiers)       | N/A  |
+| Attributes            | array of [Attribute](#attribute)                  |                                   | N/A  |
+| DocumentationComments | [DocumentationComments](#documentation-comments)  | XML documentation comments        | N/A  |
 
 
 ## Documentation Comments
@@ -236,10 +236,10 @@ Furthermore, note that JavaDoc allows for a general description, which can conta
 
 ### Required keys:
 
-| Key  | Type   | .NET                  | Java                  |
-|------|--------|-----------------------|-----------------------|
-| Name | string | Name of the parameter | Name of the parameter |
-| Type | string | Type of the parameter | Type of the parameter |
+| Key  | Type   | .NET                                  | Java                                  |
+|------|--------|---------------------------------------|---------------------------------------|
+| Name | string | Name of the parameter                 | Name of the parameter                 |
+| Type | string | Fully qualified type of the parameter | Fully qualified type of the parameter |
 
 
 ### Optional keys:
@@ -287,7 +287,7 @@ Each statement is one of the following options. The statement type is distinguis
 
 | Key        | Type                             | .NET                                                                       | Java                                                                       |
 |------------|----------------------------------|----------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| Condition  | string                           | 'if' or 'else if' condition, emtpy condition means it is an 'else' clause. | 'if' or 'else if' condition, emtpy condition means it is an 'else' clause. |
+| Condition  | string                           | 'if' or 'else if' condition, empty condition means it is an 'else' clause. | 'if' or 'else if' condition, empty condition means it is an 'else' clause. |
 | Statements | array of [Statement](#statement) |                                                                            |                                                                            |
 
 
@@ -357,23 +357,23 @@ Each statement is one of the following options. The statement type is distinguis
 
 #### Required keys:
 
-| Key        | Type                                       | .NET                  | Java                  |
-|------------|--------------------------------------------|-----------------------|-----------------------|
-| $type      | const                                      | Type of the statement | Type of the statement |
-| Expression | string                                     | Return expression     | Return expression     |
+| Key        | Type                                       | .NET                  | Java                                           |
+|------------|--------------------------------------------|-----------------------|------------------------------------------------|
+| $type      | const                                      | Type of the statement | Type of the statement                          |
+| Expression | string                                     | Return expression     | Return expression, this is not a required key. |
 
 
 ## Argument
 
 ### Required keys:
 
-| Key  | Type   | .NET                  | Java                  |
-|------|--------|-----------------------|-----------------------|
-| Type | string | Type of the argument  | Type of the argument  |
-| Text | string | Value of the argument | Value of the argument |
+| Key  | Type   | .NET                                 | Java                                 |
+|------|--------|--------------------------------------|--------------------------------------|
+| Type | string | Fully qualified type of the argument | Fully qualified type of the argument |
+| Text | string | Value of the argument                | Value of the argument                |
 
 ### Optional keys:
 
-| Key  | Type   | .NET                  | Java                  |
-|------|--------|-----------------------|-----------------------|
-| Type | string | Type of the argument  | Type of the argument  |
+| Key  | Type   | .NET                                 | Java                                 |
+|------|--------|--------------------------------------|--------------------------------------|
+| Type | string | Fully qualified type of the argument | Fully qualified type of the argument |
