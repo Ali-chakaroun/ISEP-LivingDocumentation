@@ -51,12 +51,8 @@ For an example on how to use the Maven plugin, see the `pom.xml` configuration i
 
 ### State of analyzer
 
-The following Java language elements are currently included in the generated JSON:
-
-> [~implemented-visit-types]
-
-The links refer to the types as present in the [JavaParser](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.6/) library. 
-Note that the level of detail is not infinite; some nested constructs may be cut short and included as a string literal.
+A list of Java language features which are included in the analyzer can be found in the JSON schema documentation.
+This documentation will be added soon.
 
 ## Support Libraries
 

@@ -10,7 +10,6 @@ const process = require('node:process');
 
 const OUTPUT = `../README.md`;
 const README_TEMPLATE = 'README_template.md';
-const JAVAPARSER_DOC_SITE = 'https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/';
 
 const json = JSON.parse(fs.readFileSync(process.argv[2]));
 
@@ -36,24 +35,12 @@ function renderCmdOptions(d) {
 }
 
 const cmdOptionsTable = CMD_LINE_TABLE_TEMPLATE.replace('~', () => renderCmdOptions(json));
-
-// Section rendering the implemented visited methods
-function getMarkdownLink(type) {
-  const splitted = type.split('.');
-  const displayName = splitted[splitted.length -1];
-  const relUrl = splitted.join('/');
-  return `[${displayName}](${JAVAPARSER_DOC_SITE}${relUrl}.html)`;
-}
-
 const visitor = json.filter((type) => type.FullName === 'com.infosupport.ldoc.analyzerj.AnalysisVisitor')[0];
-const parserTypes = visitor.Methods.filter((method) => method.Name === 'visit').map((method) => method.Parameters[0].Type);
-const implementedTypesList = parserTypes.map(getMarkdownLink).join(', ');
 
 // Combining everything
 try {
   const readmeTemplate = fs.readFileSync(README_TEMPLATE, 'utf8');
-  let finalReadme = readmeTemplate.replace('[~cmd-line-options]', cmdOptionsTable);
-  finalReadme = finalReadme.replace('[~implemented-visit-types]', implementedTypesList);
+  const finalReadme = readmeTemplate.replace('[~cmd-line-options]', cmdOptionsTable);
   fs.writeFileSync(OUTPUT, finalReadme);
 } catch (err) {
   console.error(err);
