@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      max-width: 500px;
+      margin: 3em auto;
+      line-height: 1.6em;
+    }
+  </style>
+  <title>Ye Olde Sandwich Shoppe</title>
+</head>
+<body>
+<h1>Ye Olde Sandwich Shoppe</h1>
+<form action="/order" method="post">
+  <div>
+    <label>
+      Address
+      <input type="text" name="address" value="Avenida da Pastelaria 1903, Lisbon">
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Bread
+      <select name="bread">
+        <option value="WHOLEWHEAT">Whole wheat</option>
+        <option value="RYE">Rye</option>
+        <option value="ITALIAN">Italian</option>
+      </select>
+    </label>
+  </div>
+
+  <div>
+    <label>
+      Protein
+      <select name="protein">
+        <option value="CHICKEN">Chicken</option>
+        <option value="CHEESE">Cheese</option>
+        <option value="AVOCADO">Avocado</option>
+        <option value="EGG">Egg</option>
+      </select>
+    </label>
+  </div>
+
+  <input type="submit">
+</form>
+</body>
+</html>
