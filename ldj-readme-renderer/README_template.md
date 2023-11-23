@@ -22,8 +22,7 @@ can be identified (which are copied from [LivingDocumentation][ldoc] description
 * [**Analyzer**](#analyzer): A tool to analyze Java projects.
 * [**Libraries**](#support-libraries): Assists in generating applications that can create plain text files such as MarkDown, AsciiDoc, PlantUML, Mermaid, and more.
 
-> **Note**: As this repository is currently association to a University assignment, it is unfortunately not possible to directly contribute to this project. 
-> Furthermore, some of the described functionalities may not yet be finalised/are subject to change.
+> **Note:** The Libraries are not yet contained within this repository.
 
 ## Getting started
 
@@ -62,5 +61,15 @@ Note that the level of detail is not infinite; some nested constructs may be cut
 ## Support Libraries
 
 There is currently no support library available. 
+
+## Contributing
+At the moment, this repository is associated to a student assignment of the University of Twente.
+Due to grading criteria, it may not be possible to contribute to this project.
+
+1. Did you find a bug? Please report this, this will help improve the project and does not collide with the educational guidelines.
+2. In the case you want to add a new feature, please contact one of the authors. Depending on the feature, it may or may not be possible to implement this yourself.
+
+The university assignment is expected to end around February 2024. As of then, these guidelines will be lifted.
+
 
 [ldoc]: https://github.com/eNeRGy164/LivingDocumentation
