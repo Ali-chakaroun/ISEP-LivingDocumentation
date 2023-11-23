@@ -3,15 +3,16 @@ package com.infosupport.ldoc.analyzerj.descriptions;
 import java.util.Objects;
 
 /**
- * I don't know exactly what this is for ?.
+ * Helper class to filter the types that need to be serialized (all excluding
+ * {@link TypeType#CLASS}).
  */
 public class TypeTypeFilter {
 
   /**
-   * Check if given object is a TypeType.CLASS ?.
+   * Filter out non-default values (so skip "Type":0).
    *
-   * @param obj ?
-   * @return ?
+   * @param obj TypeType object
+   * @return True if obj is a non-default value, False if obj is {@link TypeType#CLASS}.
    */
   @Override
   public boolean equals(Object obj) {
@@ -19,7 +20,7 @@ public class TypeTypeFilter {
   }
 
   /**
-   * ?.
+   * Mandatory method. Currently not in use.
    *
    * @return int 0
    */
