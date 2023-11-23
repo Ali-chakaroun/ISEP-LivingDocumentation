@@ -22,8 +22,7 @@ can be identified (which are copied from [LivingDocumentation][ldoc] description
 * [**Analyzer**](#analyzer): A tool to analyze Java projects.
 * [**Libraries**](#support-libraries): Assists in generating applications that can create plain text files such as MarkDown, AsciiDoc, PlantUML, Mermaid, and more.
 
-> **Note**: As this repository is currently association to a University assignment, it is unfortunately not possible to directly contribute to this project. 
-> Furthermore, some of the described functionalities may not yet be finalised/are subject to change.
+> **Note:** The Libraries are not yet contained within this repository.
 
 ## Getting started
 
@@ -59,15 +58,21 @@ For an example on how to use the Maven plugin, see the `pom.xml` configuration i
 
 ### State of analyzer
 
-The following Java language elements are currently included in the generated JSON:
-
-> [ClassOrInterfaceDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/ClassOrInterfaceDeclaration.html), [RecordDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/RecordDeclaration.html), [EnumDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/EnumDeclaration.html), [EnumConstantDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/EnumConstantDeclaration.html), [FieldDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/FieldDeclaration.html), [MethodDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/MethodDeclaration.html), [ConstructorDeclaration](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/ConstructorDeclaration.html), [Parameter](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/body/Parameter.html), [MarkerAnnotationExpr](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/expr/MarkerAnnotationExpr.html), [SingleMemberAnnotationExpr](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/expr/SingleMemberAnnotationExpr.html), [NormalAnnotationExpr](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/expr/NormalAnnotationExpr.html), [MemberValuePair](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/expr/MemberValuePair.html), [ReturnStmt](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/stmt/ReturnStmt.html), [IfStmt](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/stmt/IfStmt.html), [ForEachStmt](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/stmt/ForEachStmt.html), [SwitchStmt](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/stmt/SwitchStmt.html), [SwitchEntry](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/stmt/SwitchEntry.html), [AssignExpr](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/expr/AssignExpr.html), [MethodCallExpr](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/expr/MethodCallExpr.html), [CatchClause](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/stmt/CatchClause.html), [JavadocComment](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.1/com/github/javaparser/ast/comments/JavadocComment.html)
-
-The links refer to the types as present in the [JavaParser](https://javadoc.io/static/com.github.javaparser/javaparser-core/3.25.6/) library. 
-Note that the level of detail is not infinite; some nested constructs may be cut short and included as a string literal.
+A list of Java language features which are included in the analyzer can be found in the JSON schema documentation.
+This documentation will be added soon.
 
 ## Support Libraries
 
 There is currently no support library available. 
+
+## Contributing
+At the moment, this repository is associated to a student assignment of the University of Twente.
+Due to grading criteria, it may not be possible to contribute to this project.
+
+1. Did you find a bug? Please report this, this will help improve the project and does not collide with the educational guidelines.
+2. In the case you want to add a new feature, please contact one of the authors. Depending on the feature, it may or may not be possible to implement this yourself.
+
+The university assignment is expected to end around February 2024. As of then, these guidelines will be lifted.
+
 
 [ldoc]: https://github.com/eNeRGy164/LivingDocumentation
