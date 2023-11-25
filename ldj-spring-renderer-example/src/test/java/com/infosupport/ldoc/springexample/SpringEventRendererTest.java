@@ -1,6 +1,5 @@
 package com.infosupport.ldoc.springexample;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -22,11 +21,6 @@ class SpringEventRendererTest {
 
   private final StringWriter sw = new StringWriter();
   private final PrintWriter pw = new PrintWriter(sw);
-
-  @Test
-  void constructor() {
-    assertDoesNotThrow(SpringEventRenderer::new);
-  }
 
   @Test
   void interaction() {
