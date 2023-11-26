@@ -15,6 +15,7 @@
     <module>ldj-maven-plugin-example</module>
     <module>ldj-spring-amqp-example</module>
     <module>ldj-spring-event-example</module>
+    <module>ldj-spring-renderer-example</module>
   </modules>
 
   <build>
