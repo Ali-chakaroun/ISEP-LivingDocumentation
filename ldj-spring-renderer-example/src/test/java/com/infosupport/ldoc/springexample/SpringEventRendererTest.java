@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infosupport.ldoc.springexample.SpringEventRenderer.Interaction;
 import com.infosupport.ldoc.springexample.SpringEventRenderer.Kind;
+import com.infosupport.ldoc.springexample.util.PlantUMLBuilder;
+import com.infosupport.ldoc.springexample.util.StringOperations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,21 +61,21 @@ class SpringEventRendererTest {
 
   @Test
   void stripName() {
-    assertEquals("", SpringEventRenderer.stripName(""));
-    assertEquals("SimpleName", SpringEventRenderer.stripName("SimpleName"));
-    assertEquals("SomeClassName", SpringEventRenderer.stripName("org.example.SomeClassName"));
+    assertEquals("", StringOperations.stripName(""));
+    assertEquals("SimpleName", StringOperations.stripName("SimpleName"));
+    assertEquals("SomeClassName", StringOperations.stripName("org.example.SomeClassName"));
   }
 
   @Test
   void humanizeName() {
-    assertEquals("", SpringEventRenderer.humanizeName(""));
-    assertEquals("Simple Name", SpringEventRenderer.humanizeName("SimpleName"));
-    assertEquals("Some Class Name", SpringEventRenderer.humanizeName("org.example.SomeClassName"));
+    assertEquals("", StringOperations.humanizeName(""));
+    assertEquals("Simple Name", StringOperations.humanizeName("SimpleName"));
+    assertEquals("Some Class Name", StringOperations.humanizeName("org.example.SomeClassName"));
   }
 
   @Test
   void renderParticipant() {
-    SpringEventRenderer.renderParticipant(pw, "org.example.ExampleParticipant");
+    PlantUMLBuilder.renderParticipant(pw, "org.example.ExampleParticipant");
 
     assertEquals(
         "participant \"Example Participant\" as org.example.ExampleParticipant\n", sw.toString());
@@ -81,7 +83,7 @@ class SpringEventRendererTest {
 
   @Test
   void renderInteraction() {
-    SpringEventRenderer.renderInteraction(
+    PlantUMLBuilder.renderInteraction(
         pw, "org.example.SomeSender", "org.example.SomeReceiver", "org.example.ExampleEvent");
 
     assertEquals(

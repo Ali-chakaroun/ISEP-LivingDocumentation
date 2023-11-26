@@ -2,6 +2,7 @@ package com.infosupport.ldoc.springexample;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.infosupport.ldoc.springexample.util.PlantUMLBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -96,28 +97,6 @@ public class SpringEventRenderer {
     return interactions;
   }
 
-  /**
-   * Converts a fully-qualified class name into a plain class name.
-   */
-  static String stripName(String fqdn) {
-    return fqdn.replaceAll("^.*\\.", "");
-  }
-
-  /**
-   * Converts a fully-qualified class to a label that seems more human, with space-separated words.
-   */
-  static String humanizeName(String fqdn) {
-    return String.join(" ", stripName(fqdn).split("(?<=\\p{Ll})(?=\\p{Lu})"));
-  }
-
-  static void renderParticipant(PrintWriter out, String name) {
-    out.printf("participant \"%s\" as %s\n", humanizeName(name), name);
-  }
-
-  static void renderInteraction(PrintWriter out, String sender, String receiver, String event) {
-    out.printf("%s -[#ForestGreen]> %s : %s\n", sender, receiver, stripName(event));
-  }
-
   static void renderInteractions(PrintWriter out, String sender, List<Interaction> interactions,
       List<String> classes, String scope) {
     // This is O(spicy) but seems fast enough in our example.
@@ -126,7 +105,7 @@ public class SpringEventRenderer {
         for (String receiver : classes) {
           for (Interaction receive : interactions) {
             if (receive.isListen(receiver, send.event())) {
-              renderInteraction(out, sender, receiver, receive.event());
+              PlantUMLBuilder.renderInteraction(out, sender, receiver, receive.event());
 
               out.println("activate %s".formatted(receiver));
               renderInteractions(out, receiver, interactions, classes, receive.event());
@@ -151,7 +130,7 @@ public class SpringEventRenderer {
     List<String> classes = interactions.stream().map(Interaction::className).distinct().toList();
 
     for (String participant : classes) {
-      renderParticipant(bufferWriter, participant);
+      PlantUMLBuilder.renderParticipant(bufferWriter, participant);
     }
 
     for (String sender : classes) {
