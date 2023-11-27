@@ -215,8 +215,7 @@ public class SpringAmpqRenderer {
 
 
   public static void main(String[] args) throws IOException {
-    // TODO Note event renderer is kept as class here because the resource is attached over there
-    try (InputStream tplFile = SpringEventRenderer.class.getResourceAsStream("template.adoc")) {
+    try (InputStream tplFile = SpringAmpqRenderer.class.getResourceAsStream("template.adoc")) {
       String template = new String(Objects.requireNonNull(tplFile).readAllBytes());
       SpringAmpqRenderer.render(System.in, System.out, template);
     }
