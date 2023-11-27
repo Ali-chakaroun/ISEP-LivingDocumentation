@@ -27,9 +27,7 @@ public class SpringAmpqRenderer {
 
   /**
    * check if contains attribute with specified type and return that attribute node
-   * @param node
-   * @param attributeType
-   * @return
+   * @return The attribute JsonNode with attributeType, null if does not exist
    */
   public static JsonNode containsAttribute(JsonNode node, String attributeType) {
     for (JsonNode att : node.path("Attributes")) {
@@ -41,20 +39,8 @@ public class SpringAmpqRenderer {
   }
 
   /**
-   * Whether a node is a class node that is a queue Listener
-   * Pragmatically checks whether a presumed class node has a @RabbitListener annotation
-   * @param typeDescriptionNode
-   * @return
-   */
-  public static boolean isRabbitListener(JsonNode typeDescriptionNode) {
-    return containsAttribute(typeDescriptionNode, RABBIT_LISTENER_ANNOTATION) != null;
-  }
-
-  /**
    * Whether a node is a method node that handles the reading of a queue message
    * Pragmatically checks whether a presumed method node contains a @RabbitHandler annotation
-   * @param methodNode
-   * @return
    */
   public static boolean isQueueReadMethod(JsonNode methodNode) {
     return containsAttribute(methodNode, RABBIT_HANDLER_ANNOTATION) != null;
@@ -65,9 +51,9 @@ public class SpringAmpqRenderer {
    *  This can either be from:
    *    1. a convertAndSend(queue, msg) method invocation
    *    2. Rabbit listener with the @SendTo annotation
-   * @param node
-   * @param className
-   * @return Extracted QueueInteraction from node. Null if could not find one
+   * @param node JsonNode to check
+   * @param className class name that is attached to the interaction IF  such interaction is found
+   * @return Extracted QueueInteraction from node. Null if not found
    */
   public static QueueInteraction extractQueuePost(JsonNode node, String className) {
     // convertAndSend statement type
@@ -92,9 +78,9 @@ public class SpringAmpqRenderer {
 
   /**
    * Recursive method to retrieve all posts to a queue from a node and all its children
-   * @param node
-   * @param className
-   * @return
+   * @param node Node to check
+   * @param className class name that is attached to interactions that are found
+   * @return A list of Post Queue interactions that where found
    */
   public static List<QueueInteraction> findQueuePosts(JsonNode node, String className) {
     List<QueueInteraction> interactions = new ArrayList<>(0);
@@ -112,10 +98,10 @@ public class SpringAmpqRenderer {
 
   /**
    * Presumes node is array type
-   * @param nodes
-   * @param key
-   * @param value
-   * @return
+   * @param nodes JsonNode (presumed to be of Json Array type
+   * @param key the requested key of the JsonNode
+   * @param value the requested value of the JsonNode
+   * @return Json node (object) which contains value associated to key
    */
   public static JsonNode getNodeWithKeyAndValue(JsonNode nodes, String key, String value) {
     if (!nodes.isArray()) return null;
@@ -128,6 +114,11 @@ public class SpringAmpqRenderer {
     return null;
   }
 
+  /**
+   * From a JsonNode,
+   * @param root root Node of the Json tree corresponding to a LivingDocumentation analysis Json file
+   * @return a list of all top-level interactions (note that post interactions that happen in a read interaction are nested)
+   */
   public static List<QueueInteraction> findAllQueueInteractions(JsonNode root) {
     List<QueueInteraction> interactions = new ArrayList<>();
 
@@ -169,15 +160,14 @@ public class SpringAmpqRenderer {
 
 
   /**
-   * @param out
-   * @param allInteractions
-   * @param relevantPostInteractionsToReply
+   * Recursive method to create all PlantUML code for all interactions
+   * @param out writer where PlantUML is written to
+   * @param allInteractions all interactions associated with the source applications
+   * @param relevantPostInteractionsToReply list of Post Queue interactions that should be rendered for this cycle
    */
   static void renderInteractions(PrintWriter out, List<QueueInteraction> allInteractions,
       List<QueueInteraction> relevantPostInteractionsToReply) {
-    // This is O(spicy) but seems fast enough in our example.
-    //TODO
-    // Loop over all post interactions of the specified actor
+    // Loop over all top-level post interactions
     for (QueueInteraction postInteraction : relevantPostInteractionsToReply) {
       // Loop over all read reactions that get triggered after the postInteraction
       for (QueueInteraction readInteraction : postInteraction.filterReadsReactingToThis(allInteractions)) {
@@ -185,6 +175,7 @@ public class SpringAmpqRenderer {
             readInteraction.messageType());
 
         out.println("activate %s".formatted(readInteraction.actor()));
+        // render all post queue interactions that are instantiated from this read interaction
         renderInteractions(out, allInteractions, readInteraction.reactionToRead());
         out.println("deactivate %s".formatted(readInteraction.actor()));
       }
