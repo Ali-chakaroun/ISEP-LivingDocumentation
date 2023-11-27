@@ -128,9 +128,9 @@ public class SpringEventRenderer {
             if (receive.isListen(receiver, send.event())) {
               renderInteraction(out, sender, receiver, receive.event());
 
-              out.println("activate %s".formatted(receiver));
+              out.printf("activate %s\n", receiver);
               renderInteractions(out, receiver, interactions, classes, receive.event());
-              out.println("deactivate %s".formatted(receiver));
+              out.printf("deactivate %s\n", receiver);
             }
           }
         }
