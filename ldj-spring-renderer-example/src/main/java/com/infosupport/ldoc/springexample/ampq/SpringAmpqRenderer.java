@@ -3,10 +3,20 @@ package com.infosupport.ldoc.springexample.ampq;
 import static com.infosupport.ldoc.springexample.util.StringOperations.stripName;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.infosupport.ldoc.springexample.SpringEventRenderer;
+import com.infosupport.ldoc.springexample.util.PlantUMLBuilder;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
+import java.util.stream.Collectors;
+
 
 public class SpringAmpqRenderer {
 
@@ -65,8 +75,8 @@ public class SpringAmpqRenderer {
         && node.path("Name").asText("").equals("convertAndSend")
         && node.path("ContainingType").asText("").equals(RABBIT_TEMPLATE_CLASS)) {
       String queue = node.path("Arguments").path(0).path("Text").asText();
-      String msgType = stripName(node.path("Arguments").path(1).path("Text").asText()); // Full qualified name
-      return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType); // Convert to basic name to allow cross application queue communications
+      String msgType = stripName(node.path("Arguments").path(1).path("Type").asText()); // Full qualified name
+      return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType, null); // Convert to basic name to allow cross application queue communications
     }
 
     // Listen method with return type
@@ -75,7 +85,7 @@ public class SpringAmpqRenderer {
       // So node is both a method and contains the SendTo annotation
       String queue = sendToAttribute.path("Arguments").path(0).path("Value").asText();
       String msgType = stripName(node.path("ReturnType").asText()); // Convert to basic name to allow cross application queue communications
-      return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType);
+      return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType, null);
     }
     return null;
   }
@@ -118,11 +128,11 @@ public class SpringAmpqRenderer {
     return null;
   }
 
-  public List<QueueInteraction> findAllQueueInteractions(JsonNode root) {
+  public static List<QueueInteraction> findAllQueueInteractions(JsonNode root) {
     List<QueueInteraction> interactions = new ArrayList<>();
 
     for (JsonNode typeDesc : root) {
-      String className = typeDesc.path("Name").textValue();
+      String className = typeDesc.path("FullName").textValue();
 
       //check if class is listener
       JsonNode rabbitListenerAnnotation = containsAttribute(typeDesc, RABBIT_LISTENER_ANNOTATION);
@@ -138,20 +148,78 @@ public class SpringAmpqRenderer {
             // Note the type is stripped to support messages across different applications
             String messageType = stripName(method.path("Parameters").path(0).path("Type").textValue());
             // Create and add ReadInteraction
-            interactions.add(new QueueInteraction(className, QueueInteractionKind.READ, queue, messageType));
+            QueueInteraction newRead = new QueueInteraction(className, QueueInteractionKind.READ, queue, messageType, new ArrayList<>(0));
+            // Add all posts that happen within this read
+            newRead.reactionToRead().addAll(findQueuePosts(method, className));
+
+            interactions.add(newRead);
+          } else {
+            // Check for non-listening methods whether posts are made
+            interactions.addAll(findQueuePosts(typeDesc, className));
           }
         }
+      } else {
+        // Check for non-listener classes
+        interactions.addAll(findQueuePosts(typeDesc, className));
       }
 
-      // Check all statements whether a queue is called
-      interactions.addAll(findQueuePosts(typeDesc, className));
     }
     return interactions;
   }
 
 
-  public static void main(String[] args) {
+  /**
+   * @param out
+   * @param allInteractions
+   * @param relevantPostInteractionsToReply
+   */
+  static void renderInteractions(PrintWriter out, List<QueueInteraction> allInteractions,
+      List<QueueInteraction> relevantPostInteractionsToReply) {
+    // This is O(spicy) but seems fast enough in our example.
+    //TODO
+    // Loop over all post interactions of the specified actor
+    for (QueueInteraction postInteraction : relevantPostInteractionsToReply) {
+      // Loop over all read reactions that get triggered after the postInteraction
+      for (QueueInteraction readInteraction : postInteraction.filterReadsReactingToThis(allInteractions)) {
+        PlantUMLBuilder.renderInteraction(out, postInteraction.actor(), readInteraction.actor(),
+            readInteraction.messageType());
 
+        out.println("activate %s".formatted(readInteraction.actor()));
+        renderInteractions(out, allInteractions, readInteraction.reactionToRead());
+        out.println("deactivate %s".formatted(readInteraction.actor()));
+      }
+    }
+  }
+
+  /**
+   * Reads LivingDocumentation JSON from the input stream and writes Asciidoc to the output stream.
+   */
+  public static void render(InputStream in, OutputStream out, String template) throws IOException {
+    JsonNode json = new ObjectMapper().readTree(in);
+
+    StringWriter buffer = new StringWriter();
+    PrintWriter bufferWriter = new PrintWriter(buffer, true);
+
+    List<QueueInteraction> interactions = findAllQueueInteractions(json);
+    List<String> classes = interactions.stream().map(QueueInteraction::actor).distinct().toList();
+
+    for (String participant : classes) {
+      PlantUMLBuilder.renderParticipant(bufferWriter, participant);
+    }
+
+    // Note: requires there to be at least one queue post outside a queue read context
+    renderInteractions(bufferWriter, interactions, QueueInteraction.getAllPosts(interactions));
+
+    out.write(template.replace("' diagram", buffer.toString()).getBytes());
+  }
+
+
+  public static void main(String[] args) throws IOException {
+    // TODO Note event renderer is kept as class here because the resource is attached over there
+    try (InputStream tplFile = SpringEventRenderer.class.getResourceAsStream("template.adoc")) {
+      String template = new String(Objects.requireNonNull(tplFile).readAllBytes());
+      SpringAmpqRenderer.render(System.in, System.out, template);
+    }
   }
 
 }
