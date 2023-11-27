@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infosupport.ldoc.springexample.SpringEventRenderer.Interaction;
 import com.infosupport.ldoc.springexample.SpringEventRenderer.Kind;
-import com.infosupport.ldoc.springexample.util.PlantUMLBuilder;
+import com.infosupport.ldoc.springexample.util.PlantUmlBuilder;
 import com.infosupport.ldoc.springexample.util.StringOperations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -75,7 +75,7 @@ class SpringEventRendererTest {
 
   @Test
   void renderParticipant() {
-    PlantUMLBuilder.renderParticipant(pw, "org.example.ExampleParticipant");
+    PlantUmlBuilder.renderParticipant(pw, "org.example.ExampleParticipant");
 
     assertEquals(
         "participant \"Example Participant\" as org.example.ExampleParticipant\n", sw.toString());
@@ -83,7 +83,7 @@ class SpringEventRendererTest {
 
   @Test
   void renderInteraction() {
-    PlantUMLBuilder.renderInteraction(
+    PlantUmlBuilder.renderInteraction(
         pw, "org.example.SomeSender", "org.example.SomeReceiver", "org.example.ExampleEvent");
 
     assertEquals(
