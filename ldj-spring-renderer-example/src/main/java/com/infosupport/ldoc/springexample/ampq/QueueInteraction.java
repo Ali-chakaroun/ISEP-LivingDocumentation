@@ -1,6 +1,5 @@
 package com.infosupport.ldoc.springexample.ampq;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public record QueueInteraction(
