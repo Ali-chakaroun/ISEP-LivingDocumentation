@@ -32,6 +32,14 @@ public class ExampleAmqpApp {
   }
 
   /**
+   * Add the 'payments' queue to the context so that it is automatically declared if needed.
+   */
+  @Bean
+  public Queue paymentQueue() {
+    return new Queue("payments");
+  }
+
+  /**
    * Command-line entry point.
    */
   public static void main(String[] args) {
