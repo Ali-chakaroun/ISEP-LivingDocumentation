@@ -2,7 +2,7 @@ package com.infosupport.ldoc.springexample;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infosupport.ldoc.springexample.util.PlantUMLBuilder;
+import com.infosupport.ldoc.springexample.util.PlantUmlBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -105,7 +105,7 @@ public class SpringEventRenderer {
         for (String receiver : classes) {
           for (Interaction receive : interactions) {
             if (receive.isListen(receiver, send.event())) {
-              PlantUMLBuilder.renderInteraction(out, sender, receiver, receive.event());
+              PlantUmlBuilder.renderInteraction(out, sender, receiver, receive.event());
 
               out.println("activate %s".formatted(receiver));
               renderInteractions(out, receiver, interactions, classes, receive.event());
@@ -130,7 +130,7 @@ public class SpringEventRenderer {
     List<String> classes = interactions.stream().map(Interaction::className).distinct().toList();
 
     for (String participant : classes) {
-      PlantUMLBuilder.renderParticipant(bufferWriter, participant);
+      PlantUmlBuilder.renderParticipant(bufferWriter, participant);
     }
 
     for (String sender : classes) {

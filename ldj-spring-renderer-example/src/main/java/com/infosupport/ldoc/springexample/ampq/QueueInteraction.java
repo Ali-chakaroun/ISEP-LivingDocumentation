@@ -11,22 +11,27 @@ public record QueueInteraction(
     // The queue a message is either read/posted from/on
     String queue,
     // Class name of the POJO that is the message
-    //  NOTE: In order to support message type matching across multiple applications, in this sample, the plain class name is used (as opposed to the fqdn)
+    //  NOTE: In order to support message type matching across multiple applications, in this
+    //    sample, the plain class name is used (as opposed to the fqdn)
     String messageType,
 
-    // TODO note: Hacky: assumes this is Read, and contains solely post interactions that happen within this read context (advocates for polymorphism is read/post interactions
+    // TODO note: Hacky: assumes this is Read, and contains solely post interactions that happen
+    //   within this read context (advocates for polymorphism is read/post interactions
     // A list of Post interactions that are instantiated from this read interaction
     List<QueueInteraction> reactionToRead
 ) {
 
-  // Utility method to filter a list of interactions on type POST
-  //  TODO note: earlier did some more work, may not be useful to keep this as a separate method
+  /**
+   * Utility method to filter a list of interactions on type POST.
+   *  TODO note: earlier did some more work, may not be useful to keep this as a separate method.
+   */
   static List<QueueInteraction> getAllPosts(List<QueueInteraction> queueInteractions) {
     return queueInteractions.stream().filter(i -> i.kind() == QueueInteractionKind.POST).toList();
   }
 
   /**
-   * Filters a list to get all Queue Interactions that get triggered after a queue post
+   * Filters a list to get all Queue Interactions that get triggered after a queue post.
+   *
    * @param queueInteractions list to filter
    * @return a list of read interactions that react to a post interaction
    */
@@ -38,9 +43,9 @@ public record QueueInteraction(
   }
 
   /**
-   * Check whether this would react on another post reaction
-   *  Only makes sense if this is a read
+   * Check whether this would react on another post reaction. Only makes sense if this is a read
    * Actors may be different, queues and message types must be equal
+   *
    * @param other interaction to check
    * @return whether this would react on other
    */

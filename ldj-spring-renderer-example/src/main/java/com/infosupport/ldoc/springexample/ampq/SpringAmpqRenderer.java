@@ -4,8 +4,7 @@ import static com.infosupport.ldoc.springexample.util.StringOperations.stripName
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infosupport.ldoc.springexample.SpringEventRenderer;
-import com.infosupport.ldoc.springexample.util.PlantUMLBuilder;
+import com.infosupport.ldoc.springexample.util.PlantUmlBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,19 +13,22 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
-import java.util.stream.Collectors;
 
 
 public class SpringAmpqRenderer {
 
-  public static final String RABBIT_LISTENER_ANNOTATION = "org.springframework.amqp.rabbit.annotation.RabbitListener";
-  public static final String RABBIT_TEMPLATE_CLASS = "org.springframework.amqp.rabbit.core.RabbitTemplate";
-  public static final String RABBIT_SEND_TO_ANNOTATION = "org.springframework.messaging.handler.annotation.SendTo";
-  public static final String RABBIT_HANDLER_ANNOTATION = "org.springframework.amqp.rabbit.annotation.RabbitHandler";
+  public static final String RABBIT_LISTENER_ANNOTATION = "org.springframework.amqp.rabbit."
+      + "annotation.RabbitListener";
+  public static final String RABBIT_TEMPLATE_CLASS = "org.springframework.amqp.rabbit.core."
+      + "RabbitTemplate";
+  public static final String RABBIT_SEND_TO_ANNOTATION = "org.springframework.messaging.handler."
+      + "annotation.SendTo";
+  public static final String RABBIT_HANDLER_ANNOTATION = "org.springframework.amqp.rabbit."
+      + "annotation.RabbitHandler";
 
   /**
-   * check if contains attribute with specified type and return that attribute node
+   * Check if contains attribute with specified type and return that attribute node.
+   *
    * @return The attribute JsonNode with attributeType, null if does not exist
    */
   public static JsonNode containsAttribute(JsonNode node, String attributeType) {
@@ -39,7 +41,7 @@ public class SpringAmpqRenderer {
   }
 
   /**
-   * Whether a node is a method node that handles the reading of a queue message
+   * Whether a node is a method node that handles the reading of a queue message.
    * Pragmatically checks whether a presumed method node contains a @RabbitHandler annotation
    */
   public static boolean isQueueReadMethod(JsonNode methodNode) {
@@ -47,11 +49,10 @@ public class SpringAmpqRenderer {
   }
 
   /**
-   * Tries to extract a post queue interaction.
-   *  This can either be from:
-   *    1. a convertAndSend(queue, msg) method invocation
-   *    2. Rabbit listener with the @SendTo annotation
-   * @param node JsonNode to check
+   * Tries to extract a post queue interaction. This can either be from: 1. a convertAndSend(queue,
+   * msg) method invocation 2. Rabbit listener with the @SendTo annotation.
+   *
+   * @param node      JsonNode to check
    * @param className class name that is attached to the interaction IF  such interaction is found
    * @return Extracted QueueInteraction from node. Null if not found
    */
@@ -61,8 +62,10 @@ public class SpringAmpqRenderer {
         && node.path("Name").asText("").equals("convertAndSend")
         && node.path("ContainingType").asText("").equals(RABBIT_TEMPLATE_CLASS)) {
       String queue = node.path("Arguments").path(0).path("Text").asText();
-      String msgType = stripName(node.path("Arguments").path(1).path("Type").asText()); // Full qualified name
-      return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType, null); // Convert to basic name to allow cross application queue communications
+      String msgType = stripName(
+          node.path("Arguments").path(1).path("Type").asText()); // Full qualified name
+      return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType,
+          null); // Convert to basic name to allow cross application queue communications
     }
 
     // Listen method with return type
@@ -70,15 +73,17 @@ public class SpringAmpqRenderer {
     if (isQueueReadMethod(node) && sendToAttribute != null) {
       // So node is both a method and contains the SendTo annotation
       String queue = sendToAttribute.path("Arguments").path(0).path("Value").asText();
-      String msgType = stripName(node.path("ReturnType").asText()); // Convert to basic name to allow cross application queue communications
+      String msgType = stripName(node.path("ReturnType")
+          .asText()); // Convert to basic name to allow cross application queue communications
       return new QueueInteraction(className, QueueInteractionKind.POST, queue, msgType, null);
     }
     return null;
   }
 
   /**
-   * Recursive method to retrieve all posts to a queue from a node and all its children
-   * @param node Node to check
+   * Recursive method to retrieve all posts to a queue from a node and all its children.
+   *
+   * @param node      Node to check
    * @param className class name that is attached to interactions that are found
    * @return A list of Post Queue interactions that where found
    */
@@ -97,17 +102,20 @@ public class SpringAmpqRenderer {
   }
 
   /**
-   * Presumes node is array type
+   * Presumes node is array type.
+   *
    * @param nodes JsonNode (presumed to be of Json Array type
-   * @param key the requested key of the JsonNode
+   * @param key   the requested key of the JsonNode
    * @param value the requested value of the JsonNode
    * @return Json node (object) which contains value associated to key
    */
   public static JsonNode getNodeWithKeyAndValue(JsonNode nodes, String key, String value) {
-    if (!nodes.isArray()) return null;
+    if (!nodes.isArray()) {
+      return null;
+    }
 
     for (JsonNode node : nodes) {
-      if(node.path(key).asText().equals(value)) {
+      if (node.path(key).asText().equals(value)) {
         return node;
       }
     }
@@ -115,9 +123,12 @@ public class SpringAmpqRenderer {
   }
 
   /**
-   * From a JsonNode,
-   * @param root root Node of the Json tree corresponding to a LivingDocumentation analysis Json file
-   * @return a list of all top-level interactions (note that post interactions that happen in a read interaction are nested)
+   * From a JsonNode, gather all QueueInteractions.
+   *
+   * @param root root Node of the Json tree corresponding to a LivingDocumentation analysis Json
+   *             file
+   * @return a list of all top-level interactions (note that post interactions that happen in a read
+   *             interaction are nested)
    */
   public static List<QueueInteraction> findAllQueueInteractions(JsonNode root) {
     List<QueueInteraction> interactions = new ArrayList<>();
@@ -129,17 +140,21 @@ public class SpringAmpqRenderer {
       JsonNode rabbitListenerAnnotation = containsAttribute(typeDesc, RABBIT_LISTENER_ANNOTATION);
       if (rabbitListenerAnnotation != null) { // I.e., this class is a RabbitListener
         // Note that the queue is the same for all methods within a RabbitListener
-        JsonNode queueArgument = getNodeWithKeyAndValue(rabbitListenerAnnotation.path("Arguments"),"Name","queues");
-        assert queueArgument != null; // TODO This should not happen, how nicely do we want to handle this?
+        JsonNode queueArgument = getNodeWithKeyAndValue(rabbitListenerAnnotation.path("Arguments"),
+            "Name", "queues");
+        assert queueArgument
+            != null; // TODO This should not happen, how nicely do we want to handle this?
         String queue = queueArgument.path("Value").asText();
 
         //Check for listen methods
         for (JsonNode method : typeDesc.path("Methods")) {
           if (isQueueReadMethod(method)) {
             // Note the type is stripped to support messages across different applications
-            String messageType = stripName(method.path("Parameters").path(0).path("Type").textValue());
+            String messageType = stripName(
+                method.path("Parameters").path(0).path("Type").textValue());
             // Create and add ReadInteraction
-            QueueInteraction newRead = new QueueInteraction(className, QueueInteractionKind.READ, queue, messageType, new ArrayList<>(0));
+            QueueInteraction newRead = new QueueInteraction(className, QueueInteractionKind.READ,
+                queue, messageType, new ArrayList<>(0));
             // Add all posts that happen within this read
             newRead.reactionToRead().addAll(findQueuePosts(method, className));
 
@@ -160,18 +175,22 @@ public class SpringAmpqRenderer {
 
 
   /**
-   * Recursive method to create all PlantUML code for all interactions
-   * @param out writer where PlantUML is written to
-   * @param allInteractions all interactions associated with the source applications
-   * @param relevantPostInteractionsToReply list of Post Queue interactions that should be rendered for this cycle
+   * Recursive method to create all PlantUML code for all interactions.
+   *
+   * @param out                             writer where PlantUML is written to
+   * @param allInteractions                 all interactions associated with the source
+   *                                        applications
+   * @param relevantPostInteractionsToReply list of Post Queue interactions that should be rendered
+   *                                        for this cycle
    */
   static void renderInteractions(PrintWriter out, List<QueueInteraction> allInteractions,
       List<QueueInteraction> relevantPostInteractionsToReply) {
     // Loop over all top-level post interactions
     for (QueueInteraction postInteraction : relevantPostInteractionsToReply) {
       // Loop over all read reactions that get triggered after the postInteraction
-      for (QueueInteraction readInteraction : postInteraction.filterReadsReactingToThis(allInteractions)) {
-        PlantUMLBuilder.renderInteraction(out, postInteraction.actor(), readInteraction.actor(),
+      for (QueueInteraction readInteraction : postInteraction.filterReadsReactingToThis(
+          allInteractions)) {
+        PlantUmlBuilder.renderInteraction(out, postInteraction.actor(), readInteraction.actor(),
             readInteraction.messageType());
 
         out.println("activate %s".formatted(readInteraction.actor()));
@@ -195,7 +214,7 @@ public class SpringAmpqRenderer {
     List<String> classes = interactions.stream().map(QueueInteraction::actor).distinct().toList();
 
     for (String participant : classes) {
-      PlantUMLBuilder.renderParticipant(bufferWriter, participant);
+      PlantUmlBuilder.renderParticipant(bufferWriter, participant);
     }
 
     // Note: requires there to be at least one queue post outside a queue read context
