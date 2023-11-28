@@ -52,9 +52,7 @@ public record TypeDescription(
 
     implements Description {
 
-  /**
-   * Builder class for constructing TypeDescriptions incrementally.
-   */
+  /** Builder class for constructing TypeDescriptions incrementally. */
   public static class Builder {
 
     private final TypeType type;
@@ -68,56 +66,42 @@ public record TypeDescription(
     private final List<Description> attributes = new ArrayList<>();
     private final List<Description> enumMembers = new ArrayList<>();
 
-    /**
-     * Start building a new TypeDescription with this TypeType and fully qualified name.
-     */
+    /** Start building a new TypeDescription with this TypeType and fully qualified name. */
     public Builder(TypeType type, String fullName) {
       this.type = type;
       this.fullName = fullName;
     }
 
-    /**
-     * Changes this Builder so that every product also has the given fully qualified base types.
-     */
+    /** Changes this Builder so that every product also has the given fully qualified base types. */
     public Builder withBaseTypes(List<String> baseTypes) {
       this.baseTypes.addAll(baseTypes);
       return this;
     }
 
-    /**
-     * Changes this Builder so that every product built also has the given modifiers.
-     */
+    /** Changes this Builder so that every product built also has the given modifiers. */
     public Builder withModifiers(int modifiers) {
       this.modifiers = this.modifiers | modifiers;
       return this;
     }
 
-    /**
-     * Changes this Builder so that the given comment is attached to every product.
-     */
+    /** Changes this Builder so that the given comment is attached to every product. */
     public Builder withComment(Description comment) {
       this.comment = comment;
       return this;
     }
 
-    /**
-     * Changes this Builder so that the given attributes (annotations) are added to the product.
-     */
+    /** Changes this Builder so that the given attributes (annotations) are added to the product. */
     public Builder withAttributes(List<Description> attributes) {
       this.attributes.addAll(attributes);
       return this;
     }
 
-    /**
-     * Changes this Builder so the given members are added to the product.
-     */
+    /** Changes this Builder so the given members are added to the product. */
     public Builder withMembers(Description... members) {
       return withMembers(List.of(members));
     }
 
-    /**
-     * Changes this Builder so the members in the given list are added to the product.
-     */
+    /** Changes this Builder so the members in the given list are added to the product. */
     public Builder withMembers(List<Description> members) {
       for (Description member : members) {
         if (member instanceof ConstructorDescription) {
@@ -133,9 +117,7 @@ public record TypeDescription(
       return this;
     }
 
-    /**
-     * Produces an immutable product TypeDescription.
-     */
+    /** Produces an immutable product TypeDescription. */
     public TypeDescription build() {
       return new TypeDescription(
           type,
