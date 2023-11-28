@@ -18,7 +18,7 @@ public record MemberDescription(
     List<Description> attributes,
 
     @JsonProperty("DocumentationComments")
-    @JsonInclude(Include.NON_EMPTY)
+    @JsonInclude(Include.NON_NULL)
     Description comments
 ) implements Description {
 
