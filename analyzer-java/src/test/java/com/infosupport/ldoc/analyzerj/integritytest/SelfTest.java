@@ -2,6 +2,7 @@ package com.infosupport.ldoc.analyzerj.integritytest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.infosupport.ldoc.analyzerj.Main;
 import java.io.File;
 import java.io.IOException;
