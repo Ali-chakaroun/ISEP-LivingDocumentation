@@ -273,7 +273,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return visitAnnotation(n, args);
   }
 
-  /** Describes an annotation argument member-value pair as an {@link AttributeArgumentDescription}. */
+  /**
+   * Describes an annotation argument member-value pair as an {@link AttributeArgumentDescription}.
+   */
   @Override
   public List<Description> visit(MemberValuePair n, Analyzer arg) {
     return List.of(
