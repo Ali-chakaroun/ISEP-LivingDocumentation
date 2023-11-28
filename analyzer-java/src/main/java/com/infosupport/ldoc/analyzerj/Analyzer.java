@@ -1,5 +1,6 @@
 package com.infosupport.ldoc.analyzerj;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.javaparser.ParseResult;
@@ -16,6 +17,10 @@ import com.infosupport.ldoc.analyzerj.descriptions.Description;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import net.jimblackler.jsonschemafriend.Schema;
+import net.jimblackler.jsonschemafriend.SchemaException;
+import net.jimblackler.jsonschemafriend.SchemaStore;
+import net.jimblackler.jsonschemafriend.Validator;
 
 /**
  * Analyzer executes {@link AnalysisJob} instances. It walks the given source directory, parses each
@@ -47,6 +52,18 @@ public class Analyzer {
     return typeSolverBuilder.withCurrentClassloader().withSourceCode(job.project()).build();
   }
 
+  private Boolean validateJson(List<Description> descriptions) {
+    try {
+      Schema schema = new SchemaStore().loadSchema(
+          this.getClass().getResource("/jsonschema/schema.json"));
+      new Validator().validate(schema, new ObjectMapper().convertValue(descriptions, Object.class));
+    } catch (SchemaException e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
   /** Execute the given job. An exception is thrown if a file can not be read or parsed. */
   public void analyze(AnalysisJob job) throws IOException {
     ParserConfiguration parserConfiguration = new ParserConfiguration()
@@ -70,6 +87,10 @@ public class Analyzer {
     ObjectWriter writer = job.pretty()
         ? objectMapper.writerWithDefaultPrettyPrinter()
         : objectMapper.writer();
-    writer.writeValue(job.output().toFile(), descriptions);
+    if (validateJson(descriptions)) {
+      writer.writeValue(job.output().toFile(), descriptions);
+    }
   }
+
+
 }
