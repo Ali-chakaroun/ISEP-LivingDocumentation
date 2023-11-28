@@ -12,12 +12,12 @@ up-to-date.
 ## State of the project
 
 As of right now, this project is linked to a student assignment originating from the University of
-Twente and InfoSupport. The aim of the project is to make the [LivingDocumentation][ldoc] project
-capable to handle multilingual projects. One aspect of this is to make LivingDocumentation
+Twente and Info Support. The aim of the project is to make the [Living Documentation][ldoc] project
+capable to handle multilingual projects. One aspect of this is to make Living Documentation
 available for the Java environment; which is the purpose of this repository.
 
-Within the aspect of making LivingDocumentation available for the Java environment, two features
-can be identified (which are copied from [LivingDocumentation][ldoc] description):
+Within the aspect of making Living Documentation available for the Java environment, two features
+can be identified (which are copied from [Living Documentation][ldoc] description):
 
 * [**Analyzer**](#analyzer): A tool to analyze Java projects.
 * [**Libraries**](#support-libraries): Assists in generating applications that can create plain text files such as MarkDown, AsciiDoc, PlantUML, Mermaid, and more.
@@ -27,7 +27,7 @@ can be identified (which are copied from [LivingDocumentation][ldoc] description
 ## Getting started
 
 The process of rendering documentation can be summarized as follows:
-1. **Analysis**: Run the Analyzer over the source code of your project. This creates a LivingDocumentation JSON file.
+1. **Analysis**: Run the Analyzer over the source code of your project. This creates a  Documentation JSON file.
 2. **Render the documentation**: Use a (custom) renderer that reads the generated JSON file and outputs documentation
 
 > Renderers are applications that you can write yourself making use of the support _Libraries_. These interpret the analyzed code and create documentation files.
@@ -35,7 +35,7 @@ The process of rendering documentation can be summarized as follows:
 ## Analyzer
 
 The analyzer takes Java source code as input and generates a JSON file (containing a representation 
-of the AbstractSyntaxTree which is compatible with other LivingDocumentation applications).
+of the AbstractSyntaxTree which is compatible with other Living Documentation applications).
 
 It can be used either as a Java command line application or as a Maven plugin.
 
