@@ -43,14 +43,7 @@ It can be used either as a Java command line application or as a Maven plugin.
 The Java analyzer can be invoked directly as a plain Java application [analyzer-java](/analyzer-java). It accepts the following command
 line options:
 
-
-| Short option | Long option | Description |
-| ------------ | ----------- | ----------- |
-|  | `--output` | The file path to save the output JSON to. (Required.) |
-|  | `--project` | Root directory of the project to analyze. (Required.) |
-| `-p` | `--pretty` | Indent (pretty-print) JSON output.  |
-
-
+[~cmd-line-options]
 
 ### Maven plugin
 The analyzer can also be used as a Maven plugin (which is defined in [ldj-maven-plugin](/ldj-maven-plugin)).

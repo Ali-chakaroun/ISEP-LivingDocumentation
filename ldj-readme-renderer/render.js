@@ -8,33 +8,19 @@
 const fs = require('node:fs');
 const process = require('node:process');
 
-const OUTPUT = `README.md`;
+const OUTPUT = `../README.md`;
+const README_TEMPLATE = 'README_template.md';
 
-const TEMPLATE = `[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Ali-chakaroun_ISEP-LivingDocumentation&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Ali-chakaroun_ISEP-LivingDocumentation)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Ali-chakaroun_ISEP-LivingDocumentation&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=Ali-chakaroun_ISEP-LivingDocumentation)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Ali-chakaroun_ISEP-LivingDocumentation&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Ali-chakaroun_ISEP-LivingDocumentation)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Ali-chakaroun_ISEP-LivingDocumentation&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Ali-chakaroun_ISEP-LivingDocumentation)
-# Living Documentation Java
+const json = JSON.parse(fs.readFileSync(process.argv[2]));
 
-This project is an extension of the [Living Documentation][ldoc] set of tools to
-Java. As part of the Living Documentation toolchain, it can be used to generate
-documentation and diagrams from source code so that documentation is always
-up-to-date.
-
-## Analyzer
-
-The analyzer parses Java projects into Living Documentation JSON files that can
-be rendered by Living Documentation renderers. It accepts the following command
-line options:
-
+// Section for rendering the command line options
+const CMD_LINE_TABLE_TEMPLATE = `
 | Short option | Long option | Description |
 | ------------ | ----------- | ----------- |
 ~
-
-[ldoc]: https://github.com/eNeRGy164/LivingDocumentation
 `;
 
-function render(d) {
+function renderCmdOptions(d) {
   if (d.Name === 'addOption' || d.Name === 'addRequiredOption') {
     const args = d.Arguments.map(a => a.Text).map(JSON.parse);
     const short = args[0] ? `\`-${args[0]}\`` : '';
@@ -42,11 +28,18 @@ function render(d) {
     const required = d.Name.includes('Required') ? '(Required.)' : '';
     return `| ${short} | ${long} | ${args[3]} ${required} |\n`;
   } else if (d instanceof Array) {
-    return d.map(render).join('');
+    return d.map(renderCmdOptions).join('');
   } else if (d instanceof Object) {
-    return Object.values(d).map(render).join('');
+    return Object.values(d).map(renderCmdOptions).join('');
   }
 }
 
-const json = JSON.parse(fs.readFileSync(process.argv[2]));
-fs.writeFileSync(OUTPUT, TEMPLATE.replace('~', () => render(json)));
+const cmdOptionsTable = CMD_LINE_TABLE_TEMPLATE.replace('~', () => renderCmdOptions(json));
+
+// Combining everything
+const readmeTemplate = fs.readFileSync(README_TEMPLATE, 'utf8');
+const finalReadme = readmeTemplate.replace('[~cmd-line-options]', cmdOptionsTable);
+fs.writeFileSync(OUTPUT, finalReadme);
+
+
+
