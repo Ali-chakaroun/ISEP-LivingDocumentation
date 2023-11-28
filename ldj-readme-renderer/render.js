@@ -37,13 +37,9 @@ function renderCmdOptions(d) {
 const cmdOptionsTable = CMD_LINE_TABLE_TEMPLATE.replace('~', () => renderCmdOptions(json));
 
 // Combining everything
-try {
-  const readmeTemplate = fs.readFileSync(README_TEMPLATE, 'utf8');
-  const finalReadme = readmeTemplate.replace('[~cmd-line-options]', cmdOptionsTable);
-  fs.writeFileSync(OUTPUT, finalReadme);
-} catch (err) {
-  console.error(err);
-}
+const readmeTemplate = fs.readFileSync(README_TEMPLATE, 'utf8');
+const finalReadme = readmeTemplate.replace('[~cmd-line-options]', cmdOptionsTable);
+fs.writeFileSync(OUTPUT, finalReadme);
 
 
 
