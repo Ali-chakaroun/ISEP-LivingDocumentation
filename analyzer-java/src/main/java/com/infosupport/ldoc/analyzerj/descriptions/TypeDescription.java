@@ -27,7 +27,7 @@ public record TypeDescription(
     List<String> baseTypes,
 
     @JsonProperty("DocumentationComments")
-    @JsonInclude(Include.NON_EMPTY)
+    @JsonInclude(Include.NON_NULL)
     Description comments,
 
     @JsonProperty("Fields")
