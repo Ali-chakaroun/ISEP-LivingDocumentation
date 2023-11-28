@@ -35,7 +35,6 @@ function renderCmdOptions(d) {
 }
 
 const cmdOptionsTable = CMD_LINE_TABLE_TEMPLATE.replace('~', () => renderCmdOptions(json));
-const visitor = json.filter((type) => type.FullName === 'com.infosupport.ldoc.analyzerj.AnalysisVisitor')[0];
 
 // Combining everything
 try {
