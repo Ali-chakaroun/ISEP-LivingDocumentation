@@ -15,10 +15,14 @@ public record MemberDescription(
 
     @JsonProperty("Attributes")
     @JsonInclude(Include.NON_EMPTY)
-    List<Description> attributes
+    List<Description> attributes,
+
+    @JsonProperty("DocumentationComments")
+    @JsonInclude(Include.NON_NULL)
+    Description comments
 ) implements Description {
 
   public MemberDescription(String name) {
-    this(name, 0, List.of());
+    this(name, 0, List.of(), null);
   }
 }

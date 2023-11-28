@@ -10,15 +10,8 @@ public record EnumMemberDescription(
     MemberDescription member,
     @JsonProperty("Arguments")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    List<Description> arguments,
-
-    @JsonProperty("DocumentationComments")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    Description comments
+    List<Description> arguments
 
 ) implements Description {
-
-
-
 
 }
