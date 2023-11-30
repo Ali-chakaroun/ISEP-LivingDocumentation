@@ -1,0 +1,80 @@
+[ {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.Action"
+}, {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.Reaction"
+}, {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.OnlyListen",
+  "Methods" : [ {
+    "ReturnType" : "void",
+    "Parameters" : [ {
+      "Type" : "org.example.Action",
+      "Name" : "action"
+    } ],
+    "Name" : "handleAction",
+    "Modifiers" : 2,
+    "Attributes" : [ {
+      "Type" : "org.springframework.context.event.EventListener",
+      "Name" : "EventListener"
+    } ]
+  }, {
+    "ReturnType" : "void",
+    "Parameters" : [ {
+      "Type" : "org.example.Reaction",
+      "Name" : "reaction"
+    } ],
+    "Name" : "handleReaction",
+    "Modifiers" : 2,
+    "Attributes" : [ {
+      "Type" : "org.springframework.context.event.EventListener",
+      "Name" : "EventListener"
+    } ]
+  } ],
+  "Attributes" : [ {
+    "Type" : "org.springframework.stereotype.Service",
+    "Name" : "Service"
+  } ]
+}, {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.Interact",
+  "Methods" : [ {
+    "ReturnType" : "org.example.Reaction",
+    "Parameters" : [ {
+      "Type" : "org.example.Action",
+      "Name" : "action"
+    } ],
+    "Name" : "handleAction",
+    "Modifiers" : 2,
+    "Attributes" : [ {
+      "Type" : "org.springframework.context.event.EventListener",
+      "Name" : "EventListener"
+    } ]
+  } ],
+  "Attributes" : [ {
+    "Type" : "org.springframework.stereotype.Service",
+    "Name" : "Service"
+  } ]
+}, {
+  "Modifiers" : 2,
+  "FullName" : "org.example.App",
+  "Methods" : [ {
+    "ReturnType" : "void",
+    "Parameters" : [ {
+      "Type" : "java.lang.String[]",
+      "Name" : "args"
+    } ],
+    "Statements" : [ {
+      "$type" : "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+      "ContainingType" : "org.springframework.context.ApplicationContext",
+      "Name" : "publishEvent",
+      "Arguments" : [ {
+        "Type" : "org.example.Action",
+        "Text" : "new Action()"
+      } ]
+    } ],
+    "Name" : "main",
+    "Modifiers" : 18
+  } ]
+} ]
