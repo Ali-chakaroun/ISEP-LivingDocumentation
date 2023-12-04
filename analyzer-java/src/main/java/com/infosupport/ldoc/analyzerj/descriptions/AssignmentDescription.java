@@ -3,8 +3,8 @@ package com.infosupport.ldoc.analyzerj.descriptions;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Description for an assigment statement. Meant to be contained within a list of statements, within a
- * higher level description.
+ * Description for an assigment statement. Meant to be contained within a list of statements, within
+ * a higher level description.
  *
  * @param left     Left-hand side of the assignment as a string.
  * @param operator Assignment operator (usally '=') as a string.

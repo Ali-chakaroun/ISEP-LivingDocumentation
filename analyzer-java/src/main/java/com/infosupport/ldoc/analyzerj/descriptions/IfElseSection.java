@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Description for an if, if else or else clause. Meant to be contained within a list of IfElseSections,
- * within a {@link IfDescription}.
+ * Description for an if, if else or else clause. Meant to be contained within a list of
+ * IfElseSections, within a {@link IfDescription}.
  *
  * @param condition  The conditional expression of the clause (null for an else clause) (string).
  * @param statements A list of statements from the clause body.

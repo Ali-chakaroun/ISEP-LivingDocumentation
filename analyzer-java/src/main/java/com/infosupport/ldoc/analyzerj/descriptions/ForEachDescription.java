@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Description of a 'for each' statement. Meant to be contained within a list of statements, within a
- * higher level description. Note that as this description contains a list of statements itself, it
- * can be nested.
+ * Description of a 'for each' statement. Meant to be contained within a list of statements, within
+ * a higher level description. Note that as this description contains a list of statements itself,
+ * it can be nested.
  *
  * @param expression The iteration statement (string).
  * @param statements A list of statements from the loop body.

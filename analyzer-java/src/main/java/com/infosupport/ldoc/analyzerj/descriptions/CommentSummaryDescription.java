@@ -13,7 +13,7 @@ import java.util.Map;
  * @param summary    The second sentence of the JavaDoc comment?
  * @param params     A mapping of parameter names to their text, from the '@param' tags.
  * @param typeParams A mapping of type parameter names to their text, from the '@param' tags that
- *                   start with '<someType>'.
+ *                   start with '<'someType'>'.
  */
 public record CommentSummaryDescription(
     @JsonProperty("Remarks")
