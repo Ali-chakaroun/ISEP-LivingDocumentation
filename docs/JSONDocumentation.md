@@ -3,8 +3,9 @@
 
 This document contains an overview of the possible keys in the intermediary JSON file. It also contains a brief explanation of the meaning of the key in the different programming languages the analyser accepts. Unless indicated otherwise, the terminology used is based on .NET.
 
-## Member
+## Type*
 This is the top level element of the file.
+*Note this does not refer to a key 'Type', but rather the top level object in the JSON file.
 
 NET
 : A member can represent a class, interface, struct or enum. By default, it is a class (if Type is not specified).
@@ -25,7 +26,7 @@ Java
 |-----------------------|--------------------------------------------------|------------------------------------------------------|-----------------------------------------------------|
 | Type                  | number                                           | 0: class<br/>1: interface<br/>2: struct<br/>3: enum  | 0: class<br/>1: interface<br/>2: record<br/>3: enum |
 | Modifiers             | number                                           | See [Modifiers](#modifiers)                          | See [Modifiers](#modifiers)                         |
-| Basetypes             | array of strings                                 | Base classes                                         | Super classes                                       |
+| Basetypes             | array of strings                                 | Base classes                                         | Super classes and implemented interfaces            |
 | Fields                | array of [Field](#field)                         |                                                      |                                                     |
 | Constructors          | array of [Constructor](#constructor)             |                                                      |                                                     |
 | Methods               | array of [Method](#method)                       |                                                      |                                                     |
@@ -229,7 +230,8 @@ Furthermore, note that JavaDoc allows for a general description, which can conta
 | Exceptions  | object, string values | \<exception>   | @throws                                                |
 | Permissions | object, string values | \<permissions> | N/A, usually documented contextually or in description |
 | SeeAlsos    | object, string values | \<seealso>     | @see                                                   |
-| TypeParams  | object, string values | \<typeparam>   | @param                                                 |
+| TypeParams  | object, string values | \<typeparam>   | @param, if text starts with something encased '<' '>'  |
+| Params      | object, string values | \<param>       | @param                                                 |
 
 
 ## Parameter
@@ -357,10 +359,10 @@ Each statement is one of the following options. The statement type is distinguis
 
 #### Required keys:
 
-| Key        | Type                                       | .NET                  | Java                                           |
-|------------|--------------------------------------------|-----------------------|------------------------------------------------|
-| $type      | const                                      | Type of the statement | Type of the statement                          |
-| Expression | string                                     | Return expression     | Return expression, this is not a required key. |
+| Key        | Type   | .NET                                     | Java                                                                             |
+|------------|--------|------------------------------------------|----------------------------------------------------------------------------------|
+| $type      | const  | Type of the statement                    | Type of the statement                                                            |
+| Expression | string | Return expression, null for empty return | Return expression, this is not a required key. Key is left out for empty return. |
 
 
 ## Argument
