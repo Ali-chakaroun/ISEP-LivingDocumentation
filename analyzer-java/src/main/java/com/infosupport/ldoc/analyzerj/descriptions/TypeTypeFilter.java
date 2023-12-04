@@ -20,7 +20,7 @@ public class TypeTypeFilter {
   }
 
   /**
-   * Mandatory method. Currently not in use.
+   * Returns some integer. TypeTypeFilter is not intended to be used as a hash key.
    *
    * @return int 0
    */
