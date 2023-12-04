@@ -1,4 +1,4 @@
-package com.infosupport.ldoc.springexample.ampq;
+package com.infosupport.ldoc.springexample.amqp;
 
 public enum QueueInteractionKind {
   READ,
