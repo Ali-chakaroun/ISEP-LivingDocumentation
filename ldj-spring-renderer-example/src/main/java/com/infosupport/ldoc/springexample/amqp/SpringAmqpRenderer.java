@@ -1,4 +1,4 @@
-package com.infosupport.ldoc.springexample.ampq;
+package com.infosupport.ldoc.springexample.amqp;
 
 import static com.infosupport.ldoc.springexample.util.StringOperations.stripName;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class SpringAmpqRenderer {
+public class SpringAmqpRenderer {
 
   public static final String RABBIT_LISTENER_ANNOTATION = "org.springframework.amqp.rabbit."
       + "annotation.RabbitListener";
@@ -225,9 +225,9 @@ public class SpringAmpqRenderer {
 
 
   public static void main(String[] args) throws IOException {
-    try (InputStream tplFile = SpringAmpqRenderer.class.getResourceAsStream("template.adoc")) {
+    try (InputStream tplFile = SpringAmqpRenderer.class.getResourceAsStream("template.adoc")) {
       String template = new String(Objects.requireNonNull(tplFile).readAllBytes());
-      SpringAmpqRenderer.render(System.in, System.out, template);
+      SpringAmqpRenderer.render(System.in, System.out, template);
     }
   }
 
