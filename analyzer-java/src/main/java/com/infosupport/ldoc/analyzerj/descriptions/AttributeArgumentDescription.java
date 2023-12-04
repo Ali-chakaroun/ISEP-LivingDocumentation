@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @param name  Name of the annotation parameter (string)
  * @param type  Type of the argument value (string)
- * @param value Argument value as a string. This can be a constant, expression, variable, etc.
+ * @param value Argument value as a string. This can be a constant or constant expression, evaluated
+ *              at compile time.
  */
 public record AttributeArgumentDescription(
     @JsonProperty("Name")

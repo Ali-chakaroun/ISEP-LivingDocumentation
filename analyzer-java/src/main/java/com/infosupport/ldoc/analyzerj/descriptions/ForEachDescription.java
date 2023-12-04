@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Description of a 'for each' statement. Usually contained within a list of statements, within a
+ * Description of a 'for each' statement. Meant to be contained within a list of statements, within a
  * higher level description. Note that as this description contains a list of statements itself, it
  * can be nested.
  *

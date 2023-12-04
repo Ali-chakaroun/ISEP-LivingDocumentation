@@ -168,7 +168,7 @@ public record TypeDescription(
   }
 
   /**
-   * Constructor that takes only type, fullName and baseTypes. The rest is filled with null or emtpy
+   * Constructor that takes only type, fullName and baseTypes. The rest is filled with null or empty
    * list.
    */
   public TypeDescription(TypeType type, String fullName, List<String> baseTypes) {

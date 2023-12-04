@@ -9,10 +9,11 @@ import java.util.Objects;
 public class TypeTypeFilter {
 
   /**
-   * Filter out non-default values (so skip "Type":0).
+   * Filter out non-default values (so skip "Type":0). Note that this was made specifically for a
+   * '@JSONInclude' annotation, thus the return value is not intuitive.
    *
    * @param obj TypeType object
-   * @return True if obj is a non-default value, False if obj is {@link TypeType#CLASS}.
+   * @return False if obj is a non-default value, True if obj is {@link TypeType#CLASS}.
    */
   @Override
   public boolean equals(Object obj) {

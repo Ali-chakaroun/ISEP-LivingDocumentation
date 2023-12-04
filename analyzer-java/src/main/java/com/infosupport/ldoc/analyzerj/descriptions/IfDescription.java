@@ -18,7 +18,7 @@ public record IfDescription(
 ) implements Description {
 
   /**
-   * Identifies the statement as an Assignment.
+   * Identifies the statement as an If statement.
    *
    * @return Assignment identifier (string).
    */

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.List;
 
 /**
- * Description for a method. Usually contained in a list of methods, within a TypeDescription.
+ * Description for a method. Meant to be contained in a list of methods, within a TypeDescription.
  *
  * @param member     {@link MemberDescription}: the name, modifiers and annotations of the method.
  * @param returnType Type of the return value of the method (string).

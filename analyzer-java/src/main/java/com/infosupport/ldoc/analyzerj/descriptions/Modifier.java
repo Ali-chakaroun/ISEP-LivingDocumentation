@@ -43,10 +43,10 @@ public enum Modifier {
   }
 
   /**
-   * I don't know exactly what is happening here. ?
+   * Converts a Javaparser ast.Modifier to our definition, if such a conversion exists.
    *
-   * @param modifier ?
-   * @return ?
+   * @param  modifier A modifier keyword from a Javaparser Abstract Syntax Tree.
+   * @return          a Modifier value or {@link Modifier#NONE} if there is no equivalent.
    */
   public static Modifier valueOf(com.github.javaparser.ast.Modifier modifier) {
     boolean onType = modifier.getParentNode().map(TypeDeclaration.class::isInstance).orElse(false);

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Description for a single parameter. Usually contained in a list of parameters, in a method or
+ * Description for a single parameter. Meant to be contained in a list of parameters, in a method or
  * constructor.
  *
  * @param type       Type of the parameter (string).

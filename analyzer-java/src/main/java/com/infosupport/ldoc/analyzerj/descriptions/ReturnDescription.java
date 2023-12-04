@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Description of a return statement.
  *
  * @param expression The text of the return statement (string). This can be a constant, expression,
- *                   variable, etc.
+ *                   variable, etc. Can be null for empty returns.
  */
 public record ReturnDescription(
     @JsonProperty("Expression")
@@ -16,6 +16,9 @@ public record ReturnDescription(
     String expression
 ) implements Description {
 
+  /**
+   * Empty ReturnDescription constructor, sets expression param to null.
+   */
   public ReturnDescription() {
     this(null);
   }
