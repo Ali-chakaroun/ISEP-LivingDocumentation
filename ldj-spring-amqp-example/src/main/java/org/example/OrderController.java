@@ -15,6 +15,10 @@ public class OrderController {
 
   private final RabbitTemplate rabbitmq;
 
+  /**
+   * Initialises an OrderController along with a RabbitTemplate which is attached through
+   * dependency injection.
+   */
   public OrderController(RabbitTemplate rabbitmq) {
     this.rabbitmq = rabbitmq;
   }
