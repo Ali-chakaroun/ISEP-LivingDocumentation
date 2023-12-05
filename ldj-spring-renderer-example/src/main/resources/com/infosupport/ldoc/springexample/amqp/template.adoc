@@ -1,7 +1,7 @@
-= Spring AMPQ Sandwich Example
+= Spring AMQP Sandwich Example
 :nofooter:
 
-This "sandwich shop" "implementation" uses Spring `AMPQ`, as follows:
+This "sandwich shop" "implementation" uses Spring `AMQP`, as follows:
 
 [plantuml,"diagram",svg]
 ----
@@ -18,4 +18,4 @@ hide footbox
 @enduml
 ----
 
-For more information about Spring AMPQ, see https://docs.spring.io/spring-amqp/reference/html/#introduction[the Spring Framework reference].
+For more information about Spring AMQP, see https://docs.spring.io/spring-amqp/reference/html/#introduction[the Spring Framework reference].
