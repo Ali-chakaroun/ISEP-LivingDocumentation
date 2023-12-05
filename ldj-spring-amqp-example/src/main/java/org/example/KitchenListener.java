@@ -24,6 +24,10 @@ public class KitchenListener {
 
   private final RabbitTemplate rabbitmq;
 
+  /**
+   * Initialises a KitchenListener along with a RabbitTemplate which is attached via dependency
+   * injection.
+   */
   public KitchenListener(RabbitTemplate rabbitTemplate) {
     this.rabbitmq = rabbitTemplate;
   }
