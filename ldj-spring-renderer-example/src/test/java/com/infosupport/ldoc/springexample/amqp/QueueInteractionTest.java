@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +12,14 @@ class QueueInteractionTest {
 
   @Test
   void filter_non_empty_post_list() {
-    List<QueueInteraction> interactions = Arrays.asList(
+    List<QueueInteraction> interactions = List.of(
         new QueueInteraction("test1", QueueInteractionKind.READ, "queue1", "msg1", null),
         new QueueInteraction("test2", QueueInteractionKind.READ, "queue2", "msg2", null),
         new QueueInteraction("test3", QueueInteractionKind.POST, "queue3", "msg3", null),
         new QueueInteraction("test4", QueueInteractionKind.POST, "queue4", "msg4", null)
     );
 
-    List<QueueInteraction> expected = Arrays.asList(
+    List<QueueInteraction> expected = List.of(
         new QueueInteraction("test3", QueueInteractionKind.POST, "queue3", "msg3", null),
         new QueueInteraction("test4", QueueInteractionKind.POST, "queue4", "msg4", null)
     );
@@ -30,7 +29,7 @@ class QueueInteractionTest {
 
   @Test
   void filter_empty_post_list() {
-    List<QueueInteraction> interactions = new ArrayList<>();
+    List<QueueInteraction> interactions = List.of();
     assertIterableEquals(new ArrayList<QueueInteraction>(),
         QueueInteraction.getAllPosts(interactions));
   }
@@ -47,9 +46,9 @@ class QueueInteractionTest {
         "otherMsg", null);
     QueueInteraction readDecoy2 = new QueueInteraction("Ingrid", QueueInteractionKind.READ,
         "otherQueue", "msg1", null);
-    List<QueueInteraction> readInteractions = Arrays.asList(readDecoy1, read, readDecoy2, read2);
+    List<QueueInteraction> readInteractions = List.of(readDecoy1, read, readDecoy2, read2);
 
-    List<QueueInteraction> expected = Arrays.asList(read, read2);
+    List<QueueInteraction> expected = List.of(read, read2);
 
     assertIterableEquals(expected, post.filterReadsReactingToThis(readInteractions));
   }
