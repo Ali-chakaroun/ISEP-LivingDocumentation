@@ -85,7 +85,7 @@ public class SpringAmqpRenderer {
    *
    * @param node      Node to check
    * @param className class name that is attached to interactions that are found
-   * @return A list of Post Queue interactions that where found
+   * @return A list of Post Queue interactions that were found
    */
   public static List<QueueInteraction> findQueuePosts(JsonNode node, String className) {
     List<QueueInteraction> interactions = new ArrayList<>(0);
