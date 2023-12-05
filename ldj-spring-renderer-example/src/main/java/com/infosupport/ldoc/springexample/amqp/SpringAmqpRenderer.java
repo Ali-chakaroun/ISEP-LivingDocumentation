@@ -152,7 +152,7 @@ public class SpringAmqpRenderer {
             // Note the type is stripped to support messages across different applications
             String messageType = stripName(
                 method.path("Parameters").path(0).path("Type").textValue());
-            // Create and add ReadInteraction
+            // Create and add read interaction
             QueueInteraction newRead = new QueueInteraction(className, QueueInteractionKind.READ,
                 queue, messageType, new ArrayList<>(0));
             // Add all posts that happen within this read
