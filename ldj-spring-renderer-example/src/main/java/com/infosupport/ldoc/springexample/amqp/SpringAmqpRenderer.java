@@ -193,10 +193,10 @@ public class SpringAmqpRenderer {
         PlantUmlBuilder.renderInteraction(out, postInteraction.actor(), readInteraction.actor(),
             readInteraction.messageType());
 
-        out.println("activate %s".formatted(readInteraction.actor()));
+        out.printf("activate %s\n", readInteraction.actor());
         // render all post queue interactions that are instantiated from this read interaction
         renderInteractions(out, allInteractions, readInteraction.reactionToRead());
-        out.println("deactivate %s".formatted(readInteraction.actor()));
+        out.printf("deactivate %s\n", readInteraction.actor());
       }
     }
   }
