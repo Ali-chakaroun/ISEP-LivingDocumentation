@@ -134,6 +134,18 @@ class AnalysisVisitorTest {
                         List.of()))
                 .build()),
         parse("class Zap { Zap does(Object a, String b) {} }"));
+
+    assertIterableEquals(
+        List.of(
+            new TypeDescription.Builder(TypeType.INTERFACE, "Ala")
+                .withMembers(
+                    new MethodDescription(
+                        new MemberDescription("kazam"),
+                        null,
+                        List.of(),
+                        List.of()))
+                .build()),
+        parse("interface Ala { void kazam(); }"));
   }
 
   @Test
