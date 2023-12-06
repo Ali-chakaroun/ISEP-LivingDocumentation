@@ -20,24 +20,20 @@ class SwitchDescriptionJsonTest {
           "Sections": [
             {
               "Labels": ["Spring"],
-              "Statements": [
-                {
-                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
-                  "Expression": ""
-                }
-              ]
+              "Statements": [{
+                "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                "Expression": ""
+              }]
             },
             {
               "Labels": ["Summer"]
             },
             {
               "Labels": ["default"],
-              "Statements": [
-                {
-                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
-                  "Expression": ""
-                }
-              ]
+              "Statements": [{
+                "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                "Expression": ""
+              }]
             }
           ]
         }
