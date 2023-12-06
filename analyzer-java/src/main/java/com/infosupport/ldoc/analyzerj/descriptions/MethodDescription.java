@@ -11,6 +11,7 @@ public record MethodDescription(
     MemberDescription member,
 
     @JsonProperty("ReturnType")
+    @JsonInclude(Include.NON_NULL)
     String returnType,
 
     @JsonProperty("Parameters")

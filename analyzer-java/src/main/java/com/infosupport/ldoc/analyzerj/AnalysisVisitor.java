@@ -216,7 +216,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg),
                 n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
                     .orElse(null)),
-            resolve(n.getType()),
+            n.getType().isVoidType() ? null : resolve(n.getType()),
             visit(n.getParameters(), arg),
             n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
   }

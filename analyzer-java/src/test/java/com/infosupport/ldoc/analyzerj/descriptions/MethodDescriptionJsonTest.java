@@ -21,6 +21,11 @@ class MethodDescriptionJsonTest {
                 new MemberDescription("aap", Modifier.PRIVATE.mask(), List.of(), null),
                 "Noot", List.of(), List.of())));
 
+    assertEquals(
+        mapper.readTree("{\"Name\": \"schapen\"}"),
+        mapper.valueToTree(
+            new MethodDescription(new MemberDescription("schapen"), null, List.of(), List.of())));
+
     String example = """
         {
           "Name": "mies",
