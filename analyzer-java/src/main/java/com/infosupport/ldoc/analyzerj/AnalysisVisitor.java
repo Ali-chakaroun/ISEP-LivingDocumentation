@@ -288,7 +288,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   /** Describes a <code>return</code> statement, including the returned expression if present. */
   @Override
   public List<Description> visit(ReturnStmt n, Analyzer arg) {
-    return List.of(new ReturnDescription(n.getExpression().map(Node::toString).orElse(null)));
+    return List.of(new ReturnDescription(n.getExpression().map(Node::toString).orElse("")));
   }
 
   /** Describes an <code>if</code> statement or tree of <code>if</code> statements. */

@@ -19,7 +19,8 @@ class ForEachDescriptionJsonTest {
           "Expression": "String piece : pieces",
           "Statements": [
             {
-              "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions"
+              "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+              "Expression": ""
             }
           ]
         }
@@ -28,6 +29,6 @@ class ForEachDescriptionJsonTest {
     assertEquals(
         mapper.readTree(expected),
         mapper.valueToTree(
-            new ForEachDescription("String piece : pieces", List.of(new ReturnDescription()))));
+            new ForEachDescription("String piece : pieces", List.of(new ReturnDescription("")))));
   }
 }

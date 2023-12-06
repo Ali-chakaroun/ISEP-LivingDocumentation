@@ -22,7 +22,8 @@ class SwitchDescriptionJsonTest {
               "Labels": ["Spring"],
               "Statements": [
                 {
-                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions"
+                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                  "Expression": ""
                 }
               ]
             },
@@ -33,7 +34,8 @@ class SwitchDescriptionJsonTest {
               "Labels": ["default"],
               "Statements": [
                 {
-                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions"
+                  "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                  "Expression": ""
                 }
               ]
             }
@@ -44,8 +46,8 @@ class SwitchDescriptionJsonTest {
     assertEquals(
         mapper.readTree(expected),
         mapper.valueToTree(new SwitchDescription("season", List.of(
-            new SwitchSection(List.of("Spring"), List.of(new ReturnDescription())),
+            new SwitchSection(List.of("Spring"), List.of(new ReturnDescription(""))),
             new SwitchSection(List.of("Summer"), List.of()),
-            new SwitchSection(List.of("default"), List.of(new ReturnDescription()))))));
+            new SwitchSection(List.of("default"), List.of(new ReturnDescription("")))))));
   }
 }

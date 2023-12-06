@@ -164,7 +164,7 @@ class AnalysisVisitorTest {
 
   @Test
   void return_statement() {
-    assertIterableEquals(List.of(new ReturnDescription()), parseFragment("return;"));
+    assertIterableEquals(List.of(new ReturnDescription("")), parseFragment("return;"));
 
     assertIterableEquals(List.of(new ReturnDescription("1 + 2")), parseFragment("return 1 + 2;"));
   }

@@ -359,10 +359,10 @@ Each statement is one of the following options. The statement type is distinguis
 
 #### Required keys:
 
-| Key        | Type   | .NET                                     | Java                                                                             |
-|------------|--------|------------------------------------------|----------------------------------------------------------------------------------|
-| $type      | const  | Type of the statement                    | Type of the statement                                                            |
-| Expression | string | Return expression, null for empty return | Return expression, this is not a required key. Key is left out for empty return. |
+| Key        | Type   | .NET                              | Java                              |
+|------------|--------|-----------------------------------|-----------------------------------|
+| $type      | const  | Type of the statement             | Type of the statement             |
+| Expression | string | Return expression or empty string | Return expression or empty string |
 
 
 ## Argument
