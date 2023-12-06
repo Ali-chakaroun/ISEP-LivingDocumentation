@@ -27,10 +27,12 @@ can be identified (which are copied from [Living Documentation][ldoc] descriptio
 ## Getting started
 
 The process of rendering documentation can be summarized as follows:
-1. **Analysis**: Run the Analyzer over the source code of your project. This creates a  Documentation JSON file.
+1. **Analysis**: Run the Analyzer over the source code of your project. This creates a  Living Documentation JSON file.
 2. **Render the documentation**: Use a (custom) renderer that reads the generated JSON file and outputs documentation
 
 > Renderers are applications that you can write yourself making use of the support _Libraries_. These interpret the analyzed code and create documentation files.
+
+[JSON format documentation][json] describing the structure of the JSON file, as well as [a description in JSON Schema format][schema], are available as part of this repository.
 
 ## Analyzer
 
@@ -55,8 +57,7 @@ For an example on how to use the Maven plugin, see the `pom.xml` configuration i
 
 ### State of analyzer
 
-A list of Java language features which are included in the analyzer can be found in the JSON schema documentation.
-This documentation will be added soon.
+A list of Java language features which are included in the analyzer can be found in the [JSON format documentation][json].
 
 ## Support Libraries
 
@@ -73,3 +74,5 @@ The university assignment is expected to end around February 2024. As of then, t
 
 
 [ldoc]: https://github.com/eNeRGy164/LivingDocumentation
+[json]: docs/JSONDocumentation.md
+[schema]: analyzer-java/src/main/resources/jsonschema/schema.json
