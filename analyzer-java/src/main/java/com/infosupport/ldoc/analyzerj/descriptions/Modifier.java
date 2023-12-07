@@ -19,16 +19,35 @@ public enum Modifier {
   SEALED(1 << 10), /* Java: final (when referring to classes) */
   EXTERN(1 << 12); /* Java: native */
 
+  /**
+   * Integer that is a power of 2, unique for each modifier.
+   */
   private final int mask;
 
+  /**
+   * Constructor.
+   *
+   * @param mask The mask of the enum constant.
+   */
   Modifier(int mask) {
     this.mask = mask;
   }
 
+  /**
+   * Get the mask of an enum constant.
+   *
+   * @return mask (int).
+   */
   public int mask() {
     return mask;
   }
 
+  /**
+   * Converts a Javaparser ast.Modifier to our definition, if such a conversion exists.
+   *
+   * @param  modifier A modifier keyword from a Javaparser Abstract Syntax Tree.
+   * @return          a Modifier value or {@link Modifier#NONE} if there is no equivalent.
+   */
   public static Modifier valueOf(com.github.javaparser.ast.Modifier modifier) {
     boolean onType = modifier.getParentNode().map(TypeDeclaration.class::isInstance).orElse(false);
 

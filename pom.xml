@@ -33,7 +33,6 @@
               <consoleOutput>true</consoleOutput>
               <failOnViolation>true</failOnViolation>
               <violationSeverity>warning</violationSeverity>
-              <violationIgnore>MissingJavadocType,MissingJavadocMethod</violationIgnore>
               <linkXRef>false</linkXRef>
             </configuration>
             <goals>
