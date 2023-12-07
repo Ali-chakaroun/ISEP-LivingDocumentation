@@ -128,13 +128,24 @@ class AnalysisVisitorTest {
                     new MethodDescription(
                         new MemberDescription("does"),
                         "Zap",
-                        null,
                         List.of(
                             new ParameterDescription("java.lang.Object", "a", List.of()),
                             new ParameterDescription("java.lang.String", "b", List.of())),
                         List.of()))
                 .build()),
         parse("class Zap { Zap does(Object a, String b) {} }"));
+
+    assertIterableEquals(
+        List.of(
+            new TypeDescription.Builder(TypeType.INTERFACE, "Ala")
+                .withMembers(
+                    new MethodDescription(
+                        new MemberDescription("kazam"),
+                        null,
+                        List.of(),
+                        List.of()))
+                .build()),
+        parse("interface Ala { void kazam(); }"));
   }
 
   @Test
@@ -165,7 +176,7 @@ class AnalysisVisitorTest {
 
   @Test
   void return_statement() {
-    assertIterableEquals(List.of(new ReturnDescription()), parseFragment("return;"));
+    assertIterableEquals(List.of(new ReturnDescription("")), parseFragment("return;"));
 
     assertIterableEquals(List.of(new ReturnDescription("1 + 2")), parseFragment("return 1 + 2;"));
   }
@@ -278,17 +289,17 @@ class AnalysisVisitorTest {
             new TypeDescription.Builder(TypeType.CLASS, "Example")
                 .withMembers(
                     new MethodDescription(
-                        new MemberDescription("does"),
+                        new MemberDescription("does", 0, List.of(),
+                            new CommentSummaryDescription(
+                                "These are the remarks.",
+                                "an Example.",
+                                "This method is an example.main<>.",
+                                Map.of(
+                                    "a", "is an object.",
+                                    "b", "is a string.",
+                                    "Map<input>", "map of strings."),
+                                Map.of("L", "is a list.", "L<C>", "list of characters."))),
                         "Example",
-                        new CommentSummaryDescription(
-                            "These are the remarks.",
-                            "an Example.",
-                            "This method is an example.main<>.",
-                            Map.of(
-                                "a", "is an object.",
-                                "b", "is a string.",
-                                "Map<input>", "map of strings."),
-                            Map.of("L", "is a list.", "L<C>", "list of characters.")),
                         List.of(
                             new ParameterDescription("java.lang.Object", "a", List.of()),
                             new ParameterDescription("java.lang.String", "b", List.of())),
@@ -358,21 +369,20 @@ class AnalysisVisitorTest {
 
     FieldDescription nameField =
         new FieldDescription(
-            new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+            new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(), null),
             "java.lang.String",
-            "\"Hai\"",
-            null);
+            "\"Hai\"");
 
     CommentSummaryDescription comment =
         new CommentSummaryDescription(null, null, "Test javadoc.", null, null);
 
     FieldDescription age1Field =
         new FieldDescription(
-            new MemberDescription("age", Modifier.PUBLIC.mask(), List.of()), "int", null, comment);
+            new MemberDescription("age", Modifier.PUBLIC.mask(), List.of(), comment), "int", null);
 
     FieldDescription age2Field =
         new FieldDescription(
-            new MemberDescription("age2", Modifier.PUBLIC.mask(), List.of()), "int", "18", comment);
+            new MemberDescription("age2", Modifier.PUBLIC.mask(), List.of(), comment), "int", "18");
     List<FieldDescription> expectedFields = List.of(nameField, age1Field, age2Field);
 
     assertIterableEquals(expectedFields, fieldDescriptions);
@@ -385,13 +395,11 @@ class AnalysisVisitorTest {
             new TypeDescription.Builder(TypeType.ENUM, "Nationality")
                 .withMembers(
                     new EnumMemberDescription(
-                        new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
-                        List.of(),
-                        null),
+                        new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of(), null),
+                        List.of()),
                     new EnumMemberDescription(
-                        new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
-                        List.of(),
-                        null))
+                        new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of(), null),
+                        List.of()))
                 .build()),
         parse("enum Nationality { DUTCH, GERMAN; }"));
   }
@@ -419,22 +427,19 @@ class AnalysisVisitorTest {
         new TypeDescription.Builder(TypeType.ENUM, "Nationality")
             .withMembers(
                 new FieldDescription(
-                    new MemberDescription("counter", Modifier.NONE.mask(), List.of()),
+                    new MemberDescription("counter", Modifier.NONE.mask(), List.of(), null),
                     "int",
-                    null,
                     null),
                 new ConstructorDescription(
                     new MemberDescription("Nationality"),
                     List.of(new ParameterDescription("int", "val", List.of())),
                     List.of(new AssignmentDescription("this.counter", "=", "val"))),
                 new EnumMemberDescription(
-                    new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of()),
-                    List.of(new ArgumentDescription("int", "5")),
-                    null),
+                    new MemberDescription("DUTCH", Modifier.PUBLIC.mask(), List.of(), null),
+                    List.of(new ArgumentDescription("int", "5"))),
                 new EnumMemberDescription(
-                    new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of()),
-                    List.of(new ArgumentDescription("int", "10")),
-                    null))
+                    new MemberDescription("GERMAN", Modifier.PUBLIC.mask(), List.of(), null),
+                    List.of(new ArgumentDescription("int", "10"))))
             .build();
 
     assertEquals(expected, typeDescription);

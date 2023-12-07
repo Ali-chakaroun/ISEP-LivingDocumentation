@@ -1,27 +1,17 @@
 package com.infosupport.ldoc.analyzerj.descriptions;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Description of a return statement.
  *
  * @param expression The text of the return statement (string). This can be a constant, expression,
- *                   variable, etc. Can be null for empty returns.
+ *                   variable, etc. Can be empty string for empty returns.
  */
 public record ReturnDescription(
     @JsonProperty("Expression")
-    @JsonInclude(Include.NON_NULL)
     String expression
 ) implements Description {
-
-  /**
-   * Empty ReturnDescription constructor, sets expression param to null.
-   */
-  public ReturnDescription() {
-    this(null);
-  }
 
   /**
    * Identifies the statement as a return statement.

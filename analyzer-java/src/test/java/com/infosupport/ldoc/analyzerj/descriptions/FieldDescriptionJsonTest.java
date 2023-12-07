@@ -16,78 +16,76 @@ class FieldDescriptionJsonTest {
   void field_description_serializes_as_expected() throws IOException {
     String expected =
         """
-                {
-                "Type": "java.lang.String",
-                "Initializer": "Hai",
-                "Name": "name",
-                "Modifiers": 4,
-                "DocumentationComments": {
-                    "Remarks": "Tread carefully.",
-                    "Returns": "An integer.",
-                    "Summary": "Add two values.",
-                    "Params": {
-                        "N": "first integer value" ,
-                        "Y": "second integer value"
-                        }
+            {
+            "Type": "java.lang.String",
+            "Initializer": "Hai",
+            "Name": "name",
+            "Modifiers": 4,
+            "DocumentationComments": {
+                "Remarks": "Tread carefully.",
+                "Returns": "An integer.",
+                "Summary": "Add two values.",
+                "Params": {
+                    "N": "first integer value" ,
+                    "Y": "second integer value"
                     }
                 }
-                """;
+            }
+            """;
     assertEquals(
         mapper.readTree(expected),
         mapper.valueToTree(
             new FieldDescription(
-                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(),
+                    new CommentSummaryDescription(
+                        "Tread carefully.",
+                        "An integer.",
+                        "Add two values.",
+                        Map.of(
+                            "N", "first integer value",
+                            "Y", "second integer value"),
+                        null)),
                 "java.lang.String",
-                "Hai",
-                new CommentSummaryDescription(
-                    "Tread carefully.",
-                    "An integer.",
-                    "Add two values.",
-                    Map.of(
-                        "N", "first integer value",
-                        "Y", "second integer value"),
-                    null))));
+                "Hai")));
   }
 
   @Test
   void field_description_serializes_as_expected_no_initializer() throws IOException {
     String expected =
         """
-                {
-                "Type": "int",
-                "Name": "name",
-                "Modifiers": 4
-                }
-                """;
+            {
+            "Type": "int",
+            "Name": "name",
+            "Modifiers": 4
+            }
+            """;
     assertEquals(
         mapper.readTree(expected),
         mapper.valueToTree(
             new FieldDescription(
-                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
+                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(), null),
                 "int",
-                null,
                 null)));
   }
 
   @Test
-  void initializer_is_method_call()  throws IOException {
+  void initializer_is_method_call() throws IOException {
     String expected =
-            """
-                    {
-                    "Type": "float",
-                    "Name": "name",
-                    "Modifiers": 4,
-                    "Initializer": "System.currentTimeMillis()"
-                    }
-                    """;
+        """
+            {
+            "Type": "float",
+            "Name": "name",
+            "Modifiers": 4,
+            "Initializer": "System.currentTimeMillis()"
+            }
+            """;
     assertEquals(
-            mapper.readTree(expected),
-            mapper.valueToTree(
-                    new FieldDescription(
-                            new MemberDescription("name", Modifier.PRIVATE.mask(), List.of()),
-                            "float",
-                            "System.currentTimeMillis()",
-                            null)));
+        mapper.readTree(expected),
+        mapper.valueToTree(
+            new FieldDescription(
+                new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(), null),
+                "float",
+                "System.currentTimeMillis()")));
   }
 
 

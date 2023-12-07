@@ -18,11 +18,11 @@ import java.util.List;
 public record MethodDescription(
     @JsonUnwrapped
     MemberDescription member,
+
     @JsonProperty("ReturnType")
-    String returnType,
-    @JsonProperty("DocumentationComments")
     @JsonInclude(Include.NON_EMPTY)
-    Description comments,
+    String returnType,
+
     @JsonProperty("Parameters")
     @JsonInclude(Include.NON_EMPTY)
     List<Description> parameters,
@@ -31,4 +31,5 @@ public record MethodDescription(
     @JsonInclude(Include.NON_EMPTY)
     List<Description> statements
 ) implements Description {
+
 }

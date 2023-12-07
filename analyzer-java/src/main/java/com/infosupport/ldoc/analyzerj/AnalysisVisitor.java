@@ -91,9 +91,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return types.stream().map(this::resolve).toList();
   }
 
-  /**
-   * Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers.
-   */
+  /** Computes an OR-combined LivingDocumentation bitmask for a NodeList of JavaParser Modifiers. */
   private int combine(NodeList<com.github.javaparser.ast.Modifier> modifiers) {
     return modifiers.stream().mapToInt(m -> Modifier.valueOf(m).mask()).reduce(0, (a, b) -> a | b);
   }
@@ -108,7 +106,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   private TypeDescription.Builder typeBuilder(TypeType typeType,
       TypeDeclaration<? extends TypeDeclaration<?>> n, Analyzer arg) {
     String name = n.getFullyQualifiedName().orElseThrow();
-    Description comment = n.getComment().map(z -> z.accept(this, arg).get(0)).orElse(null);
+    Description comment = n.getComment().map(z -> z.accept(this, arg).get(0))
+        .orElse(null);
     return new TypeDescription.Builder(typeType, name)
         .withModifiers(combine(n.getModifiers()))
         .withComment(comment)
@@ -169,9 +168,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(
         new EnumMemberDescription(
             new MemberDescription(
-                n.getNameAsString(), Modifier.PUBLIC.mask(), visit(n.getAnnotations(), arg)),
-            arguments,
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
+                n.getNameAsString(), Modifier.PUBLIC.mask(), visit(n.getAnnotations(), arg),
+                n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                    .orElse(null)),
+            arguments));
   }
 
   /**
@@ -197,10 +197,11 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
               new MemberDescription(
                   variable.getNameAsString(),
                   combine(n.getModifiers()),
-                  visit(n.getAnnotations(), arg)),
+                  visit(n.getAnnotations(), arg),
+                  n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                      .orElse(null)),
               resolve(variable.getType()),
-              initializer,
-              n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)));
+              initializer));
     }
 
     return fieldDescriptions;
@@ -212,9 +213,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(
         new MethodDescription(
             new MemberDescription(
-                n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
-            resolve(n.getType()),
-            n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null),
+                n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg),
+                n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                    .orElse(null)),
+            n.getType().isVoidType() ? null : resolve(n.getType()),
             visit(n.getParameters(), arg),
             n.getBody().map(z -> z.accept(this, arg)).orElse(List.of())));
   }
@@ -225,7 +227,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(
         new ConstructorDescription(
             new MemberDescription(
-                n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg)),
+                n.getNameAsString(), combine(n.getModifiers()), visit(n.getAnnotations(), arg),
+                n.getComment().flatMap(c -> c.accept(this, arg).stream().findFirst())
+                    .orElse(null)),
             visit(n.getParameters(), arg),
             visit(n.getBody(), arg)));
   }
@@ -284,7 +288,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   /** Describes a <code>return</code> statement, including the returned expression if present. */
   @Override
   public List<Description> visit(ReturnStmt n, Analyzer arg) {
-    return List.of(new ReturnDescription(n.getExpression().map(Node::toString).orElse(null)));
+    return List.of(new ReturnDescription(n.getExpression().map(Node::toString).orElse("")));
   }
 
   /** Describes an <code>if</code> statement or tree of <code>if</code> statements. */
@@ -375,7 +379,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     // This regex splits the sentence into 2 at the first dot(.) followed by a space.
     String[] sentences = CommentHelperMethods.extractSummary(n).split("\\.\\s+", 2);
     // Add a dot(.) at the end if it is missing.
-    String summary = (sentences.length > 0) ? sentences[0].strip().concat(".") : null;
+    String summary =
+        (sentences.length > 0 && !sentences[0].isEmpty()) ? sentences[0].strip().concat(".") : null;
     String remarks = (sentences.length > 1) ? sentences[1].strip() : null;
     Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
     CommentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);

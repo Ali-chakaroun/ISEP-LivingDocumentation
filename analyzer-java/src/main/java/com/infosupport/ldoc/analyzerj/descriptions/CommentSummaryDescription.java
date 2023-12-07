@@ -19,9 +19,11 @@ public record CommentSummaryDescription(
     @JsonProperty("Remarks")
     @JsonInclude(Include.NON_EMPTY)
     String remarks,
+
     @JsonProperty("Returns")
     @JsonInclude(Include.NON_EMPTY)
     String returns,
+
     @JsonProperty("Summary")
     @JsonInclude(Include.NON_EMPTY)
     String summary,
@@ -29,6 +31,7 @@ public record CommentSummaryDescription(
     @JsonProperty("Params")
     @JsonInclude(Include.NON_EMPTY)
     Map<String, String> params,
+
     @JsonProperty("TypeParams")
     @JsonInclude(Include.NON_EMPTY)
     Map<String, String> typeParams

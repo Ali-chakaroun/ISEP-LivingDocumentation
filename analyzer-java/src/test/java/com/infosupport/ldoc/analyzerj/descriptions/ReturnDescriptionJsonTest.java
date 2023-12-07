@@ -14,7 +14,8 @@ class ReturnDescriptionJsonTest {
   void return_description_serializes_as_expected() throws IOException {
     String plain = """
         {
-          "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions"
+          "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+          "Expression": ""
         }
         """;
     String value = """
@@ -24,7 +25,7 @@ class ReturnDescriptionJsonTest {
         }
         """;
 
-    assertEquals(mapper.readTree(plain), mapper.valueToTree(new ReturnDescription()));
+    assertEquals(mapper.readTree(plain), mapper.valueToTree(new ReturnDescription("")));
     assertEquals(mapper.readTree(value), mapper.valueToTree(new ReturnDescription("1")));
   }
 }
