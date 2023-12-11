@@ -4,7 +4,7 @@ import static com.infosupport.ldoc.springexample.util.StringOperations.stripName
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.infosupport.ldoc.springexample.util.PlantUmlBuilder;
+import com.infosupport.ldoc.springexample.util.StringOperations;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -190,8 +190,9 @@ public class SpringAmqpRenderer {
       // Loop over all read reactions that get triggered after the postInteraction
       for (QueueInteraction readInteraction : postInteraction.filterReadsReactingToThis(
           allInteractions)) {
-        PlantUmlBuilder.renderInteraction(out, postInteraction.actor(), readInteraction.actor(),
-            readInteraction.messageType());
+        out.printf("%s -[#ForestGreen]> %s : %s\n", postInteraction.actor(),
+            readInteraction.actor(),
+            stripName(readInteraction.messageType()));
 
         out.printf("activate %s\n", readInteraction.actor());
         // render all post queue interactions that are instantiated from this read interaction
@@ -214,7 +215,8 @@ public class SpringAmqpRenderer {
     List<String> classes = interactions.stream().map(QueueInteraction::actor).distinct().toList();
 
     for (String participant : classes) {
-      PlantUmlBuilder.renderParticipant(bufferWriter, participant);
+      bufferWriter.printf("participant \"%s\" as %s\n", StringOperations.humanizeName(participant),
+          participant);
     }
 
     // Note: requires there to be at least one queue post outside a queue read context

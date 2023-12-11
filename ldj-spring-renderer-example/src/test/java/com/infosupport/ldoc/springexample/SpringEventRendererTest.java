@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infosupport.ldoc.springexample.SpringEventRenderer.Interaction;
 import com.infosupport.ldoc.springexample.SpringEventRenderer.Kind;
-import com.infosupport.ldoc.springexample.util.PlantUmlBuilder;
 import com.infosupport.ldoc.springexample.util.StringOperations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -75,7 +74,8 @@ class SpringEventRendererTest {
 
   @Test
   void renderParticipant() {
-    PlantUmlBuilder.renderParticipant(pw, "org.example.ExampleParticipant");
+    pw.printf("participant \"%s\" as %s\n", StringOperations.humanizeName(
+        "org.example.ExampleParticipant"), "org.example.ExampleParticipant");
 
     assertEquals(
         "participant \"Example Participant\" as org.example.ExampleParticipant\n", sw.toString());
@@ -83,8 +83,8 @@ class SpringEventRendererTest {
 
   @Test
   void renderInteraction() {
-    PlantUmlBuilder.renderInteraction(
-        pw, "org.example.SomeSender", "org.example.SomeReceiver", "org.example.ExampleEvent");
+    pw.printf("%s -[#ForestGreen]> %s : %s\n", "org.example.SomeSender", "org.example.SomeReceiver",
+        StringOperations.stripName("org.example.ExampleEvent"));
 
     assertEquals(
         "org.example.SomeSender -[#ForestGreen]> org.example.SomeReceiver : ExampleEvent\n",
