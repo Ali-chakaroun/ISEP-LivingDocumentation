@@ -22,6 +22,11 @@ class InvocationImpl implements Invocation {
   }
 
   @Override
+  public String name() {
+    return node.path("Name").textValue();
+  }
+
+  @Override
   public Stream<Argument> arguments() {
     return Util.streamOf(node.path("Arguments"), ArgumentImpl::new);
   }
