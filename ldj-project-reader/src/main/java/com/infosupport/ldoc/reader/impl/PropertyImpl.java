@@ -8,8 +8,8 @@ import com.infosupport.ldoc.reader.Visitor;
 import java.util.stream.Stream;
 
 class PropertyImpl implements Property {
-  private ProjectImpl project;
-  private JsonNode node;
+  private final ProjectImpl project;
+  private final JsonNode node;
 
   PropertyImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
@@ -33,7 +33,7 @@ class PropertyImpl implements Property {
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   @Override

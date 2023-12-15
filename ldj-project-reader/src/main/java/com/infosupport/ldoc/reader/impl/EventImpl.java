@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 
 class EventImpl implements Event {
 
-  private ProjectImpl project;
-  private JsonNode node;
+  private final ProjectImpl project;
+  private final JsonNode node;
 
   EventImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
@@ -34,7 +34,7 @@ class EventImpl implements Event {
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   @Override

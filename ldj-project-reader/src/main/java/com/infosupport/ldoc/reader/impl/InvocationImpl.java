@@ -23,7 +23,7 @@ class InvocationImpl implements Invocation {
 
   @Override
   public Stream<Argument> arguments() {
-    return Util.streamOf(node.path("Arguments"), a -> new ArgumentImpl(project, a));
+    return Util.streamOf(node.path("Arguments"), ArgumentImpl::new);
   }
 
   @Override

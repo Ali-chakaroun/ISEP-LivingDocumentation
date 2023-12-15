@@ -7,11 +7,10 @@ import com.infosupport.ldoc.reader.Visitor;
 import java.util.stream.Stream;
 
 class ParameterImpl implements Parameter {
-  private ProjectImpl project;
-  private JsonNode node;
 
-  ParameterImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  private final JsonNode node;
+
+  ParameterImpl(JsonNode node) {
     this.node = node;
   }
 
@@ -27,7 +26,7 @@ class ParameterImpl implements Parameter {
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   @Override

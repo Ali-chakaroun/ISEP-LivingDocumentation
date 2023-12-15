@@ -32,7 +32,7 @@ class MethodImpl implements Method {
 
   @Override
   public Stream<Parameter> parameters() {
-    return Util.streamOf(node.path("Parameters"), p -> new ParameterImpl(project, p));
+    return Util.streamOf(node.path("Parameters"), ParameterImpl::new);
   }
 
   @Override
@@ -42,7 +42,7 @@ class MethodImpl implements Method {
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   @Override

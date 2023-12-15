@@ -20,13 +20,13 @@ class Util {
 
     return streamOf(node.path("Statements"), s -> {
       return switch (s.path("$type").textValue().split(", ")[0]) {
-        case "LivingDocumentation.AssignmentDescription" -> new AssignmentImpl(project, node);
+        case "LivingDocumentation.AssignmentDescription" -> new AssignmentImpl(node);
         case "LivingDocumentation.ForEach" -> new ForEachImpl(project, node);
         case "LivingDocumentation.If" -> new IfImpl(project, node);
         case "LivingDocumentation.InvocationDescription" -> new InvocationImpl(project, node);
-        case "LivingDocumentation.ReturnDescription" -> new ReturnImpl(project, node);
+        case "LivingDocumentation.ReturnDescription" -> new ReturnImpl(node);
         case "LivingDocumentation.Switch" -> new SwitchImpl(project, node);
-        default -> new UnknownStatementImpl(project, node);
+        default -> new UnknownStatementImpl();
       };
     });
   }

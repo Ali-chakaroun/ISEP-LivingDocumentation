@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 
 class IfImpl implements IfStatement {
 
-  private ProjectImpl project;
-  private JsonNode node;
+  private final ProjectImpl project;
+  private final JsonNode node;
 
   IfImpl(ProjectImpl project, JsonNode node) {
     this.project = project;

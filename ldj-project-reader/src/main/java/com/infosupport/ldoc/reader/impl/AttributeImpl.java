@@ -7,11 +7,10 @@ import com.infosupport.ldoc.reader.Visitor;
 import java.util.stream.Stream;
 
 class AttributeImpl implements Attribute {
-  private final ProjectImpl project;
+
   private final JsonNode node;
 
-  AttributeImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  AttributeImpl(JsonNode node) {
     this.node = node;
   }
 
@@ -27,7 +26,7 @@ class AttributeImpl implements Attribute {
 
   @Override
   public Stream<AttributeArgument> arguments() {
-    return Util.streamOf(node.path("Arguments"), a -> new AttributeArgumentImpl(project, a));
+    return Util.streamOf(node.path("Arguments"), AttributeArgumentImpl::new);
   }
 
   @Override

@@ -5,11 +5,10 @@ import com.infosupport.ldoc.reader.Field;
 import com.infosupport.ldoc.reader.Visitor;
 
 class FieldImpl implements Field {
-  private final ProjectImpl project;
+
   private final JsonNode node;
 
-  FieldImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  FieldImpl(JsonNode node) {
     this.node = node;
   }
 
