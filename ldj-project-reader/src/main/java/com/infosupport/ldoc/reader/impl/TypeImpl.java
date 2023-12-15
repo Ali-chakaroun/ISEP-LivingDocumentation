@@ -55,7 +55,7 @@ class TypeImpl {
   }
 
   public Stream<Attribute> attributes() {
-    return streamOf("Attributes", a -> null);
+    return streamOf("Attributes", a -> new AttributeImpl(project, a));
   }
 
   public Stream<EnumMember> enumMembers() {
