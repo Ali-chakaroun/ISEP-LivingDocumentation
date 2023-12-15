@@ -14,6 +14,8 @@ public interface Visitor {
 
   void visitConstructor(Constructor constructor);
 
+  void visitDocumentationComment(DocumentationComment documentationComment);
+
   void visitEnum(Enum enumType);
 
   void visitEnumMember(EnumMember enumMember);
