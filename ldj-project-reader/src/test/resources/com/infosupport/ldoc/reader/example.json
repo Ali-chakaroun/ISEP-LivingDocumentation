@@ -5,6 +5,16 @@
     "DocumentationComments": {
       "Summary": "An example application where we pretend 6 sandwiches were ordered by a hungry customer who lives\nat 123 Fake Street.."
     },
+    "Fields": [
+      {
+        "Type": "org.example.models.Order",
+        "DocumentationComments": {
+          "Summary": "The order that was paid."
+        },
+        "Name": "order",
+        "Modifiers": 130
+      }
+    ],
     "Methods": [
       {
         "ReturnType": "void",
