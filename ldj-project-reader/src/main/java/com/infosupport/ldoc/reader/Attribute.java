@@ -1,5 +1,13 @@
 package com.infosupport.ldoc.reader;
 
-public interface Attribute {
+import java.util.stream.Stream;
+
+public interface Attribute extends Node {
+
+  String name();
+
+  String type();
+
+  Stream<AttributeArgument> arguments();
 
 }

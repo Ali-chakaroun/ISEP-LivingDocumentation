@@ -13,4 +13,6 @@ public interface Visitor {
   void visitConstructor(Constructor constructor);
 
   void visitProperty(Property property);
+
+  void visitAttribute(Attribute attribute);
 }
