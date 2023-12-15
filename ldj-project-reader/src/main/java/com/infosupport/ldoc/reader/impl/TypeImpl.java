@@ -51,7 +51,7 @@ class TypeImpl {
   }
 
   public Stream<Property> properties() {
-    return streamOf("Properties", p -> null);
+    return streamOf("Properties", p -> new PropertyImpl(project, p));
   }
 
   public Stream<Attribute> attributes() {
