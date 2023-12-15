@@ -18,7 +18,7 @@ class ProjectImpl implements Project {
 
   private final JsonNode node;
 
-  public ProjectImpl(ObjectMapper objectMapper, JsonNode node) {
+  ProjectImpl(ObjectMapper objectMapper, JsonNode node) {
     this.objectMapper = objectMapper;
     assert node != null;
     assert node.isArray();
