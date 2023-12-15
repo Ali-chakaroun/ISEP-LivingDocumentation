@@ -1,6 +1,7 @@
 package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infosupport.ldoc.reader.Class;
 import com.infosupport.ldoc.reader.Enum;
 import com.infosupport.ldoc.reader.Interface;
@@ -13,13 +14,20 @@ import java.util.stream.StreamSupport;
 
 class ProjectImpl implements Project {
 
+  private final ObjectMapper objectMapper;
+
   private final JsonNode node;
 
-  public ProjectImpl(JsonNode node) {
+  public ProjectImpl(ObjectMapper objectMapper, JsonNode node) {
+    this.objectMapper = objectMapper;
     assert node != null;
     assert node.isArray();
 
     this.node = node;
+  }
+
+  public ObjectMapper objectMapper() {
+    return objectMapper;
   }
 
   @Override

@@ -5,11 +5,14 @@ import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Method;
 import com.infosupport.ldoc.reader.Visitor;
 
-public class MethodImpl implements Method {
+class MethodImpl implements Method {
+
+  private final ProjectImpl project;
 
   private final JsonNode node;
 
-  public MethodImpl(JsonNode node) {
+  public MethodImpl(ProjectImpl project, JsonNode node) {
+    this.project = project;
     this.node = node;
   }
 
@@ -20,7 +23,7 @@ public class MethodImpl implements Method {
 
   @Override
   public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(node.get("DocumentationComments"));
+    return new DocumentationCommentImpl(project, node.get("DocumentationComments"));
   }
 
   @Override
