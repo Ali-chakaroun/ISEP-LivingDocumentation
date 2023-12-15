@@ -8,13 +8,13 @@ import java.util.stream.StreamSupport;
 
 class Util {
 
-  public static <T> Stream<T> streamOf(JsonNode node, Function<JsonNode, T> converter) {
+  static <T> Stream<T> streamOf(JsonNode node, Function<JsonNode, T> converter) {
     assert node.isContainerNode();
 
     return StreamSupport.stream(node.spliterator(), false).map(converter);
   }
 
-  public static Stream<Statement> statements(ProjectImpl project, JsonNode node) {
+  static Stream<Statement> statements(ProjectImpl project, JsonNode node) {
     assert node.isObject();
     assert node.has("Statements");
 
