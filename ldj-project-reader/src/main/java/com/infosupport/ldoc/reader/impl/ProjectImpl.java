@@ -32,7 +32,13 @@ class ProjectImpl implements Project {
 
   @Override
   public Stream<Type> allTypes() {
-    return StreamSupport.stream(node.spliterator(), false).map(n -> TypeImpl.fromNode(this, n));
+    return StreamSupport.stream(node.spliterator(), false).map(n -> switch (n.path("type").asInt(0)) {
+      case 0 -> new ClassImpl(this, n);
+      case 1 -> new UnknownTypeImpl(); /* TODO: should be interface */
+      case 2 -> new UnknownTypeImpl(); /* TODO: should be struct */
+      case 3 -> new UnknownTypeImpl(); /* TODO: should be enum */
+      default -> new UnknownTypeImpl();
+    });
   }
 
   private <T> Stream<T> allOfType(java.lang.Class<T> type) {
