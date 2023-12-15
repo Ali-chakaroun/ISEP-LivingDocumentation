@@ -1,9 +1,13 @@
 package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.infosupport.ldoc.reader.Attribute;
 import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Method;
+import com.infosupport.ldoc.reader.Parameter;
+import com.infosupport.ldoc.reader.Statement;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.stream.Stream;
 
 class MethodImpl implements Method {
 
@@ -18,7 +22,27 @@ class MethodImpl implements Method {
 
   @Override
   public String name() {
-    return node.get("Name").textValue();
+    return node.path("Name").textValue();
+  }
+
+  @Override
+  public String returnType() {
+    return node.path("ReturnType").textValue();
+  }
+
+  @Override
+  public Stream<Parameter> parameters() {
+    return Util.streamOf(node.path("Parameters"), p -> null);
+  }
+
+  @Override
+  public Stream<Statement> statements() {
+    throw new UnsupportedOperationException(); /* TODO */
+  }
+
+  @Override
+  public Stream<Attribute> attributes() {
+    return Util.streamOf(node.path("Attributes"), a -> null);
   }
 
   @Override
