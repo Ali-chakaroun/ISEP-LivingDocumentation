@@ -59,7 +59,7 @@ class TypeImpl {
   }
 
   public Stream<EnumMember> enumMembers() {
-    return streamOf("EnumMembers", m -> null);
+    return streamOf("EnumMembers", m -> new EnumMemberImpl(project, m));
   }
 
   public Stream<Event> events() {
