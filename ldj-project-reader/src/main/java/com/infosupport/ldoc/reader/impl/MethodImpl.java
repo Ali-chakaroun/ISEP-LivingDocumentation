@@ -15,7 +15,7 @@ class MethodImpl implements Method {
 
   private final JsonNode node;
 
-  public MethodImpl(ProjectImpl project, JsonNode node) {
+  MethodImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
     this.node = node;
   }

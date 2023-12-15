@@ -6,11 +6,11 @@ import com.infosupport.ldoc.reader.AttributeArgument;
 import com.infosupport.ldoc.reader.Visitor;
 import java.util.stream.Stream;
 
-public class AttributeImpl implements Attribute {
+class AttributeImpl implements Attribute {
   private final ProjectImpl project;
   private final JsonNode node;
 
-  public AttributeImpl(ProjectImpl project, JsonNode node) {
+  AttributeImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
     this.node = node;
   }

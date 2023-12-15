@@ -10,7 +10,7 @@ class DocumentationCommentImpl implements DocumentationComment {
   private final ProjectImpl project;
   private final JsonNode node;
 
-  public DocumentationCommentImpl(ProjectImpl project, JsonNode node) {
+  DocumentationCommentImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
     this.node = node;
   }

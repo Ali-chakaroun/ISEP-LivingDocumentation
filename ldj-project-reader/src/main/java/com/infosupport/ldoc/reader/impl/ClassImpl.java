@@ -6,7 +6,7 @@ import com.infosupport.ldoc.reader.Visitor;
 
 class ClassImpl extends TypeImpl implements Class {
 
-  public ClassImpl(ProjectImpl project, JsonNode node) {
+  ClassImpl(ProjectImpl project, JsonNode node) {
     super(project, node);
   }
 
