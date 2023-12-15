@@ -1,8 +1,10 @@
 package com.infosupport.ldoc.reader;
 
 import com.infosupport.ldoc.reader.impl.JacksonProjectFactory;
+import com.infosupport.ldoc.reader.visitor.BaseVisitor;
 import java.io.IOException;
 import java.net.URL;
+import java.util.TreeMap;
 
 public class Example {
 
@@ -19,5 +21,18 @@ public class Example {
         System.out.println(method.documentationComment().summary());
       });
     });
+
+    System.out.print("# Used field types\n\n");
+
+    TreeMap<String, Integer> counts = new TreeMap<>();
+    project.accept(new BaseVisitor() {
+      @Override
+      public void visitField(Field field) {
+        counts.merge(field.type(), 1, Integer::sum);
+      }
+    });
+    System.out.println("| Type | Count |");
+    System.out.println("| ---- | ----- |");
+    counts.forEach((k, v) -> System.out.printf("| `%s` | %d |\n", k, v));
   }
 }
