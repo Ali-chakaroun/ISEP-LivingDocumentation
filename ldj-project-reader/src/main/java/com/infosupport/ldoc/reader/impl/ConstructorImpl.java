@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.infosupport.ldoc.reader.Attribute;
 import com.infosupport.ldoc.reader.Constructor;
 import com.infosupport.ldoc.reader.DocumentationComment;
+import com.infosupport.ldoc.reader.Parameter;
 import com.infosupport.ldoc.reader.Statement;
 import com.infosupport.ldoc.reader.Visitor;
-import java.lang.reflect.Parameter;
 import java.util.stream.Stream;
 
 class ConstructorImpl implements Constructor {
@@ -26,22 +26,22 @@ class ConstructorImpl implements Constructor {
 
   @Override
   public Stream<Parameter> parameters() {
-    return Util.streamOf(node.path("Parameters"), p -> null);
+    return Util.streamOf(node.path("Parameters"), p -> new ParameterImpl(project, p));
   }
 
   @Override
   public Stream<Statement> statements() {
-    throw new UnsupportedOperationException(); /* TODO */
+    return Util.statements(project, node);
   }
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> null);
+    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
   }
 
   @Override
   public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.get("DocumentationComments"));
+    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
   }
 
   @Override

@@ -34,9 +34,9 @@ class ProjectImpl implements Project {
   public Stream<Type> allTypes() {
     return StreamSupport.stream(node.spliterator(), false).map(n -> switch (n.path("type").asInt(0)) {
       case 0 -> new ClassImpl(this, n);
-      case 1 -> new UnknownTypeImpl(); /* TODO: should be interface */
-      case 2 -> new UnknownTypeImpl(); /* TODO: should be struct */
-      case 3 -> new UnknownTypeImpl(); /* TODO: should be enum */
+      case 1 -> new InterfaceImpl(this, n);
+      case 2 -> new StructImpl(this, n);
+      case 3 -> new EnumImpl(this, n);
       default -> new UnknownTypeImpl();
     });
   }

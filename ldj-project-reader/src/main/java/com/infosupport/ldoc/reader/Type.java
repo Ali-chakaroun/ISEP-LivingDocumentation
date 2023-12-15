@@ -11,6 +11,8 @@ public interface Type extends Node {
 
   Stream<Constructor> constructors();
 
+  String fullName();
+
   Stream<Method> methods();
 
   Stream<Property> properties();
