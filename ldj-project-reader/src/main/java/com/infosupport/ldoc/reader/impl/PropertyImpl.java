@@ -33,12 +33,12 @@ class PropertyImpl implements Property {
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> null);
+    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
   }
 
   @Override
   public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.get("DocumentationComments"));
+    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
   }
 
   @Override

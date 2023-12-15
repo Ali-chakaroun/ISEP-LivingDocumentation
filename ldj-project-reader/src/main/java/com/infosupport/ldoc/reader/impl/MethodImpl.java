@@ -37,17 +37,17 @@ class MethodImpl implements Method {
 
   @Override
   public Stream<Statement> statements() {
-    throw new UnsupportedOperationException(); /* TODO */
+    return Util.statements(project, node);
   }
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> null);
+    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
   }
 
   @Override
   public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.get("DocumentationComments"));
+    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
   }
 
   @Override

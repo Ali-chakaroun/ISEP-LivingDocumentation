@@ -1,6 +1,6 @@
 package com.infosupport.ldoc.reader;
 
-public interface Return extends Statement {
+public interface ReturnStatement extends Statement {
 
   String expression();
 }

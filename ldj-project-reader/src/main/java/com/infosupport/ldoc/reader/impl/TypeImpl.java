@@ -11,9 +11,7 @@ import com.infosupport.ldoc.reader.Field;
 import com.infosupport.ldoc.reader.Method;
 import com.infosupport.ldoc.reader.Property;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 class TypeImpl {
 
@@ -23,10 +21,6 @@ class TypeImpl {
   TypeImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
     this.node = node;
-  }
-
-  private <T> Stream<T> streamOf(String path, Function<JsonNode, T> converter) {
-    return StreamSupport.stream(node.path(path).spliterator(), false).map(converter);
   }
 
   public String fullName() {
@@ -39,34 +33,34 @@ class TypeImpl {
   }
 
   public Stream<Field> fields() {
-    return streamOf("Fields", f -> new FieldImpl(project, f));
+    return Util.streamOf(node.path("Fields"), f -> new FieldImpl(project, f));
   }
 
   public Stream<Constructor> constructors() {
-    return streamOf("Constructors", c -> new ConstructorImpl(project, c));
+    return Util.streamOf(node.path("Constructors"), c -> new ConstructorImpl(project, c));
   }
 
   public Stream<Method> methods() {
-    return streamOf("Methods", m -> new MethodImpl(project, m));
+    return Util.streamOf(node.path("Methods"), m -> new MethodImpl(project, m));
   }
 
   public Stream<Property> properties() {
-    return streamOf("Properties", p -> new PropertyImpl(project, p));
+    return Util.streamOf(node.path("Properties"), p -> new PropertyImpl(project, p));
   }
 
   public Stream<Attribute> attributes() {
-    return streamOf("Attributes", a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
   }
 
   public Stream<EnumMember> enumMembers() {
-    return streamOf("EnumMembers", m -> new EnumMemberImpl(project, m));
+    return Util.streamOf(node.path("EnumMembers"), m -> new EnumMemberImpl(project, m));
   }
 
   public Stream<Event> events() {
-    return streamOf("Events", e -> new EventImpl(project, e));
+    return Util.streamOf(node.path("Events"), e -> new EventImpl(project, e));
   }
 
   public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.get("DocumentationComments"));
+    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
   }
 }

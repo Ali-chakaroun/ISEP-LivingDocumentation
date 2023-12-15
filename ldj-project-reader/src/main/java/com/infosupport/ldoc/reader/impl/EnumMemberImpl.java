@@ -30,7 +30,7 @@ class EnumMemberImpl implements EnumMember {
 
   @Override
   public Stream<Argument> arguments() {
-    return Util.streamOf(node.path("Arguments"), a -> null);
+    return Util.streamOf(node.path("Arguments"), a -> new ArgumentImpl(project, a));
   }
 
   @Override
