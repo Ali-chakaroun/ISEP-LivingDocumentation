@@ -6,6 +6,8 @@ public interface Invocation extends Statement {
 
   String containingType();
 
+  String name();
+
   Stream<Argument> arguments();
 
 }
