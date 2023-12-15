@@ -15,4 +15,6 @@ public interface Visitor {
   void visitProperty(Property property);
 
   void visitAttribute(Attribute attribute);
+
+  void visitAttributeArgument(AttributeArgument attributeArgument);
 }

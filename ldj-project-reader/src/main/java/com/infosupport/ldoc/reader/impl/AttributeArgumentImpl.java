@@ -1,16 +1,14 @@
 package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.infosupport.ldoc.reader.Attribute;
 import com.infosupport.ldoc.reader.AttributeArgument;
 import com.infosupport.ldoc.reader.Visitor;
-import java.util.stream.Stream;
 
-class AttributeImpl implements Attribute {
-  private final ProjectImpl project;
-  private final JsonNode node;
+class AttributeArgumentImpl implements AttributeArgument {
+  private ProjectImpl project;
+  private JsonNode node;
 
-  AttributeImpl(ProjectImpl project, JsonNode node) {
+  public AttributeArgumentImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
     this.node = node;
   }
@@ -26,12 +24,12 @@ class AttributeImpl implements Attribute {
   }
 
   @Override
-  public Stream<AttributeArgument> arguments() {
-    return Util.streamOf(node.path("Arguments"), a -> new AttributeArgumentImpl(project, a));
+  public String value() {
+    return node.path("Value").textValue();
   }
 
   @Override
   public void accept(Visitor v) {
-    v.visitAttribute(this);
+    v.visitAttributeArgument(this);
   }
 }
