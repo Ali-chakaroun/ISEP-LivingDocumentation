@@ -7,6 +7,4 @@ public interface Visitor {
   void visitMethod(Method method);
 
   void visitProject(Project project);
-
-  void visitType(Type type);
 }
