@@ -11,4 +11,6 @@ public interface Visitor {
   void visitField(Field field);
 
   void visitConstructor(Constructor constructor);
+
+  void visitProperty(Property property);
 }
