@@ -19,4 +19,6 @@ public interface Visitor {
   void visitAttributeArgument(AttributeArgument attributeArgument);
 
   void visitEnumMember(EnumMember enumMember);
+
+  void visitEvent(Event event);
 }

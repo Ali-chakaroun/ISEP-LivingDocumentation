@@ -63,7 +63,7 @@ class TypeImpl {
   }
 
   public Stream<Event> events() {
-    return streamOf("Events", e -> null);
+    return streamOf("Events", e -> new EventImpl(project, e));
   }
 
   public DocumentationComment documentationComment() {

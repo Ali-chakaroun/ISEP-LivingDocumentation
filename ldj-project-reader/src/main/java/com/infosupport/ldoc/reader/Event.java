@@ -1,5 +1,16 @@
 package com.infosupport.ldoc.reader;
 
-public interface Event {
+import java.util.stream.Stream;
 
+public interface Event extends Node {
+
+  String name();
+
+  String type();
+
+  String initializer();
+
+  Stream<Attribute> attributes();
+
+  DocumentationComment documentationComment();
 }
