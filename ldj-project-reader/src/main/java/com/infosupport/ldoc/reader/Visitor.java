@@ -9,4 +9,6 @@ public interface Visitor {
   void visitProject(Project project);
 
   void visitField(Field field);
+
+  void visitConstructor(Constructor constructor);
 }

@@ -43,7 +43,7 @@ class TypeImpl {
   }
 
   public Stream<Constructor> constructors() {
-    return streamOf("Constructors", c -> null);
+    return streamOf("Constructors", c -> new ConstructorImpl(project, c));
   }
 
   public Stream<Method> methods() {
