@@ -33,7 +33,8 @@
               <configLocation>google_checks.xml</configLocation>
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <consoleOutput>true</consoleOutput>
-              <!--<failOnViolation>true</failOnViolation>-->
+              <failOnViolation>true</failOnViolation>
+              <violationIgnore>MissingJavadocType,MissingJavadocMethod</violationIgnore>
               <violationSeverity>warning</violationSeverity>
               <linkXRef>false</linkXRef>
             </configuration>
