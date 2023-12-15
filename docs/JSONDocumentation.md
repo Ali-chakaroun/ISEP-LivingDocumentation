@@ -336,7 +336,7 @@ Each statement is one of the following options. The statement type is distinguis
 | Key             | Type                                              | .NET                                     | Java                                     |
 |-----------------|---------------------------------------------------|------------------------------------------|------------------------------------------|
 | ContainingType  | string                                            | Class that the invoked method belongs to | Class that the invoked method belongs to |
-| Arguments       | array of [AttributeArgument](#attribute-argument) |                                          |                                          |
+| Arguments       | array of [Argument](#argument) |                                          |                                          |
 
 
 ### Assignment
