@@ -2,7 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.Map;
 
-public interface DocumentationComment {
+public interface DocumentationComment extends Node {
   String example();
 
   String remarks();
