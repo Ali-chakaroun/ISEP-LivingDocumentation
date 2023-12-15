@@ -39,7 +39,7 @@ class TypeImpl {
   }
 
   public Stream<Field> fields() {
-    return streamOf("Fields", f -> null);
+    return streamOf("Fields", f -> new FieldImpl(project, f));
   }
 
   public Stream<Constructor> constructors() {
