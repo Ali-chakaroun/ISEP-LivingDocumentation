@@ -1,13 +1,12 @@
 package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.infosupport.ldoc.reader.Project;
 import com.infosupport.ldoc.reader.Type;
 import com.infosupport.ldoc.reader.Visitor;
 
 class TypeImpl implements Type {
 
-  public static Type fromNode(Project project, JsonNode node) {
+  public static Type fromNode(ProjectImpl project, JsonNode node) {
     return switch (node.path("type").asInt(0)) {
       case 0 -> new ClassImpl(project, node);
       case 1 -> new UnknownTypeImpl(); /* TODO: should be interface */

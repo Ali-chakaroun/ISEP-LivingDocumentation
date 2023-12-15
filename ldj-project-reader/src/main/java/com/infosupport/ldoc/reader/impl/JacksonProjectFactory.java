@@ -22,7 +22,7 @@ public class JacksonProjectFactory implements ProjectFactory {
   }
 
   private Project project(JsonNode node) {
-    return new ProjectImpl(node);
+    return new ProjectImpl(om, node);
   }
 
   @Override
