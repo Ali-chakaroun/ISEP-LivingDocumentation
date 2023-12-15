@@ -21,4 +21,6 @@ public interface Visitor {
   void visitEnumMember(EnumMember enumMember);
 
   void visitEvent(Event event);
+
+  void visitParameter(Parameter parameter);
 }
