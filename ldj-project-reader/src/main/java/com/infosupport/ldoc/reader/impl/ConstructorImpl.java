@@ -26,7 +26,7 @@ class ConstructorImpl implements Constructor {
 
   @Override
   public Stream<Parameter> parameters() {
-    return Util.streamOf(node.path("Parameters"), p -> new ParameterImpl(project, p));
+    return Util.streamOf(node.path("Parameters"), ParameterImpl::new);
   }
 
   @Override
@@ -36,7 +36,7 @@ class ConstructorImpl implements Constructor {
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   @Override

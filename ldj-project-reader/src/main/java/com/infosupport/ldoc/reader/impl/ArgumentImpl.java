@@ -6,11 +6,9 @@ import com.infosupport.ldoc.reader.Visitor;
 
 class ArgumentImpl implements Argument {
 
-  private final ProjectImpl project;
   private final JsonNode node;
 
-  ArgumentImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  ArgumentImpl(JsonNode node) {
     this.node = node;
   }
 

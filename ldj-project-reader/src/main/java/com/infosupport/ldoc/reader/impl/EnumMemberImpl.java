@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 class EnumMemberImpl implements EnumMember {
 
-  private ProjectImpl project;
-  private JsonNode node;
+  private final ProjectImpl project;
+  private final JsonNode node;
 
   EnumMemberImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
@@ -30,12 +30,12 @@ class EnumMemberImpl implements EnumMember {
 
   @Override
   public Stream<Argument> arguments() {
-    return Util.streamOf(node.path("Arguments"), a -> new ArgumentImpl(project, a));
+    return Util.streamOf(node.path("Arguments"), ArgumentImpl::new);
   }
 
   @Override
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   @Override

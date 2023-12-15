@@ -33,7 +33,7 @@ class TypeImpl {
   }
 
   public Stream<Field> fields() {
-    return Util.streamOf(node.path("Fields"), f -> new FieldImpl(project, f));
+    return Util.streamOf(node.path("Fields"), FieldImpl::new);
   }
 
   public Stream<Constructor> constructors() {
@@ -49,7 +49,7 @@ class TypeImpl {
   }
 
   public Stream<Attribute> attributes() {
-    return Util.streamOf(node.path("Attributes"), a -> new AttributeImpl(project, a));
+    return Util.streamOf(node.path("Attributes"), AttributeImpl::new);
   }
 
   public Stream<EnumMember> enumMembers() {

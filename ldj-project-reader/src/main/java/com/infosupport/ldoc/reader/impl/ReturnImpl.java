@@ -6,11 +6,9 @@ import com.infosupport.ldoc.reader.Visitor;
 
 class ReturnImpl implements ReturnStatement {
 
-  private ProjectImpl project;
-  private JsonNode node;
+  private final JsonNode node;
 
-  ReturnImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  ReturnImpl(JsonNode node) {
     this.node = node;
   }
 

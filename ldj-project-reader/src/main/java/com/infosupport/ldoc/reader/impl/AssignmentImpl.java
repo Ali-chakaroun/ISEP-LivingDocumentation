@@ -5,11 +5,10 @@ import com.infosupport.ldoc.reader.Assignment;
 import com.infosupport.ldoc.reader.Visitor;
 
 class AssignmentImpl implements Assignment {
-  private ProjectImpl project;
-  private JsonNode node;
 
-  AssignmentImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  private final JsonNode node;
+
+  AssignmentImpl(JsonNode node) {
     this.node = node;
   }
 

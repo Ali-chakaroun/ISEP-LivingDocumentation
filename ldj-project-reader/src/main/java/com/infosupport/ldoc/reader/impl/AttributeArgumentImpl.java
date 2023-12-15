@@ -5,11 +5,10 @@ import com.infosupport.ldoc.reader.AttributeArgument;
 import com.infosupport.ldoc.reader.Visitor;
 
 class AttributeArgumentImpl implements AttributeArgument {
-  private ProjectImpl project;
-  private JsonNode node;
 
-  AttributeArgumentImpl(ProjectImpl project, JsonNode node) {
-    this.project = project;
+  private final JsonNode node;
+
+  AttributeArgumentImpl(JsonNode node) {
     this.node = node;
   }
 

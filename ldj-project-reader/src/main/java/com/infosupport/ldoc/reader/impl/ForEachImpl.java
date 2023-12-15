@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 
 class ForEachImpl implements ForEachStatement {
 
-  private ProjectImpl project;
-  private JsonNode node;
+  private final ProjectImpl project;
+  private final JsonNode node;
 
   ForEachImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
