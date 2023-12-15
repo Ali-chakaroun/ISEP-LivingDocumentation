@@ -24,4 +24,21 @@
     <maven.compiler.source>17</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.infosupport.livingdocumentation</groupId>
+        <artifactId>ldj-maven-plugin</artifactId>
+        <version>1-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>livingdocumentation</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
