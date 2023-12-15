@@ -8,7 +8,7 @@ class AttributeArgumentImpl implements AttributeArgument {
   private ProjectImpl project;
   private JsonNode node;
 
-  public AttributeArgumentImpl(ProjectImpl project, JsonNode node) {
+  AttributeArgumentImpl(ProjectImpl project, JsonNode node) {
     this.project = project;
     this.node = node;
   }
