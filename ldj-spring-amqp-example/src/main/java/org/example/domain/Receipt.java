@@ -2,6 +2,10 @@ package org.example.domain;
 
 import java.io.Serializable;
 
+/**
+ * Class representing a receipt. For this sample/dummy application only one sandWhich order with
+ * an associated (fixed) price.
+ */
 public class Receipt implements Serializable {
 
   public final SandwichOrder sandwichOrder;
