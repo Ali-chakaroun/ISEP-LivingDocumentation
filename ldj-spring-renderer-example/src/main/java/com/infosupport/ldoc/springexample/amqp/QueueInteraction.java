@@ -21,14 +21,6 @@ public record QueueInteraction(
 ) {
 
   /**
-   * Utility method to filter a list of interactions on type POST.
-   *  TODO note: earlier did some more work, may not be useful to keep this as a separate method.
-   */
-  static List<QueueInteraction> getAllPosts(List<QueueInteraction> queueInteractions) {
-    return queueInteractions.stream().filter(i -> i.kind() == QueueInteractionKind.POST).toList();
-  }
-
-  /**
    * Filters a list to get all Queue Interactions that get triggered after a queue post.
    *
    * @param queueInteractions list to filter

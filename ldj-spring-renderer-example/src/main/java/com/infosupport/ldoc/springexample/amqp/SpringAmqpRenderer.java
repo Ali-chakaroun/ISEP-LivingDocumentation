@@ -220,7 +220,9 @@ public class SpringAmqpRenderer {
     }
 
     // Note: requires there to be at least one queue post outside a queue read context
-    renderInteractions(bufferWriter, interactions, QueueInteraction.getAllPosts(interactions));
+    List<QueueInteraction> onlyPostInteractions = interactions.stream()
+        .filter(i -> i.kind() == QueueInteractionKind.POST).toList();
+    renderInteractions(bufferWriter, interactions, onlyPostInteractions);
 
     out.write(template.replace("' diagram", buffer.toString()).getBytes());
   }
