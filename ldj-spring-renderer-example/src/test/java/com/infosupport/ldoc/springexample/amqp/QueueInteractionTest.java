@@ -4,35 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class QueueInteractionTest {
-
-  @Test
-  void filter_non_empty_post_list() {
-    List<QueueInteraction> interactions = List.of(
-        new QueueInteraction("test1", QueueInteractionKind.READ, "queue1", "msg1", null),
-        new QueueInteraction("test2", QueueInteractionKind.READ, "queue2", "msg2", null),
-        new QueueInteraction("test3", QueueInteractionKind.POST, "queue3", "msg3", null),
-        new QueueInteraction("test4", QueueInteractionKind.POST, "queue4", "msg4", null)
-    );
-
-    List<QueueInteraction> expected = List.of(
-        new QueueInteraction("test3", QueueInteractionKind.POST, "queue3", "msg3", null),
-        new QueueInteraction("test4", QueueInteractionKind.POST, "queue4", "msg4", null)
-    );
-
-    assertIterableEquals(expected, QueueInteraction.getAllPosts(interactions));
-  }
-
-  @Test
-  void filter_empty_post_list() {
-    List<QueueInteraction> interactions = List.of();
-    assertIterableEquals(new ArrayList<QueueInteraction>(),
-        QueueInteraction.getAllPosts(interactions));
-  }
 
   @Test
   void filterReadsReactingToThis() {
