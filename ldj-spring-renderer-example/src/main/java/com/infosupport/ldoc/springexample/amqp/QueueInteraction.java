@@ -24,8 +24,6 @@ public record QueueInteraction(
     //    sample, the plain class name is used (as opposed to the fqdn)
     String messageType,
 
-    // TODO note: Hacky: assumes this is Read, and contains solely post interactions that happen
-    //   within this read context (advocates for polymorphism is read/post interactions
     // A list of Send interactions that are instantiated from this receive interaction
     List<QueueInteraction> reactionToReceive
 ) {
