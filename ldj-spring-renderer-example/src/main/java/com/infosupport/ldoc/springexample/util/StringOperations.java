@@ -6,6 +6,13 @@ package com.infosupport.ldoc.springexample.util;
 public class StringOperations {
 
   /**
+   *  Private constructor to hide the implicit public one.
+   */
+  private StringOperations() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  /**
    * Converts a fully-qualified class name into a plain class name.
    */
   public static String stripName(String fqdn) {
