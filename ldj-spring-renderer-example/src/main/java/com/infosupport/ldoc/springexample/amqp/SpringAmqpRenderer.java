@@ -148,8 +148,7 @@ public class SpringAmqpRenderer {
         // Note that the queue is the same for all methods within a RabbitListener
         JsonNode queueArgument = getNodeWithKeyAndValue(rabbitListenerAnnotation.path("Arguments"),
             "Name", "queues");
-        assert queueArgument
-            != null; // TODO This should not happen, how nicely do we want to handle this?
+        assert queueArgument != null; // To avoid null pointer exception
         String queue = queueArgument.path("Value").asText();
 
         //Check for receive/listen methods
