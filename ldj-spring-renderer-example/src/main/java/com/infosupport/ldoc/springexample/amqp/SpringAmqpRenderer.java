@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * Class containing methods to renderer a UML Sequence diagram from a sample Spring AMQP
+ * application. Reads LivingDocumentation JSON and outputs AsciiDoc format.
+ */
 public class SpringAmqpRenderer {
 
   public static final String RABBIT_LISTENER_ANNOTATION = "org.springframework.amqp.rabbit."
@@ -139,7 +142,8 @@ public class SpringAmqpRenderer {
       String className = typeDesc.path("FullName").textValue();
 
       //check if class is listener
-      JsonNode rabbitListenerAnnotation = getAttributeWithType(typeDesc, RABBIT_LISTENER_ANNOTATION);
+      JsonNode rabbitListenerAnnotation = getAttributeWithType(typeDesc,
+          RABBIT_LISTENER_ANNOTATION);
       if (rabbitListenerAnnotation != null) { // I.e., this class is a RabbitListener
         // Note that the queue is the same for all methods within a RabbitListener
         JsonNode queueArgument = getNodeWithKeyAndValue(rabbitListenerAnnotation.path("Arguments"),
@@ -155,8 +159,8 @@ public class SpringAmqpRenderer {
             String messageType = stripName(
                 method.path("Parameters").path(0).path("Type").textValue());
             // Create and add receive interaction
-            QueueInteraction newReceive = new QueueInteraction(className, QueueInteractionKind.RECEIVE,
-                queue, messageType, new ArrayList<>(0));
+            QueueInteraction newReceive = new QueueInteraction(className,
+                QueueInteractionKind.RECEIVE, queue, messageType, new ArrayList<>(0));
             // Add all sends that happen within this receive
             newReceive.reactionToReceive().addAll(findQueueSends(method, className));
 
@@ -230,6 +234,9 @@ public class SpringAmqpRenderer {
   }
 
 
+  /**
+   * Command-line entry point. Reads JSON from standard input and writes Asciidoc to standard out.
+   */
   public static void main(String[] args) throws IOException {
     try (InputStream tplFile = SpringAmqpRenderer.class.getResourceAsStream("template.adoc")) {
       String template = new String(Objects.requireNonNull(tplFile).readAllBytes());

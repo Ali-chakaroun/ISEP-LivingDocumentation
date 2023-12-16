@@ -1,5 +1,8 @@
 package com.infosupport.ldoc.springexample.util;
 
+/**
+ * Class that extracts common String operations for both the Spring Event and AMQP renderer.
+ */
 public class StringOperations {
 
   /**

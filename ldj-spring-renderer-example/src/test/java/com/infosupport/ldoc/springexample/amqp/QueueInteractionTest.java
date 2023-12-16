@@ -15,7 +15,8 @@ class QueueInteractionTest {
         null);
     QueueInteraction read = new QueueInteraction("Henk", QueueInteractionKind.RECEIVE, "q1", "msg1",
         null);
-    QueueInteraction read2 = new QueueInteraction("Henks alterego", QueueInteractionKind.RECEIVE, "q1",
+    QueueInteraction read2 = new QueueInteraction("Henks alterego", QueueInteractionKind.RECEIVE,
+        "q1",
         "msg1", null);
     QueueInteraction readDecoy1 = new QueueInteraction("Pieter", QueueInteractionKind.RECEIVE, "q1",
         "otherMsg", null);

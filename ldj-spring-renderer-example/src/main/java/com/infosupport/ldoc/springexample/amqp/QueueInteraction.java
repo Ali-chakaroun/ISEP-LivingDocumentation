@@ -2,6 +2,16 @@ package com.infosupport.ldoc.springexample.amqp;
 
 import java.util.List;
 
+/**
+ * Model element that represents the interaction between an actor and a queue.
+ *
+ * @param actor String representation of actor that interacts with a queue.
+ * @param kind Whether the interaction is sending or receiving a message to/from a queue.
+ * @param queue String representation of the queue that is communicated with.
+ * @param messageType String representation/identification of the message type that is
+ *                    received/sent.
+ * @param reactionToReceive List of send interactions that are instantiated after this interaction.
+ */
 public record QueueInteraction(
     // The actor (Java classes in this case) that either receives or sends a message in a queue
     String actor,
