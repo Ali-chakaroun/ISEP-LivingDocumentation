@@ -12,7 +12,6 @@ import java.util.List;
  *                  constructor.
  * @param arguments List of {@link ArgumentDescription}, containing the constructor arguments (if
  *                  relevant).
- * @param comments  JavaDoc comments in an {@link CommentSummaryDescription}.
  */
 public record EnumMemberDescription(
     @JsonUnwrapped
