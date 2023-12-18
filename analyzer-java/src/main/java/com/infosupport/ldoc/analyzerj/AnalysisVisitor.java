@@ -379,9 +379,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     // This regex splits the sentence into 2 at the first dot(.) followed by a space.
     String[] sentences = CommentHelperMethods.extractSummary(n).split("\\.\\s+", 2);
     // Add a dot(.) at the end if it is missing.
-    String summary =
-        (sentences.length > 0 && !sentences[0].isEmpty()) ? sentences[0].strip().endsWith(".") ?
-                sentences[0].strip() : sentences[0].strip().concat(".") : null;
+    String summary = (sentences.length > 0 && !sentences[0].isEmpty()) ?
+        sentences[0].strip().endsWith(".") ?
+            sentences[0].strip() : sentences[0].strip().concat(".")
+        : null;
     String remarks = (sentences.length > 1) ? sentences[1].strip() : null;
     Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
     CommentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);
