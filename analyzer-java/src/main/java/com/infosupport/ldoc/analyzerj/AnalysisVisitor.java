@@ -381,8 +381,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     // Add a dot(.) at the end if it is missing.
     String summary =
         (sentences.length > 0 && !sentences[0].isEmpty()) ?
-            sentences[0].strip().endsWith(".") ? sentences[0].strip()
-                : sentences[0].strip().concat(".")
+            sentences[0].strip().endsWith(".") ?
+                sentences[0].strip() : sentences[0].strip().concat(".")
             : null;
     String remarks = (sentences.length > 1) ? sentences[1].strip() : null;
     Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
