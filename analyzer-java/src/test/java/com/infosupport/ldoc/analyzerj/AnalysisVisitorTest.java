@@ -374,7 +374,7 @@ class AnalysisVisitorTest {
             "\"Hai\"");
 
     CommentSummaryDescription comment =
-        new CommentSummaryDescription(null, null, "Test javadoc.", null, null);
+        new CommentSummaryDescription(null, null, "Test javadoc", null, null);
 
     FieldDescription age1Field =
         new FieldDescription(
