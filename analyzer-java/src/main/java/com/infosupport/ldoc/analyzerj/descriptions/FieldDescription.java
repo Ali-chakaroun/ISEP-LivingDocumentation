@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * @param member       {@link MemberDescription}: the name, modifiers and annotations of the field.
  * @param type         Type of the field (string).
  * @param initialValue The explicit initialization value (string).
- * @param comments     JavaDoc comments in an {@link CommentSummaryDescription}.
  */
 public record FieldDescription(
 

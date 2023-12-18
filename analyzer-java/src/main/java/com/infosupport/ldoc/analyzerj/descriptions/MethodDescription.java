@@ -11,7 +11,6 @@ import java.util.List;
  *
  * @param member     {@link MemberDescription}: the name, modifiers and annotations of the method.
  * @param returnType Type of the return value of the method (string).
- * @param comments   JavaDoc comments in an {@link CommentSummaryDescription}.
  * @param parameters List of method {@link ParameterDescription}.
  * @param statements List of statements from the method body.
  */
