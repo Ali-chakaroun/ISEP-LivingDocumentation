@@ -51,6 +51,7 @@ line options:
 |  | `--output` | The file path to save the output JSON to. (Required.) |
 |  | `--project` | Root directory of the project to analyze. (Required.) |
 | `-p` | `--pretty` | Indent (pretty-print) JSON output.  |
+|  | `--classpath` | (Semi)colon-separated list of JAR paths to use during type resolution.  |
 
 
 
