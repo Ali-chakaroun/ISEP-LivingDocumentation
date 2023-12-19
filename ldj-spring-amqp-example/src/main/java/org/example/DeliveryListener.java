@@ -1,10 +1,12 @@
 package org.example;
 
+import org.example.domain.DeliveryConfirmation;
 import org.example.domain.DeliveryInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +22,9 @@ public class DeliveryListener {
    * Called when a delivery instruction arrives.
    */
   @RabbitHandler
-  public void deliver(DeliveryInstruction delivery) {
+  @SendTo("kitchen")
+  public DeliveryConfirmation deliver(DeliveryInstruction delivery) {
     logger.atInfo().log("Would now deliver a {}", delivery.order);
+    return new DeliveryConfirmation(delivery.order);
   }
 }
