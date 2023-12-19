@@ -1,6 +1,7 @@
 package com.infosupport.ldoc.analyzerj;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -19,6 +20,8 @@ public class Main {
     options.addRequiredOption(null, "output", true, "The file path to save the output JSON to.");
     options.addRequiredOption(null, "project", true, "Root directory of the project to analyze.");
     options.addOption("p", "pretty", false, "Indent (pretty-print) JSON output.");
+    options.addOption(null, "classpath", true,
+        "(Semi)colon-separated list of JAR paths to use during type resolution.");
     return options;
   }
 
@@ -29,7 +32,7 @@ public class Main {
     return new AnalysisJob(
         Path.of(commandLine.getOptionValue("project")),
         Path.of(commandLine.getOptionValue("output")),
-        List.of(),
+        List.of(commandLine.getOptionValue("classpath", "").split(File.pathSeparator)),
         commandLine.hasOption("pretty"));
   }
 
