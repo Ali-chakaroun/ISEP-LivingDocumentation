@@ -53,6 +53,7 @@ public class BaseVisitor implements Visitor {
     type.methods().forEach(m -> m.accept(this));
     type.events().forEach(e -> e.accept(this));
     type.enumMembers().forEach(m -> m.accept(this));
+    type.documentationComment().accept(this);
   }
 
   @Override
@@ -92,6 +93,7 @@ public class BaseVisitor implements Visitor {
 
   @Override
   public void visitField(Field field) {
+    field.documentationComment().accept(this);
   }
 
   @Override

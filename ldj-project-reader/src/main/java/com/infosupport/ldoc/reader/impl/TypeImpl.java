@@ -42,7 +42,7 @@ class TypeImpl {
   }
 
   public Stream<Field> fields() {
-    return Util.streamOf(node.path("Fields"), FieldImpl::new);
+    return Util.streamOf(node.path("Fields"), f -> new FieldImpl(project, f));
   }
 
   public Stream<Constructor> constructors() {

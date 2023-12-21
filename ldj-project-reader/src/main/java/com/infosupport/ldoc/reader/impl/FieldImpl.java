@@ -1,14 +1,18 @@
 package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Field;
 import com.infosupport.ldoc.reader.Visitor;
 
 class FieldImpl implements Field {
 
+  private final ProjectImpl project;
+
   private final JsonNode node;
 
-  FieldImpl(JsonNode node) {
+  FieldImpl(ProjectImpl project, JsonNode node) {
+    this.project = project;
     this.node = node;
   }
 
@@ -30,6 +34,11 @@ class FieldImpl implements Field {
   @Override
   public String initializer() {
     return node.path("Initializer").textValue();
+  }
+
+  @Override
+  public DocumentationComment documentationComment() {
+    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
   }
 
   @Override
