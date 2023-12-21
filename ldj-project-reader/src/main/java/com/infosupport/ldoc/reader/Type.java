@@ -3,7 +3,7 @@ package com.infosupport.ldoc.reader;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface Type extends Node {
+public interface Type extends Named, Node {
 
   List<String> basetypes();
 
