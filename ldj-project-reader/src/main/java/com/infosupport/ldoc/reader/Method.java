@@ -2,7 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface Method extends Named, Modified, Node {
+public interface Method extends Named, Modified, Documented, Node {
 
   String returnType();
 
@@ -11,7 +11,4 @@ public interface Method extends Named, Modified, Node {
   Stream<Statement> statements();
 
   Stream<Attribute> attributes();
-
-  DocumentationComment documentationComment();
-
 }

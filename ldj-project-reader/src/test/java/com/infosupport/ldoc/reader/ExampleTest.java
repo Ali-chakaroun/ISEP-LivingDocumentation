@@ -38,7 +38,8 @@ class ExampleTest {
     assertFalse(example.isProtected());
     assertFalse(example.isStatic());
 
-    assertTrue(example.documentationComment().summary().startsWith("An example application"));
+    DocumentationComment comment = example.documentationComment().orElseThrow();
+    assertTrue(comment.summary().startsWith("An example application"));
   }
 
   @Test
@@ -72,7 +73,8 @@ class ExampleTest {
 
     assertEquals(0, method.attributes().count());
 
-    assertTrue(method.documentationComment().summary().startsWith("Command-line entry point"));
+    DocumentationComment comment = method.documentationComment().orElseThrow();
+    assertTrue(comment.summary().startsWith("Command-line entry point"));
   }
 
   @Test

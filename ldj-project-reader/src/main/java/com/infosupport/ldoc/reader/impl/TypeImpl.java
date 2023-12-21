@@ -11,6 +11,7 @@ import com.infosupport.ldoc.reader.Field;
 import com.infosupport.ldoc.reader.Method;
 import com.infosupport.ldoc.reader.Property;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class TypeImpl {
@@ -69,7 +70,7 @@ class TypeImpl {
     return Util.streamOf(node.path("Events"), e -> new EventImpl(project, e));
   }
 
-  public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
+  public Optional<DocumentationComment> documentationComment() {
+    return Util.commentOf(project, node);
   }
 }
