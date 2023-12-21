@@ -24,6 +24,11 @@ class EnumMemberImpl implements EnumMember {
   }
 
   @Override
+  public long modifiers() {
+    return node.path("Modifiers").longValue();
+  }
+
+  @Override
   public String value() {
     return node.path("Value").textValue();
   }

@@ -28,6 +28,11 @@ class EventImpl implements Event {
   }
 
   @Override
+  public long modifiers() {
+    return node.path("Modifiers").longValue();
+  }
+
+  @Override
   public String initializer() {
     return node.path("Initializer").textValue();
   }

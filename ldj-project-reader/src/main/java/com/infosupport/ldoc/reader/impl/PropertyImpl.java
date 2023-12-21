@@ -8,6 +8,7 @@ import com.infosupport.ldoc.reader.Visitor;
 import java.util.stream.Stream;
 
 class PropertyImpl implements Property {
+
   private final ProjectImpl project;
   private final JsonNode node;
 
@@ -24,6 +25,11 @@ class PropertyImpl implements Property {
   @Override
   public String type() {
     return node.path("Type").textValue();
+  }
+
+  @Override
+  public long modifiers() {
+    return node.path("Modifiers").longValue();
   }
 
   @Override
