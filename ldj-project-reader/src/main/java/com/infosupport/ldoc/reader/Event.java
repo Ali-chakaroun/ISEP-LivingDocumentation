@@ -2,11 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface Event extends Node {
-
-  String name();
-
-  String type();
+public interface Event extends Named, Typed, Node {
 
   String initializer();
 

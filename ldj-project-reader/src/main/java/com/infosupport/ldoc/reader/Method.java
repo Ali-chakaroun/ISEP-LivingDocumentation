@@ -2,9 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface Method extends Node {
-
-  String name();
+public interface Method extends Named, Node {
 
   String returnType();
 

@@ -2,11 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface Property extends Node {
-
-  String name();
-
-  String type();
+public interface Property extends Named, Typed, Node {
 
   String initializer();
 

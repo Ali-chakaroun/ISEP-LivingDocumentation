@@ -27,6 +27,11 @@ class TypeImpl {
     return node.path("FullName").textValue();
   }
 
+  public String name() {
+    String fullName = fullName();
+    return fullName.substring(fullName.lastIndexOf('.') + 1);
+  }
+
   public List<String> basetypes() {
     return project.objectMapper().convertValue(node.path("Basetypes"), new TypeReference<>() {
     });

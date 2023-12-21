@@ -2,11 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface Parameter extends Node {
-
-  String name();
-
-  String type();
+public interface Parameter extends Named, Typed, Node {
 
   Stream<Attribute> attributes();
 

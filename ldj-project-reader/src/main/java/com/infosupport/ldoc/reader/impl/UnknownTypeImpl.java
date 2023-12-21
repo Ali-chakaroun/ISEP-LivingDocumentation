@@ -26,6 +26,11 @@ class UnknownTypeImpl implements Type {
   }
 
   @Override
+  public String name() {
+    return null;
+  }
+
+  @Override
   public List<String> basetypes() {
     return List.of();
   }

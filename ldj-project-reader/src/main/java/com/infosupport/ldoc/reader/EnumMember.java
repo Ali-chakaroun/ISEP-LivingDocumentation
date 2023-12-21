@@ -2,9 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface EnumMember extends Node {
-
-  String name();
+public interface EnumMember extends Named, Node {
 
   String value();
 
