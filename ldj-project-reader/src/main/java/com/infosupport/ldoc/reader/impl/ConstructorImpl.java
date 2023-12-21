@@ -25,6 +25,11 @@ class ConstructorImpl implements Constructor {
   }
 
   @Override
+  public long modifiers() {
+    return node.path("Modifiers").longValue();
+  }
+
+  @Override
   public Stream<Parameter> parameters() {
     return Util.streamOf(node.path("Parameters"), ParameterImpl::new);
   }

@@ -26,6 +26,11 @@ class MethodImpl implements Method {
   }
 
   @Override
+  public long modifiers() {
+    return node.path("Modifiers").longValue();
+  }
+
+  @Override
   public String returnType() {
     return node.path("ReturnType").textValue();
   }

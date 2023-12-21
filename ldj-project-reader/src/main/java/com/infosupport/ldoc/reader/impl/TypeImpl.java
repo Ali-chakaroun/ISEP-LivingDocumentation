@@ -32,6 +32,10 @@ class TypeImpl {
     return fullName.substring(fullName.lastIndexOf('.') + 1);
   }
 
+  public long modifiers() {
+    return node.path("Modifiers").longValue();
+  }
+
   public List<String> basetypes() {
     return project.objectMapper().convertValue(node.path("Basetypes"), new TypeReference<>() {
     });

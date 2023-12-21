@@ -31,6 +31,11 @@ class UnknownTypeImpl implements Type {
   }
 
   @Override
+  public long modifiers() {
+    return 0;
+  }
+
+  @Override
   public List<String> basetypes() {
     return List.of();
   }
