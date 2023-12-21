@@ -38,7 +38,7 @@ class ProjectImpl implements Project {
         case 1 -> new InterfaceImpl(this, n);
         case 2 -> new StructImpl(this, n);
         case 3 -> new EnumImpl(this, n);
-        default -> new UnknownTypeImpl();
+        default -> new UnknownTypeImpl(this, n);
       };
     });
   }
