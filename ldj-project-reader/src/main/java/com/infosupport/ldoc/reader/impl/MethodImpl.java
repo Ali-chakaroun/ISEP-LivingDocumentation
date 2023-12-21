@@ -7,6 +7,7 @@ import com.infosupport.ldoc.reader.Method;
 import com.infosupport.ldoc.reader.Parameter;
 import com.infosupport.ldoc.reader.Statement;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class MethodImpl implements Method {
@@ -51,8 +52,8 @@ class MethodImpl implements Method {
   }
 
   @Override
-  public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
+  public Optional<DocumentationComment> documentationComment() {
+    return Util.commentOf(project, node);
   }
 
   @Override

@@ -5,6 +5,7 @@ import com.infosupport.ldoc.reader.Attribute;
 import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Property;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class PropertyImpl implements Property {
@@ -43,8 +44,8 @@ class PropertyImpl implements Property {
   }
 
   @Override
-  public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
+  public Optional<DocumentationComment> documentationComment() {
+    return Util.commentOf(project, node);
   }
 
   @Override

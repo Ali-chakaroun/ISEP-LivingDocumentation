@@ -18,7 +18,8 @@ public class Example {
       klass.methods().forEach(method -> {
         System.out.printf("## Method %s\n\n", method.name());
 
-        System.out.println(method.documentationComment().summary());
+        method.documentationComment().ifPresent(comment ->
+          System.out.println(comment.summary()));
       });
     });
 

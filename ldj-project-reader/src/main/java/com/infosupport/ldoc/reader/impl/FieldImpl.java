@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Field;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Optional;
 
 class FieldImpl implements Field {
 
@@ -37,8 +38,8 @@ class FieldImpl implements Field {
   }
 
   @Override
-  public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
+  public Optional<DocumentationComment> documentationComment() {
+    return Util.commentOf(project, node);
   }
 
   @Override

@@ -1,7 +1,9 @@
 package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Statement;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -10,6 +12,11 @@ class Util {
 
   static <T> Stream<T> streamOf(JsonNode node, Function<JsonNode, T> converter) {
     return StreamSupport.stream(node.spliterator(), false).map(converter);
+  }
+
+  static Optional<DocumentationComment> commentOf(ProjectImpl project, JsonNode node) {
+    String key = "DocumentationComments";
+    return Optional.ofNullable(node.get(key)).map(n -> new DocumentationCommentImpl(project, n));
   }
 
   static Stream<Statement> statements(ProjectImpl project, JsonNode node) {

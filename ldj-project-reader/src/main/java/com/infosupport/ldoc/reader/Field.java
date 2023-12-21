@@ -1,8 +1,6 @@
 package com.infosupport.ldoc.reader;
 
-public interface Field extends Named, Typed, Modified, Node {
+public interface Field extends Named, Typed, Modified, Documented, Node {
 
   String initializer();
-
-  DocumentationComment documentationComment();
 }

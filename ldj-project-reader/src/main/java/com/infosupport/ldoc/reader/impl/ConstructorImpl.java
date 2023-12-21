@@ -7,6 +7,7 @@ import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.Parameter;
 import com.infosupport.ldoc.reader.Statement;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class ConstructorImpl implements Constructor {
@@ -45,8 +46,8 @@ class ConstructorImpl implements Constructor {
   }
 
   @Override
-  public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
+  public Optional<DocumentationComment> documentationComment() {
+    return Util.commentOf(project, node);
   }
 
   @Override

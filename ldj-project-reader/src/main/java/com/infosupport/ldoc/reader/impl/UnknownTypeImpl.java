@@ -11,6 +11,7 @@ import com.infosupport.ldoc.reader.Property;
 import com.infosupport.ldoc.reader.Type;
 import com.infosupport.ldoc.reader.Visitor;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class UnknownTypeImpl implements Type {
@@ -76,7 +77,7 @@ class UnknownTypeImpl implements Type {
   }
 
   @Override
-  public DocumentationComment documentationComment() {
-    return null;
+  public Optional<DocumentationComment> documentationComment() {
+    return Optional.empty();
   }
 }

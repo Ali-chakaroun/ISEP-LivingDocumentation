@@ -53,7 +53,7 @@ public class BaseVisitor implements Visitor {
     type.methods().forEach(m -> m.accept(this));
     type.events().forEach(e -> e.accept(this));
     type.enumMembers().forEach(m -> m.accept(this));
-    type.documentationComment().accept(this);
+    type.documentationComment().ifPresent(d -> d.accept(this));
   }
 
   @Override
@@ -65,7 +65,7 @@ public class BaseVisitor implements Visitor {
   public void visitConstructor(Constructor constructor) {
     constructor.attributes().forEach(a -> a.accept(this));
     constructor.parameters().forEach(p -> p.accept(this));
-    constructor.documentationComment().accept(this);
+    constructor.documentationComment().ifPresent(d -> d.accept(this));
     constructor.statements().forEach(s -> s.accept(this));
   }
 
@@ -82,18 +82,18 @@ public class BaseVisitor implements Visitor {
   public void visitEnumMember(EnumMember enumMember) {
     enumMember.arguments().forEach(a -> a.accept(this));
     enumMember.attributes().forEach(a -> a.accept(this));
-    enumMember.documentationComment().accept(this);
+    enumMember.documentationComment().ifPresent(d -> d.accept(this));
   }
 
   @Override
   public void visitEvent(Event event) {
     event.attributes().forEach(a -> a.accept(this));
-    event.documentationComment().accept(this);
+    event.documentationComment().ifPresent(d -> d.accept(this));
   }
 
   @Override
   public void visitField(Field field) {
-    field.documentationComment().accept(this);
+    field.documentationComment().ifPresent(d -> d.accept(this));
   }
 
   @Override
@@ -123,7 +123,7 @@ public class BaseVisitor implements Visitor {
 
   @Override
   public void visitMethod(Method method) {
-    method.documentationComment().accept(this);
+    method.documentationComment().ifPresent(d -> d.accept(this));
     method.attributes().forEach(a -> a.accept(this));
     method.parameters().forEach(p -> p.accept(this));
     method.statements().forEach(s -> s.accept(this));
@@ -142,7 +142,7 @@ public class BaseVisitor implements Visitor {
   @Override
   public void visitProperty(Property property) {
     property.attributes().forEach(a -> a.accept(this));
-    property.documentationComment().accept(this);
+    property.documentationComment().ifPresent(d -> d.accept(this));
   }
 
   @Override

@@ -6,6 +6,7 @@ import com.infosupport.ldoc.reader.Attribute;
 import com.infosupport.ldoc.reader.DocumentationComment;
 import com.infosupport.ldoc.reader.EnumMember;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class EnumMemberImpl implements EnumMember {
@@ -44,8 +45,8 @@ class EnumMemberImpl implements EnumMember {
   }
 
   @Override
-  public DocumentationComment documentationComment() {
-    return new DocumentationCommentImpl(project, node.path("DocumentationComments"));
+  public Optional<DocumentationComment> documentationComment() {
+    return Util.commentOf(project, node);
   }
 
   @Override
