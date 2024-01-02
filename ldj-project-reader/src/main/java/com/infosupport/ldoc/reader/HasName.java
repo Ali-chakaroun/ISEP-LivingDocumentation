@@ -1,6 +1,6 @@
 package com.infosupport.ldoc.reader;
 
-public interface Named {
+public interface HasName {
 
   String name();
 }
