@@ -37,10 +37,12 @@ class KitchenSinkJsonTest {
   @Test
   void typesByKind() {
     /* Given that some classes, enums, interfaces and structs exist, we can find them. */
-    assertEquals(List.of("KitchenSink", "SomeClass"), project.classes().map(Named::name).toList());
-    assertEquals(List.of("ExampleEnum"), project.enums().map(Named::name).toList());
-    assertEquals(List.of("IExampleInterface"), project.interfaces().map(Named::name).toList());
-    assertEquals(List.of("ExampleStruct"), project.structs().map(Named::name).toList());
+    assertEquals(
+        List.of("KitchenSink", "SomeClass"),
+        project.classes().map(HasName::name).toList());
+    assertEquals(List.of("ExampleEnum"), project.enums().map(HasName::name).toList());
+    assertEquals(List.of("IExampleInterface"), project.interfaces().map(HasName::name).toList());
+    assertEquals(List.of("ExampleStruct"), project.structs().map(HasName::name).toList());
   }
 
   @Test

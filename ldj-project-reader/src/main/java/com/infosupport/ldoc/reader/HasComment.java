@@ -2,7 +2,7 @@ package com.infosupport.ldoc.reader;
 
 import java.util.Optional;
 
-public interface Documented {
+public interface HasComment {
 
   Optional<DocumentationComment> documentationComment();
 }

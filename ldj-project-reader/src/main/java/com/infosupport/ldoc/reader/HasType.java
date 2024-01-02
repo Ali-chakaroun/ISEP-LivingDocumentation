@@ -1,6 +1,6 @@
 package com.infosupport.ldoc.reader;
 
-public interface Typed {
+public interface HasType {
 
   String type();
 }
