@@ -9,17 +9,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.infosupport.ldoc.reader.impl.JacksonProjectFactory;
 import com.infosupport.ldoc.reader.visitor.BaseVisitor;
 import java.io.IOException;
+import java.net.URL;
 import org.junit.jupiter.api.Test;
 
 /**
  * Tests with example.json, which is based on the Spring event example app.
  */
-class ExampleTest {
+class ExampleJsonTest {
 
   private final Project project;
 
-  ExampleTest() throws IOException {
-    project = new JacksonProjectFactory().project(ExampleTest.class.getResource("example.json"));
+  ExampleJsonTest() throws IOException {
+    URL url = ExampleJsonTest.class.getResource("example.json");
+    project = new JacksonProjectFactory().project(url);
   }
 
   @Test
