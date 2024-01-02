@@ -27,7 +27,7 @@ import com.infosupport.ldoc.reader.SwitchStatement;
 import com.infosupport.ldoc.reader.Type;
 import com.infosupport.ldoc.reader.Visitor;
 
-public class BaseVisitor implements Visitor {
+public abstract class BaseVisitor implements Visitor {
 
   @Override
   public void visitArgument(Argument argument) {
