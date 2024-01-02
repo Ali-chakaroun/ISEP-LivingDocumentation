@@ -2,7 +2,9 @@ package com.infosupport.ldoc.reader;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.infosupport.ldoc.reader.impl.JacksonProjectFactory;
 import com.infosupport.ldoc.reader.visitor.BaseVisitor;
@@ -103,6 +105,9 @@ class KitchenSinkJsonTest {
           assertEquals(1, method.attributesOfType("System.ObsoleteAttribute").count());
           assertEquals(0, method.attributesOfType("bogus type").count());
           assertEquals(0, method.attributesOfType(null).count());
+
+          assertTrue(method.hasAttribute("System.ObsoleteAttribute"));
+          assertFalse(method.hasAttribute("bogus type"));
         }
       }
     });
