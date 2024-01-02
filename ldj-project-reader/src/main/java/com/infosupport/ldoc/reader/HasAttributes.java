@@ -9,4 +9,8 @@ public interface HasAttributes {
   default Stream<Attribute> attributesOfType(String fullNameOfType) {
     return attributes().filter(attr -> attr.type().equals(fullNameOfType));
   }
+
+  default boolean hasAttribute(String fullNameOfType) {
+    return attributes().anyMatch(attr -> attr.type().equals(fullNameOfType));
+  }
 }
