@@ -15,6 +15,10 @@ public interface Type extends HasName, HasModifiers, HasComment, HasAttributes, 
 
   Stream<Method> methods();
 
+  default Stream<Method> methodsWithName(String name) {
+    return methods().filter(m -> m.name().equals(name));
+  }
+
   Stream<Property> properties();
 
   Stream<EnumMember> enumMembers();
