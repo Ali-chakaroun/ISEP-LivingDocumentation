@@ -9,6 +9,8 @@ import com.infosupport.ldoc.reader.Project;
 import com.infosupport.ldoc.reader.Struct;
 import com.infosupport.ldoc.reader.Type;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -41,6 +43,12 @@ class ProjectImpl implements Project {
         default -> new UnknownTypeImpl(this, n);
       };
     });
+  }
+
+  @Override
+  public Optional<Type> type(String name) {
+    boolean full = name == null || name.contains(".");
+    return allTypes().filter(t -> Objects.equals(name, full ? t.fullName() : t.name())).findFirst();
   }
 
   private <T> Stream<T> allOfType(java.lang.Class<T> type) {
