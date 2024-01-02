@@ -3,7 +3,9 @@ package com.infosupport.ldoc.reader.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.infosupport.ldoc.reader.Argument;
 import com.infosupport.ldoc.reader.Invocation;
+import com.infosupport.ldoc.reader.Method;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 class InvocationImpl implements Invocation {
@@ -29,6 +31,15 @@ class InvocationImpl implements Invocation {
   @Override
   public Stream<Argument> arguments() {
     return Util.streamOf(node.path("Arguments"), ArgumentImpl::new);
+  }
+
+  @Override
+  public Optional<Method> getInvokedMethod() {
+    return project
+        .type(containingType())
+        .flatMap(type -> type.methodsWithName(name())
+            .filter(method -> method.parameters().count() == arguments().count())
+            .findFirst());
   }
 
   @Override
