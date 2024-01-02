@@ -18,7 +18,7 @@ class IfImpl implements IfStatement {
 
   @Override
   public Stream<IfElseSection> sections() {
-    return Util.streamOf(node.path("Sections"), s -> new IfElseSectionImpl(project, node));
+    return Util.streamOf(node.path("Sections"), s -> new IfElseSectionImpl(project, s));
   }
 
   @Override
