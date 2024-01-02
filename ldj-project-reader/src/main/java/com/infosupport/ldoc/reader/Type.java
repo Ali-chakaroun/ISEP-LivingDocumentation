@@ -3,7 +3,7 @@ package com.infosupport.ldoc.reader;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface Type extends Named, Modified, Documented, Node {
+public interface Type extends Named, Modified, Documented, Attributed, Node {
 
   List<String> basetypes();
 
@@ -16,8 +16,6 @@ public interface Type extends Named, Modified, Documented, Node {
   Stream<Method> methods();
 
   Stream<Property> properties();
-
-  Stream<Attribute> attributes();
 
   Stream<EnumMember> enumMembers();
 

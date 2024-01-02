@@ -1,10 +1,6 @@
 package com.infosupport.ldoc.reader;
 
-import java.util.stream.Stream;
-
-public interface Parameter extends Named, Typed, Node {
-
-  Stream<Attribute> attributes();
+public interface Parameter extends Named, Typed, Attributed, Node {
 
   boolean hasDefaultValue();
 }
