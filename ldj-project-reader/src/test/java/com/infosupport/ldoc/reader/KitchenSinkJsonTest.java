@@ -18,12 +18,12 @@ import org.junit.jupiter.api.Test;
  * Tests with kitchensink.json, an output from the C# analyzer that covers the entire JSON Schema as
  * much as possible.
  */
-class KitchenSinkTest {
+class KitchenSinkJsonTest {
 
   private final Project project;
 
-  KitchenSinkTest() throws IOException {
-    URL url = KitchenSinkTest.class.getResource("kitchensink.json");
+  KitchenSinkJsonTest() throws IOException {
+    URL url = KitchenSinkJsonTest.class.getResource("kitchensink.json");
     project = new JacksonProjectFactory().project(url);
   }
 
