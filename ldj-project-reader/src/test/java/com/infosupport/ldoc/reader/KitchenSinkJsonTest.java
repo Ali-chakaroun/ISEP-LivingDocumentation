@@ -95,6 +95,18 @@ class KitchenSinkJsonTest {
       }
     });
 
+    project.accept(new BaseVisitor() {
+      @Override
+      public void visitMethod(Method method) {
+        if (method.name().equals("Example")) {
+          assertEquals(1, method.attributes().count());
+          assertEquals(1, method.attributesOfType("System.ObsoleteAttribute").count());
+          assertEquals(0, method.attributesOfType("bogus type").count());
+          assertEquals(0, method.attributesOfType(null).count());
+        }
+      }
+    });
+
     assertEquals(1, seen.size());
   }
 }
