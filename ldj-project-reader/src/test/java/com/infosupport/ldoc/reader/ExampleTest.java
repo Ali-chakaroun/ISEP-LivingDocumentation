@@ -11,6 +11,9 @@ import com.infosupport.ldoc.reader.visitor.BaseVisitor;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests with example.json, which is based on the Spring event example app.
+ */
 class ExampleTest {
 
   private final Project project;
