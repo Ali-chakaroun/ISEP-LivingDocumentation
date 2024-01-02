@@ -2,11 +2,9 @@ package com.infosupport.ldoc.reader;
 
 import java.util.stream.Stream;
 
-public interface EnumMember extends Named, Modified, Documented, Node {
+public interface EnumMember extends Named, Modified, Documented, Attributed, Node {
 
   String value();
 
   Stream<Argument> arguments();
-
-  Stream<Attribute> attributes();
 }
