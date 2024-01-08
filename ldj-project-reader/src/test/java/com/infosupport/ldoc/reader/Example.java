@@ -19,7 +19,7 @@ public class Example {
         System.out.printf("## Method %s\n\n", method.name());
 
         method.documentationComment().ifPresent(comment ->
-          System.out.println(comment.summary()));
+            System.out.println(comment.summary()));
       });
     });
 
