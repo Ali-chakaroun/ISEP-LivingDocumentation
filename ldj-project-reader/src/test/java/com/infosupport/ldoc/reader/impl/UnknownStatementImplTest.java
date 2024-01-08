@@ -21,15 +21,15 @@ class UnknownStatementImplTest {
     tree.withObject("/0/Methods/0/Statements/0").put("$type", "no such type");
 
     proj.classes().forEach(cls -> {
-        cls.methods().forEach(mth -> {
-            mth.statements().forEach(stmt -> {
-              // ...then that is represented as an UnknownStatement...
-              assertInstanceOf(UnknownStatementImpl.class, stmt);
+      cls.methods().forEach(mth -> {
+        mth.statements().forEach(stmt -> {
+          // ...then that is represented as an UnknownStatement...
+          assertInstanceOf(UnknownStatementImpl.class, stmt);
 
-              // ...which is ignored by visitors.
-              stmt.accept(null);
-            });
+          // ...which is ignored by visitors.
+          stmt.accept(null);
         });
+      });
     });
   }
 }
