@@ -62,7 +62,7 @@ The analyzer can also be used as a Maven plugin (which is defined in [ldj-maven-
 For an example on how to use the Maven plugin, see the `pom.xml` configuration in [ldj-maven-plugin-example](/ldj-maven-plugin-example).
 
 > **Note:** As of right now, the Maven plugin is not published to a public Maven repository. 
-> If one would like to use the analyzer in the form of a plugin, one can manually install the plugin using Maven install.
+> If one would like to use the analyzer in the form of a plugin, one can manually install the plugin using Maven install (make sure to maven install the root folder due to dependencies).
 > After a manual install, the plugin can be used as defined in the [ldj-maven-plugin-example](/ldj-maven-plugin-example).
 
 ### State of analyzer
