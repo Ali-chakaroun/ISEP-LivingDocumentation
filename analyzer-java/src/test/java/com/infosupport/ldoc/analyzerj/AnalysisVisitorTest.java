@@ -444,4 +444,69 @@ class AnalysisVisitorTest {
 
     assertEquals(expected, typeDescription);
   }
+
+  @Test
+  void annotation_declaration_without_members() {
+    List<Description> parsed = parse("""
+         public @interface AnnotationTest {
+         
+         }
+        """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    TypeDescription expected =
+        new TypeDescription.Builder(TypeType.INTERFACE, "AnnotationTest")
+            .withModifiers(Modifier.PUBLIC.mask())
+            .build();
+
+    assertEquals(expected, typeDescription);
+  }
+
+  @Test
+  void annotation_declaration_with_annotations() {
+    List<Description> parsed = parse("""
+        import java.lang.annotation.Retention;
+        import java.lang.annotation.RetentionPolicy;
+        
+        @Retention(RetentionPolicy.RUNTIME)
+        public @interface AnnotationTest {
+               
+        }
+        """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    TypeDescription expected =
+        new TypeDescription.Builder(TypeType.INTERFACE, "AnnotationTest")
+            .withModifiers(Modifier.PUBLIC.mask())
+            .withAttributes(List.of(
+                new AttributeDescription("java.lang.annotation.Retention",
+                "Retention",
+                List.of(new AttributeArgumentDescription("value",
+                    "java.lang.annotation.RetentionPolicy", "RetentionPolicy.RUNTIME")))))
+            .build();
+
+    assertEquals(expected, typeDescription);
+  }
+
+  @Test
+  void annotation_declaration_with_fields() {
+    List<Description> parsed = parse("""
+        public @interface AnnotationTest {
+          String testField() default "";
+        }
+        """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    // TODO check whether the AnnotationMemberDeclaration should be included, and if so,
+    //  in what form.
+    TypeDescription expected =
+        new TypeDescription.Builder(TypeType.INTERFACE, "AnnotationTest")
+            .withModifiers(Modifier.PUBLIC.mask())
+            .build();
+
+    assertEquals(expected, typeDescription);
+  }
 }
