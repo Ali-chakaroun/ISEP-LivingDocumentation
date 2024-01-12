@@ -2,6 +2,7 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
@@ -144,6 +145,15 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             .withBaseTypes(resolve(n.getImplementedTypes()))
             .withMembers(visit(n.getEntries(), arg))
             .build());
+  }
+
+  /** Describes an annotation declaration (or annotation interface; Java)
+   *    as a TypeType INTERFACE. */
+  @Override
+  public List<Description> visit(AnnotationDeclaration n, Analyzer arg) {
+    return List.of(
+        typeBuilder(TypeType.INTERFACE, n, arg).build()
+    );
   }
 
   /**
