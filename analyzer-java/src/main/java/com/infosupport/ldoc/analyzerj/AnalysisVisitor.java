@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * AnalysisVisitor converts a JavaParser parse tree into a list of {@link Description} objects. The
@@ -174,7 +173,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
                 visit(n.getAnnotations(), arg), n.getComment()
                     .flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)),
                 resolve(n.getType()),
-                n.getDefaultValue().map(Objects::toString).orElse(null)
+                n.getDefaultValue().map(Object::toString).orElse(null)
         )
     );
   }
