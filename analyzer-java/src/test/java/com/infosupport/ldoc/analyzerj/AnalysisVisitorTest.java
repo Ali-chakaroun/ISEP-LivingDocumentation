@@ -500,13 +500,44 @@ class AnalysisVisitorTest {
 
     TypeDescription typeDescription = (TypeDescription) parsed.get(0);
 
-    // TODO check whether the AnnotationMemberDeclaration should be included, and if so,
-    //  in what form.
+    // Note that an AnnotationMember is mapped to a living documentation Field
     TypeDescription expected =
         new TypeDescription.Builder(TypeType.INTERFACE, "AnnotationTest")
             .withModifiers(Modifier.PUBLIC.mask())
+            .withMembers(List.of(new FieldDescription(
+                new MemberDescription("testField"),
+                "java.lang.String",
+                "\"\""
+            )))
+            .build();
+
+    assertEquals(expected, typeDescription);
+  }
+
+  @Test
+  void annotation_declaration_with_field_no_default() {
+    List<Description> parsed = parse("""
+        public @interface AnnotationTest {
+          String testField();
+        }
+        """);
+
+    TypeDescription typeDescription = (TypeDescription) parsed.get(0);
+
+    // Note that an AnnotationMember is mapped to a living documentation Field
+    TypeDescription expected =
+        new TypeDescription.Builder(TypeType.INTERFACE, "AnnotationTest")
+            .withModifiers(Modifier.PUBLIC.mask())
+            .withMembers(List.of(new FieldDescription(
+                new MemberDescription("testField"),
+                "java.lang.String",
+                null
+            )))
             .build();
 
     assertEquals(expected, typeDescription);
   }
 }
+
+
+

@@ -3,6 +3,7 @@ package com.infosupport.ldoc.analyzerj;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
@@ -61,6 +62,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * AnalysisVisitor converts a JavaParser parse tree into a list of {@link Description} objects. The
@@ -153,6 +155,27 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   public List<Description> visit(AnnotationDeclaration n, Analyzer arg) {
     return List.of(
         typeBuilder(TypeType.INTERFACE, n, arg).build()
+    );
+  }
+
+  /**
+   * Maps a Java AnnotationMemeberDeclaration to a FieldDescription.
+   *
+   * @param n   node of type EnumConstantDeclaration
+   * @param arg Analyzer to be used
+   * @return FieldDescription with the name of method as member name, return type as type,
+   *      and default value as initialValue
+   */
+  @Override
+  public List<Description> visit(AnnotationMemberDeclaration n, Analyzer arg) {
+    return List.of(
+        new FieldDescription(
+            new MemberDescription(n.getNameAsString(), Modifier.NONE.mask(),
+                visit(n.getAnnotations(), arg), n.getComment()
+                    .flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)),
+                resolve(n.getType()),
+                n.getDefaultValue().map(Objects::toString).orElse(null)
+        )
     );
   }
 
