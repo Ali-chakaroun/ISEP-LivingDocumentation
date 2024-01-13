@@ -161,7 +161,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   /**
    * Maps a Java AnnotationMemeberDeclaration to a FieldDescription.
    *
-   * @param n   node of type EnumConstantDeclaration
+   * @param n   node of type AnnotationMemberDeclaration
    * @param arg Analyzer to be used
    * @return FieldDescription with the name of method as member name, return type as type,
    *      and default value as initialValue
