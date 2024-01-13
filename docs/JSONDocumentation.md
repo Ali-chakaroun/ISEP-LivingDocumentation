@@ -22,19 +22,19 @@ Java
 
 ### Optional keys:
 
-| Key                   | Type                                             | .NET                                                 | Java                                                |
-|-----------------------|--------------------------------------------------|------------------------------------------------------|-----------------------------------------------------|
-| Type                  | number                                           | 0: class<br/>1: interface<br/>2: struct<br/>3: enum  | 0: class<br/>1: interface<br/>2: record<br/>3: enum |
-| Modifiers             | number                                           | See [Modifiers](#modifiers)                          | See [Modifiers](#modifiers)                         |
-| Basetypes             | array of strings                                 | Base classes                                         | Super classes and implemented interfaces            |
-| Fields                | array of [Field](#field)                         |                                                      |                                                     |
-| Constructors          | array of [Constructor](#constructor)             |                                                      |                                                     |
-| Methods               | array of [Method](#method)                       |                                                      |                                                     |
-| Properties            | array of [Property](#property)                   |                                                      | Not applicable                                      |
-| Attributes            | array of [Attribute](#attribute)                 |                                                      | Annotations                                         |
-| EnumMembers           | array of [EnumMember](#enummember)               | Enumeration constant                                 | Enumeration constant                                |
-| Events                | array of [Event](#event)                         |                                                      | Not applicable                                      |
-| DocumentationComments | [DocumentationComments](#documentation-comments) | XML documentation comments                           | JavaDoc                                             |
+| Key                   | Type                                             | .NET                                                 | Java                                                                                                                  |
+|-----------------------|--------------------------------------------------|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| Type                  | number                                           | 0: class<br/>1: interface<br/>2: struct<br/>3: enum  | 0: class<br/>1: interface (or annotation interface)<br/>2: record<br/>3: enum                                         |
+| Modifiers             | number                                           | See [Modifiers](#modifiers)                          | See [Modifiers](#modifiers)                                                                                           |
+| Basetypes             | array of strings                                 | Base classes                                         | Super classes and implemented interfaces                                                                              |
+| Fields                | array of [Field](#field)                         |                                                      | Normal Fields for classes, enums, interfaces, and records. In case of annotations interfaces, the annotation members. |
+| Constructors          | array of [Constructor](#constructor)             |                                                      |                                                                                                                       |
+| Methods               | array of [Method](#method)                       |                                                      |                                                                                                                       |
+| Properties            | array of [Property](#property)                   |                                                      | Not applicable                                                                                                        |
+| Attributes            | array of [Attribute](#attribute)                 |                                                      | Annotations                                                                                                           |
+| EnumMembers           | array of [EnumMember](#enummember)               | Enumeration constant                                 | Enumeration constant                                                                                                  |
+| Events                | array of [Event](#event)                         |                                                      | Not applicable                                                                                                        |
+| DocumentationComments | [DocumentationComments](#documentation-comments) | XML documentation comments                           | JavaDoc                                                                                                               |
 
 ## Modifiers
 Different modifiers (access, non-access, other) are combined into a single value using a bitmap. Currently, modifiers that exist only in Java but not in .NET are not included. These could be added in the future.
@@ -72,10 +72,10 @@ The following modifiers are included:
 
 ### Optional keys:
 
-| Key         | Type               | .NET                           | Java                           |
-|-------------|--------------------|--------------------------------|--------------------------------|
-| Initializer | string             | The initial value of the field | The initial value of the field |
-| Modifiers   | integer, minimum 0 | See [Modifiers](#modifiers)    | See [Modifiers](#modifiers)    |
+| Key         | Type               | .NET                           | Java                                                                                 |
+|-------------|--------------------|--------------------------------|--------------------------------------------------------------------------------------|
+| Initializer | string             | The initial value of the field | The initial value of the field (or default value in case of an annotation interface) |
+| Modifiers   | integer, minimum 0 | See [Modifiers](#modifiers)    | See [Modifiers](#modifiers)                                                          |
 
 
 ## Constructor

@@ -2,6 +2,8 @@ package com.infosupport.ldoc.analyzerj;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.AnnotationDeclaration;
+import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumConstantDeclaration;
@@ -144,6 +146,36 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             .withBaseTypes(resolve(n.getImplementedTypes()))
             .withMembers(visit(n.getEntries(), arg))
             .build());
+  }
+
+  /** Describes an annotation declaration (or annotation interface; Java)
+   *    as a TypeType INTERFACE. */
+  @Override
+  public List<Description> visit(AnnotationDeclaration n, Analyzer arg) {
+    return List.of(
+        typeBuilder(TypeType.INTERFACE, n, arg).build()
+    );
+  }
+
+  /**
+   * Maps a Java AnnotationMemeberDeclaration to a FieldDescription.
+   *
+   * @param n   node of type AnnotationMemberDeclaration
+   * @param arg Analyzer to be used
+   * @return FieldDescription with the name of method as member name, return type as type,
+   *      and default value as initialValue
+   */
+  @Override
+  public List<Description> visit(AnnotationMemberDeclaration n, Analyzer arg) {
+    return List.of(
+        new FieldDescription(
+            new MemberDescription(n.getNameAsString(), Modifier.NONE.mask(),
+                visit(n.getAnnotations(), arg), n.getComment()
+                    .flatMap(c -> c.accept(this, arg).stream().findFirst()).orElse(null)),
+                resolve(n.getType()),
+                n.getDefaultValue().map(Object::toString).orElse(null)
+        )
+    );
   }
 
   /**
