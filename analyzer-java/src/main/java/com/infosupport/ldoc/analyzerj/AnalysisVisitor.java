@@ -104,11 +104,11 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
   }
 
-
   private TypeDescription.Builder typeBuilder(TypeType typeType,
       TypeDeclaration<? extends TypeDeclaration<?>> n, Analyzer arg) {
     String name = n.getFullyQualifiedName().orElseThrow();
-    Description comment = n.getComment().map(z -> z.accept(this, arg).get(0))
+    Description comment = n.getComment()
+        .flatMap(z -> z.accept(this, arg).stream().findFirst())
         .orElse(null);
     return new TypeDescription.Builder(typeType, name)
         .withModifiers(combine(n.getModifiers()))

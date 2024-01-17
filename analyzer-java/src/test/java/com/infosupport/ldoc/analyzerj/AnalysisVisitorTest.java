@@ -285,6 +285,15 @@ class AnalysisVisitorTest {
   @Test
   void comment_tests() {
     assertIterableEquals(
+        List.of(new TypeDescription.Builder(TypeType.ENUM, "TestEnum").build()),
+        parse("/* Non-java-doc comment */ enum TestEnum { }"));
+
+    assertIterableEquals(
+        List.of(new TypeDescription.Builder(TypeType.CLASS, "TestClass")
+            .withMembers(new FieldDescription(new MemberDescription("foo"), "int", null)).build()),
+        parse("class TestClass { /* Not Javadoc */ int foo; }"));
+
+    assertIterableEquals(
         List.of(
             new TypeDescription.Builder(TypeType.CLASS, "Example")
                 .withMembers(
