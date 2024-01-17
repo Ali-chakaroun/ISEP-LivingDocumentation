@@ -17,7 +17,7 @@ import java.util.List;
  * @param modifiers    {@link Modifier}s of the element.
  * @param fullName     Name of the element, including packages.
  * @param baseTypes    Superclasses of the element.
- * @param comments     JavaDoc comments in an {@link CommentSummaryDescription}.
+ * @param comments     JavaDoc comments in an {@link DocumentationCommentsDescription}.
  * @param fields       List of {@link FieldDescription}.
  * @param constructors List of {@link ConstructorDescription}.
  * @param methods      List of {@link MethodDescription}.

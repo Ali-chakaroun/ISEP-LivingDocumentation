@@ -39,9 +39,9 @@ import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.DocumentationCommentsDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.EnumMemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
@@ -402,7 +402,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return (out != null) ? out : List.of();
   }
 
-  /** Describe a doc comment as a {@link CommentSummaryDescription}. */
+  /** Describe a doc comment as a {@link DocumentationCommentsDescription}. */
   @Override
   public List<Description> visit(JavadocComment n, Analyzer arg) {
     StringBuilder returns = new StringBuilder();
@@ -416,7 +416,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     Map<String, Map<String, String>> commentData = CommentHelperMethods.extractParamDescriptions(n);
     CommentHelperMethods.processCommentData(commentData, returns, commentParams, commentTypeParams);
     return List.of(
-        new CommentSummaryDescription(
+        new DocumentationCommentsDescription(
             remarks,
             !returns.isEmpty() ? returns.toString() : null,
             summary,

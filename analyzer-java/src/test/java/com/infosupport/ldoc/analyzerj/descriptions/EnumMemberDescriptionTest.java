@@ -41,7 +41,7 @@ class EnumMemberDescriptionTest {
         mapper.readTree(expected),
         mapper.valueToTree(
             new EnumMemberDescription(
-                new MemberDescription("DUTCH", 0, List.of(), new CommentSummaryDescription(
+                new MemberDescription("DUTCH", 0, List.of(), new DocumentationCommentsDescription(
                     "Tread carefully.",
                     "An integer.",
                     "Add two values.",

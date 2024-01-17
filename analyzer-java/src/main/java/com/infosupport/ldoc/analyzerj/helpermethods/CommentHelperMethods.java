@@ -42,7 +42,8 @@ public final class CommentHelperMethods {
   }
 
   /**
-   * Separate the given comment into the shape expected by <code>CommentSummaryDescription</code>.
+   * Separate the given comment into the shape expected by
+   * <code>DocumentationCommentsDescription</code>.
    *
    * @param commentData       a parameter description from <code>extractParamDescriptions</code>
    * @param returns           if a return value is documented, it is appended here
