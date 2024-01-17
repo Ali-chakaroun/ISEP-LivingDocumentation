@@ -327,16 +327,17 @@ Each statement is one of the following options. The statement type is distinguis
 
 #### Required keys:
 
-| Key   | Type   | .NET                  | Java                  |
-|-------|--------|-----------------------|-----------------------|
-| $type | const  | Type of the statement | Type of the statement |
+| Key   | Type   | .NET                       | Java                       |
+|-------|--------|----------------------------|----------------------------|
+| $type | const  | Type of the statement      | Type of the statement      |
+| Name  | string | Name of the invoked method | Name of the invoked method |
 
 #### Optional keys:
 
-| Key             | Type                                              | .NET                                     | Java                                     |
-|-----------------|---------------------------------------------------|------------------------------------------|------------------------------------------|
-| ContainingType  | string                                            | Class that the invoked method belongs to | Class that the invoked method belongs to |
-| Arguments       | array of [AttributeArgument](#attribute-argument) |                                          |                                          |
+| Key             | Type                             | .NET                                     | Java                                     |
+|-----------------|----------------------------------|------------------------------------------|------------------------------------------|
+| ContainingType  | string                           | Class that the invoked method belongs to | Class that the invoked method belongs to |
+| Arguments       | array of [Argument](#argument)   |                                          |                                          |
 
 
 ### Assignment
