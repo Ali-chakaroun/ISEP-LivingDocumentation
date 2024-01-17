@@ -1,0 +1,97 @@
+[ {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.domain.MsgType"
+}, {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.domain.MsgType2"
+}, {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.QueueListenerClass",
+  "Methods" : [
+    {
+      "ReturnType" : "org.example.domain.MsgType2",
+      "Parameters" : [ {
+        "Type" : "org.example.domain.MsgType",
+        "Name" : "msg"
+      } ],
+      "Statements" : [{
+        "$type" : "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+        "Expression" : "new MsgType2()"
+      } ],
+      "Name" : "listenToQueue1",
+      "Modifiers" : 2,
+      "Attributes" : [ {
+        "Type" : "org.springframework.amqp.rabbit.annotation.RabbitHandler",
+        "Name" : "RabbitHandler"
+      }, {
+        "Type" : "org.springframework.messaging.handler.annotation.SendTo",
+        "Name" : "SendTo",
+        "Arguments" : [ {
+          "Name" : "value",
+          "Type" : "java.lang.String",
+          "Value" : "\"queue1\""
+        } ]
+      } ]
+    }
+  ],
+  "Attributes" : [ {
+    "Type" : "org.springframework.amqp.rabbit.annotation.RabbitListener",
+    "Name" : "RabbitListener",
+    "Arguments" : [ {
+      "Name" : "queues",
+      "Type" : "java.lang.String",
+      "Value" : "\"queue1\""
+    } ]
+  } ]
+
+}, {
+  "Modifiers" : 1026,
+  "FullName" : "org.example.FirstMessagePublish",
+  "Methods" : [
+    {
+      "$type" : "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+      "ContainingType" : "org.springframework.amqp.rabbit.core.RabbitTemplate",
+      "Name" : "convertAndSend",
+      "Arguments" : [ {
+        "Type" : "java.lang.String",
+        "Text" : "\"queue1\""
+      }, {
+        "Type" : "org.example.domain.MsgType",
+        "Text" : "msgType"
+      } ]
+    }
+
+  ]
+},
+  {
+    "Modifiers" : 1026,
+    "FullName" : "org.example.QueueListenerClass2",
+    "Methods" : [
+      {
+        "Parameters" : [ {
+          "Type" : "org.example.domain.MsgType2",
+          "Name" : "msg2"
+        } ],
+        "Statements" : [],
+        "Name" : "listenToQueue1",
+        "Modifiers" : 2,
+        "Attributes" : [ {
+          "Type" : "org.springframework.amqp.rabbit.annotation.RabbitHandler",
+          "Name" : "RabbitHandler"
+        } ]
+      }
+    ],
+    "Attributes" : [ {
+      "Type" : "org.springframework.amqp.rabbit.annotation.RabbitListener",
+      "Name" : "RabbitListener",
+      "Arguments" : [ {
+        "Name" : "queues",
+        "Type" : "java.lang.String",
+        "Value" : "\"queue1\""
+      } ]
+    } ]
+
+  }
+
+
+]
