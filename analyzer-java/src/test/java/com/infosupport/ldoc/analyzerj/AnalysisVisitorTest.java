@@ -13,9 +13,9 @@ import com.infosupport.ldoc.analyzerj.descriptions.ArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AssignmentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeArgumentDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.AttributeDescription;
-import com.infosupport.ldoc.analyzerj.descriptions.CommentSummaryDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ConstructorDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.Description;
+import com.infosupport.ldoc.analyzerj.descriptions.DocumentationCommentsDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.EnumMemberDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.FieldDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.ForEachDescription;
@@ -299,7 +299,7 @@ class AnalysisVisitorTest {
                 .withMembers(
                     new MethodDescription(
                         new MemberDescription("does", 0, List.of(),
-                            new CommentSummaryDescription(
+                            new DocumentationCommentsDescription(
                                 "These are the remarks.",
                                 "an Example.",
                                 "This method is an example.main<>.",
@@ -382,8 +382,8 @@ class AnalysisVisitorTest {
             "java.lang.String",
             "\"Hai\"");
 
-    CommentSummaryDescription comment =
-        new CommentSummaryDescription(null, null, "Test javadoc", null, null);
+    DocumentationCommentsDescription comment =
+        new DocumentationCommentsDescription(null, null, "Test javadoc", null, null);
 
     FieldDescription age1Field =
         new FieldDescription(
@@ -477,7 +477,7 @@ class AnalysisVisitorTest {
     List<Description> parsed = parse("""
         import java.lang.annotation.Retention;
         import java.lang.annotation.RetentionPolicy;
-        
+                
         @Retention(RetentionPolicy.RUNTIME)
         public @interface AnnotationTest {
                
@@ -491,9 +491,9 @@ class AnalysisVisitorTest {
             .withModifiers(Modifier.PUBLIC.mask())
             .withAttributes(List.of(
                 new AttributeDescription("java.lang.annotation.Retention",
-                "Retention",
-                List.of(new AttributeArgumentDescription("value",
-                    "java.lang.annotation.RetentionPolicy", "RetentionPolicy.RUNTIME")))))
+                    "Retention",
+                    List.of(new AttributeArgumentDescription("value",
+                        "java.lang.annotation.RetentionPolicy", "RetentionPolicy.RUNTIME")))))
             .build();
 
     assertEquals(expected, typeDescription);

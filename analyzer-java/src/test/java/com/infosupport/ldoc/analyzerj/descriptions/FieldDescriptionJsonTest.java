@@ -37,7 +37,7 @@ class FieldDescriptionJsonTest {
         mapper.valueToTree(
             new FieldDescription(
                 new MemberDescription("name", Modifier.PRIVATE.mask(), List.of(),
-                    new CommentSummaryDescription(
+                    new DocumentationCommentsDescription(
                         "Tread carefully.",
                         "An integer.",
                         "Add two values.",

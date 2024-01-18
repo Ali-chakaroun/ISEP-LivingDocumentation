@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-class CommentSummaryDescriptionJsonTest {
+class DocumentationCommentsDescriptionJsonTest {
 
   private final ObjectMapper mapper = new ObjectMapper();
 
@@ -32,7 +32,7 @@ class CommentSummaryDescriptionJsonTest {
     assertEquals(
         mapper.readTree(example),
         mapper.valueToTree(
-            new CommentSummaryDescription(
+            new DocumentationCommentsDescription(
                 "tread carefully.\r\nWhen you code.", "An integer.", "add two values",
                 Map.of("N", "first integer value", "Y", "second integer value",
                     "Map<input>", "map of strings."),

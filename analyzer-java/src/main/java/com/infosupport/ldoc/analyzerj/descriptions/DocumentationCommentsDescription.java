@@ -15,7 +15,7 @@ import java.util.Map;
  * @param typeParams A mapping of type parameter names to their text, from the '@param' tags that
  *                   start with '<'someType'>'.
  */
-public record CommentSummaryDescription(
+public record DocumentationCommentsDescription(
     @JsonProperty("Remarks")
     @JsonInclude(Include.NON_EMPTY)
     String remarks,
