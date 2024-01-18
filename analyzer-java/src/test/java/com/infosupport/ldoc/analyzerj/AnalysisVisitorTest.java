@@ -546,6 +546,27 @@ class AnalysisVisitorTest {
 
     assertEquals(expected, typeDescription);
   }
+
+  @Test
+  void record_as_method_argument() {
+    parse("""
+        public record TestRecord(int id, String name){             
+        }
+        
+        class TestMethodCall {
+          private void test(TestRecord argRecord) {
+            // do nothing
+          }
+          
+          private void invokeMethod() {
+            TestRecord recVar = new TestRecord(1, "string");
+            test(recVar);
+          }
+        
+        }
+                
+        """);
+  }
 }
 
 
