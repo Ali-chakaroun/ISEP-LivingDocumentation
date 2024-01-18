@@ -79,12 +79,23 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   }
 
   /** Resolves the given type to a String with its fully-qualified class name. */
-  private String resolve(Type type) {
+  private String resolve(Node node) {
     try {
-      return resolver.toResolvedType(type, ResolvedType.class).describe();
-    } catch (UnsupportedOperationException e) {
+      if (node instanceof Type t) {
+        return resolver.toResolvedType(t, ResolvedType.class).describe();
+      } else if (node instanceof AnnotationExpr ae) {
+        return resolver.resolveDeclaration(ae, ResolvedAnnotationDeclaration.class).getQualifiedName();
+      } else if (node instanceof Expression e) {
+        return resolver.calculateType(e).describe();
+      } else {
+        // TODO probably throw a better exception
+        throw new RuntimeException("Type of node not implemented to be resolved");
+      }
+    } catch (UnsupportedOperationException | IllegalArgumentException e) {
       // References to records can not be resolved yet (issue #66); fall back to unqualified name
-      return type.toString();
+      // Apparently, in case node is a named expression, an illegal argument exception is thrown as
+      //    opposed to an unsupported operation expression.
+      return "Unknown";
     }
   }
 
@@ -100,8 +111,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
   /** Describes an annotation (Java) as an Attribute (LivingDocumentation) with given arguments. */
   private List<Description> visitAnnotation(AnnotationExpr n, List<Description> args) {
-    var type = resolver.resolveDeclaration(n, ResolvedAnnotationDeclaration.class);
-    return List.of(new AttributeDescription(type.getQualifiedName(), n.getNameAsString(), args));
+    String type = resolve(n);
+    return List.of(new AttributeDescription(type, n.getNameAsString(), args));
   }
 
   private TypeDescription.Builder typeBuilder(TypeType typeType,
@@ -192,7 +203,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     List<Description> arguments = new ArrayList<>();
 
     for (Expression argument : n.getArguments()) {
-      String type = resolver.calculateType(argument).describe();
+      String type = resolve(argument);
       String value = argument.toString();
       arguments.add(new ArgumentDescription(type, value));
     }
@@ -290,7 +301,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         List.of(
             new AttributeArgumentDescription(
                 "value",
-                resolver.calculateType(n.getMemberValue()).describe(),
+                resolve(n.getMemberValue()),
                 n.getMemberValue().toString()));
     return visitAnnotation(n, args);
   }
@@ -313,7 +324,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     return List.of(
         new AttributeArgumentDescription(
             n.getNameAsString(),
-            resolver.calculateType(n.getValue()).describe(),
+            resolve(n.getValue()),
             n.getValue().toString()));
   }
 
@@ -384,13 +395,13 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
 
     List<Description> arguments = new ArrayList<>();
     for (Expression argument : n.getArguments()) {
-      String type = resolver.calculateType(argument).describe();
+      String type = resolve(argument);
       String text = argument.toString();
       arguments.add(new ArgumentDescription(type, text));
     }
     return List.of(
         new InvocationDescription(
-            n.getScope().map(s -> resolver.calculateType(s).describe()).orElse("?"),
+            n.getScope().map(this::resolve).orElse("?"),
             n.getNameAsString(),
             arguments));
   }
