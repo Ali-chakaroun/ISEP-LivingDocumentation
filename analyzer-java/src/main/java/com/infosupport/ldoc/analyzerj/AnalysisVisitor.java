@@ -58,6 +58,7 @@ import com.infosupport.ldoc.analyzerj.descriptions.SwitchSection;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeDescription;
 import com.infosupport.ldoc.analyzerj.descriptions.TypeType;
 import com.infosupport.ldoc.analyzerj.helpermethods.CommentHelperMethods;
+import com.infosupport.ldoc.analyzerj.ldjexceptions.LdocException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -89,8 +90,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       } else if (node instanceof Expression e) {
         return resolver.calculateType(e).describe();
       } else {
-        // TODO probably throw a better exception
-        throw new RuntimeException("Type of node not implemented to be resolved");
+        throw new LdocException("The type of node trying to be resolved is not implemented in the "
+            + "AnalysisVisitor.");
       }
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
       // References to records can not be resolved yet (issue #66); fall back to unqualified name
