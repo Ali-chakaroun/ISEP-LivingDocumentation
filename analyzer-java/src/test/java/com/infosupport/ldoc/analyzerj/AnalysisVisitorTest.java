@@ -1,5 +1,6 @@
 package com.infosupport.ldoc.analyzerj;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -549,8 +550,8 @@ class AnalysisVisitorTest {
 
   @Test
   void record_as_method_argument() {
-    parse("""
-        public record TestRecord(int id, String name){             
+    String code = """
+        public record TestRecord(int id, String name){            
         }
         
         class TestMethodCall {
@@ -565,7 +566,9 @@ class AnalysisVisitorTest {
         
         }
                 
-        """);
+        """;
+
+    assertDoesNotThrow(() -> parse(code));
   }
 }
 
