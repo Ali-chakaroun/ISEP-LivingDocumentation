@@ -79,7 +79,9 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     this.resolver = resolver;
   }
 
-  /** Resolves the given type to a String with its fully-qualified class name. */
+  /** Resolves the given node to a String with its fully-qualified class name.
+   * Calls the corresponding resolver method based on the type of the node.
+   * */
   private String resolve(Node node) {
     try {
       if (node instanceof Type t) {
