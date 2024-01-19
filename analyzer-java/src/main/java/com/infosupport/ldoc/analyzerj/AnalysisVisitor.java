@@ -94,8 +94,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       }
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
       // References to records can not be resolved yet (issue #66); fall back to unqualified name
-      // Apparently, in case node is a named expression, an illegal argument exception is thrown as
-      //    opposed to an unsupported operation expression.
+      // Apparently, in case the to be resolved Record lies in a separate compiltation unit,
+      //    an illegal argument exception is thrown.
       return "Unknown";
     }
   }
