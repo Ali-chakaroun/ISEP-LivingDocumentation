@@ -84,7 +84,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       if (node instanceof Type t) {
         return resolver.toResolvedType(t, ResolvedType.class).describe();
       } else if (node instanceof AnnotationExpr ae) {
-        return resolver.resolveDeclaration(ae, ResolvedAnnotationDeclaration.class).getQualifiedName();
+        return resolver.resolveDeclaration(ae, ResolvedAnnotationDeclaration.class)
+            .getQualifiedName();
       } else if (node instanceof Expression e) {
         return resolver.calculateType(e).describe();
       } else {
