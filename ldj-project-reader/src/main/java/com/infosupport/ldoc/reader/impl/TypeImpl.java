@@ -38,7 +38,7 @@ class TypeImpl {
   }
 
   public List<String> basetypes() {
-    return project.objectMapper().convertValue(node.path("Basetypes"), new TypeReference<>() {
+    return project.objectMapper().convertValue(node.path("BaseTypes"), new TypeReference<>() {
     });
   }
 
