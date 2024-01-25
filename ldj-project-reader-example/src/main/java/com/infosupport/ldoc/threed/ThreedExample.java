@@ -34,7 +34,7 @@ import org.jgrapht.alg.drawing.model.Point2D;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
-public class ThreeDExample implements Runnable, GLEventListener {
+public class ThreedExample implements Runnable, GLEventListener {
 
   private final Project project;
 
@@ -48,7 +48,7 @@ public class ThreeDExample implements Runnable, GLEventListener {
   private int mouseX;
   private boolean mouseAway = false;
 
-  public ThreeDExample(Project project) {
+  public ThreedExample(Project project) {
     this.project = project;
   }
 
@@ -188,6 +188,6 @@ public class ThreeDExample implements Runnable, GLEventListener {
   public static void main(String[] args) throws IOException {
     System.setProperty("jogl.disable.openglcore", "true");
     System.setProperty("sun.awt.noerasebackground", "true");
-    new ThreeDExample(new JacksonProjectFactory().project(new File(args[0]))).run();
+    new ThreedExample(new JacksonProjectFactory().project(new File(args[0]))).run();
   }
 }
