@@ -7,9 +7,24 @@ import java.util.stream.Stream;
  */
 public interface Method extends HasName, HasModifiers, HasComment, HasAttributes, Node {
 
+  /**
+   * Retrieve return type of the method.
+   *
+   * @return Return type string.
+   */
   String returnType();
 
+  /**
+   * Retrieve the parameters of the method.
+   *
+   * @return Stream of parameters.
+   */
   Stream<Parameter> parameters();
 
+  /**
+   * Retrieve the statements of the method.
+   *
+   * @return Stream of statements.
+   */
   Stream<Statement> statements();
 }

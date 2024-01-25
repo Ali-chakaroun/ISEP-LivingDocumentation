@@ -7,8 +7,18 @@ import java.util.stream.Stream;
  */
 public interface SwitchStatement extends Statement {
 
+  /**
+   * Retrieve the switch expression.
+   *
+   * @return String with expression.
+   */
   String expression();
 
+  /**
+   * Retrieve the switch sections of the statement.
+   *
+   * @return Stream of switch sections.
+   */
   Stream<SwitchSection> sections();
 
 }

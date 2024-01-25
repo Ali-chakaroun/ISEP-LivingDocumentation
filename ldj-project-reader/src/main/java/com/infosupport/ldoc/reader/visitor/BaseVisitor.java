@@ -27,6 +27,9 @@ import com.infosupport.ldoc.reader.SwitchStatement;
 import com.infosupport.ldoc.reader.Type;
 import com.infosupport.ldoc.reader.Visitor;
 
+/**
+ * Visitor class that visits everything by default.
+ */
 public abstract class BaseVisitor implements Visitor {
 
   @Override

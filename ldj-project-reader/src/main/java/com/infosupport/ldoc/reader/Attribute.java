@@ -9,6 +9,7 @@ public interface Attribute extends HasName, HasType, Node {
 
   /**
    * Retrieve the arguments of the attribute.
+   *
    * @return Stream of {@link AttributeArgument}.
    */
   Stream<AttributeArgument> arguments();

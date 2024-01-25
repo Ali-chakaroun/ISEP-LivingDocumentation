@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 
+/**
+ * Project factory implementation based on Jackson.
+ */
 public class JacksonProjectFactory implements ProjectFactory {
 
   private final ObjectMapper om;

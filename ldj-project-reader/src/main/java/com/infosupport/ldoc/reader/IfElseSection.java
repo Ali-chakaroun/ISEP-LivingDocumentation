@@ -7,8 +7,18 @@ import java.util.stream.Stream;
  */
 public interface IfElseSection extends Node {
 
+  /**
+   * Retrieve the if condition of the if-else section.
+   *
+   * @return String with condition.
+   */
   String condition();
 
+  /**
+   * Retrieve the statements of the if-else section.
+   *
+   * @return Stream with statement strings.
+   */
   Stream<Statement> statements();
 
 }

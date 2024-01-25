@@ -1,5 +1,8 @@
 package com.infosupport.ldoc.reader;
 
+/**
+ * Enumeration of modifiers. Contains all modifiers that can be found in the JSON file.
+ */
 public enum Modifier {
   INTERNAL(1),
   PUBLIC(1 << 1),
@@ -18,12 +21,25 @@ public enum Modifier {
   UNSAFE(1 << 14),
   PARTIAL(1 << 15);
 
+  /**
+   * Integer that is a power of 2, unique for each modifier.
+   */
   private final long mask;
 
+  /**
+   * Modifier constructor. Sets mask to given number.
+   *
+   * @param i Mask number.
+   */
   Modifier(long i) {
     mask = i;
   }
 
+  /**
+   * Get mask value.
+   *
+   * @return mask value.
+   */
   public long mask() {
     return mask;
   }

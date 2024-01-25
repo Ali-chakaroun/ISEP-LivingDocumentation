@@ -8,8 +8,18 @@ import java.util.stream.Stream;
  */
 public interface SwitchSection extends Node {
 
+  /**
+   * Retrieve the case labels for this section of the switch statement.
+   *
+   * @return List of label strings.
+   */
   List<String> labels();
 
+  /**
+   * Retrieve the statements in this section of the switch statement.
+   *
+   * @return Stream of statements.
+   */
   Stream<Statement> statements();
 
 }

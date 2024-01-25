@@ -7,6 +7,7 @@ public interface Argument extends HasType, Node {
 
   /**
    * Retrieve the text (the value) of the argument.
+   *
    * @return String of the text holding the value of the argument.
    */
   String text();

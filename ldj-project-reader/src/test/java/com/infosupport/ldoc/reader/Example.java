@@ -6,8 +6,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.TreeMap;
 
+/**
+ * Example class for the project reader.
+ */
 public class Example {
 
+  /**
+   * Example usage for the project reader.
+   *
+   * @param args standard input arguments.
+   * @throws IOException for invalid input.
+   */
   public static void main(String[] args) throws IOException {
     URL example = Example.class.getResource("example.json");
     Project project = new JacksonProjectFactory().project(example);

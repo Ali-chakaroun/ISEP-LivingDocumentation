@@ -7,6 +7,11 @@ import java.util.stream.Stream;
  */
 public interface IfStatement extends Statement {
 
+  /**
+   * Retrieve the if-else sections of the if statement.
+   *
+   * @return Stream of if-else sections.
+   */
   Stream<IfElseSection> sections();
 
 }

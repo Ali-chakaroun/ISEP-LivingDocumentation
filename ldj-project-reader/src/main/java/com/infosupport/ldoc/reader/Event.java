@@ -5,5 +5,10 @@ package com.infosupport.ldoc.reader;
  */
 public interface Event extends HasName, HasType, HasModifiers, HasComment, HasAttributes, Node {
 
+  /**
+   * Retrieve the initial value of the event.
+   *
+   * @return String with value.
+   */
   String initializer();
 }

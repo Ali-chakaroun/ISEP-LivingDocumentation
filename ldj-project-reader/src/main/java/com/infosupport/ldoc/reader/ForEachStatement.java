@@ -7,8 +7,18 @@ import java.util.stream.Stream;
  */
 public interface ForEachStatement extends Statement {
 
+  /**
+   * Retrieve the iteration expression of the foreach statement.
+   *
+   * @return String with expression.
+   */
   String expression();
 
+  /**
+   * Retrieve the statements of the foreach statement.
+   *
+   * @return Stream of statement strings.
+   */
   Stream<Statement> statements();
 
 }

@@ -1,5 +1,8 @@
 package com.infosupport.ldoc.reader;
 
+/**
+ * Visitor interface to implement for use with Project.accept().
+ */
 public interface Visitor {
 
   void visitArgument(Argument argument);

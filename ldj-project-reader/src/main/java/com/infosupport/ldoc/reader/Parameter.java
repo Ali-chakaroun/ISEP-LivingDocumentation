@@ -5,5 +5,10 @@ package com.infosupport.ldoc.reader;
  */
 public interface Parameter extends HasName, HasType, HasAttributes, Node {
 
+  /**
+   * Check if the parameter has a default value.
+   *
+   * @return true if parameter has default value, false if not.
+   */
   boolean hasDefaultValue();
 }

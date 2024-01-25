@@ -5,5 +5,10 @@ package com.infosupport.ldoc.reader;
  */
 public interface ReturnStatement extends Statement {
 
+  /**
+   * Retrieve the expression of the return statement.
+   *
+   * @return expression string.
+   */
   String expression();
 }
