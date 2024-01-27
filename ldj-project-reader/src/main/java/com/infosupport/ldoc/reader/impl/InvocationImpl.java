@@ -2,9 +2,11 @@ package com.infosupport.ldoc.reader.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.infosupport.ldoc.reader.Argument;
+import com.infosupport.ldoc.reader.HasType;
 import com.infosupport.ldoc.reader.Invocation;
 import com.infosupport.ldoc.reader.Method;
 import com.infosupport.ldoc.reader.Visitor;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -38,7 +40,9 @@ class InvocationImpl implements Invocation {
     return project
         .type(containingType())
         .flatMap(type -> type.methodsWithName(name())
-            .filter(method -> method.parameters().count() == arguments().count())
+            .filter(method -> Arrays.equals(
+                method.parameters().map(HasType::type).toArray(),
+                arguments().map(HasType::type).toArray()))
             .findFirst());
   }
 
