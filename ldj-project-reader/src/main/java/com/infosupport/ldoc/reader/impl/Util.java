@@ -20,16 +20,16 @@ class Util {
   }
 
   static Stream<Statement> statements(ProjectImpl project, JsonNode node) {
-    return streamOf(node.path("Statements"), s -> {
-      return switch (s.path("$type").textValue().split(", ")[0]) {
-        case "LivingDocumentation.AssignmentDescription" -> new AssignmentImpl(s);
-        case "LivingDocumentation.ForEach" -> new ForEachImpl(project, s);
-        case "LivingDocumentation.If" -> new IfImpl(project, s);
-        case "LivingDocumentation.InvocationDescription" -> new InvocationImpl(project, s);
-        case "LivingDocumentation.ReturnDescription" -> new ReturnImpl(s);
-        case "LivingDocumentation.Switch" -> new SwitchImpl(project, s);
-        default -> new UnknownStatementImpl();
-      };
-    });
+    return streamOf(node.path("Statements"), s ->
+        switch (s.path("$type").textValue().split(", ")[0]) {
+          case "LivingDocumentation.AssignmentDescription" -> new AssignmentImpl(s);
+          case "LivingDocumentation.ForEach" -> new ForEachImpl(project, s);
+          case "LivingDocumentation.If" -> new IfImpl(project, s);
+          case "LivingDocumentation.InvocationDescription" -> new InvocationImpl(project, s);
+          case "LivingDocumentation.ReturnDescription" -> new ReturnImpl(s);
+          case "LivingDocumentation.Switch" -> new SwitchImpl(project, s);
+          default -> new UnknownStatementImpl();
+        }
+    );
   }
 }
