@@ -34,15 +34,15 @@ class ProjectImpl implements Project {
 
   @Override
   public Stream<Type> allTypes() {
-    return StreamSupport.stream(node.spliterator(), false).map(n -> {
-      return switch (n.path("Type").asInt(0)) {
-        case 0 -> new ClassImpl(this, n);
-        case 1 -> new InterfaceImpl(this, n);
-        case 2 -> new StructImpl(this, n);
-        case 3 -> new EnumImpl(this, n);
-        default -> new UnknownTypeImpl(this, n);
-      };
-    });
+    return StreamSupport.stream(node.spliterator(), false).map(n ->
+        switch (n.path("Type").asInt(0)) {
+          case 0 -> new ClassImpl(this, n);
+          case 1 -> new InterfaceImpl(this, n);
+          case 2 -> new StructImpl(this, n);
+          case 3 -> new EnumImpl(this, n);
+          default -> new UnknownTypeImpl(this, n);
+        }
+    );
   }
 
   @Override
