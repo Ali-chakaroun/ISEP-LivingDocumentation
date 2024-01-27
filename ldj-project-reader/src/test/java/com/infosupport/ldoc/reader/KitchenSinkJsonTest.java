@@ -48,6 +48,12 @@ class KitchenSinkJsonTest {
   }
 
   @Test
+  void baseTypes() {
+    Type struct = project.type("ExampleStruct").orElseThrow();
+    struct.baseTypes().forEach(b -> project.type(b).orElseThrow());
+  }
+
+  @Test
   void documentationComment() {
     /* Exactly one documentation comment exists, and when read, it matches our expectations. */
     List<DocumentationComment> seen = new ArrayList<>();

@@ -13,7 +13,7 @@ public interface Type extends HasName, HasModifiers, HasComment, HasAttributes, 
    *
    * @return Stream of basetypes.
    */
-  List<String> basetypes();
+  List<String> baseTypes();
 
   /**
    * Retrieve all fields.

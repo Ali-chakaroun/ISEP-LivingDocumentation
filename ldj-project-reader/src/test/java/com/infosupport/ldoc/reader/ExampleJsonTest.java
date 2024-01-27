@@ -31,7 +31,7 @@ class ExampleJsonTest {
     assertEquals("EventApp", example.name());
     assertEquals("org.example.EventApp", example.fullName());
 
-    assertNull(example.basetypes());
+    assertNull(example.baseTypes());
     assertEquals(0, example.constructors().count());
     assertEquals(0, example.enumMembers().count());
     assertEquals(0, example.properties().count());
