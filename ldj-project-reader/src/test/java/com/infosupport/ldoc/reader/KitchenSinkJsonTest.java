@@ -50,7 +50,8 @@ class KitchenSinkJsonTest {
   @Test
   void baseTypes() {
     Type struct = project.type("ExampleStruct").orElseThrow();
-    struct.baseTypes().forEach(b -> project.type(b).orElseThrow());
+
+    struct.baseTypes().forEach(b -> assertTrue(project.type(b).isPresent()));
   }
 
   @Test
