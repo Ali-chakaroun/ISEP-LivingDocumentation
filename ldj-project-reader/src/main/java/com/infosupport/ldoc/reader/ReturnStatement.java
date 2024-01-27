@@ -8,7 +8,7 @@ public interface ReturnStatement extends Statement {
   /**
    * Retrieve the expression of the return statement.
    *
-   * @return expression string.
+   * @return expression string, which may be empty for statements like <code>return;</code>.
    */
   String expression();
 }

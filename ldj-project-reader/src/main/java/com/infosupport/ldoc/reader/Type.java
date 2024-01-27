@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 public interface Type extends HasName, HasModifiers, HasComment, HasAttributes, Node {
 
   /**
-   * Retrieve all basetypes.
+   * Retrieve all base types (superclasses, implemented interfaces), if any.
    *
-   * @return Stream of basetypes.
+   * @return Stream of fully qualified names of base types, or null.
    */
   List<String> baseTypes();
 

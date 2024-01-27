@@ -17,7 +17,7 @@ public interface IfElseSection extends Node {
   /**
    * Retrieve the statements of the if-else section.
    *
-   * @return Stream with statement strings.
+   * @return Stream with statements.
    */
   Stream<Statement> statements();
 

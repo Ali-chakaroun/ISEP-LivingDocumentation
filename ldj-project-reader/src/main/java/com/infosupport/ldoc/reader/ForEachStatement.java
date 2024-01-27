@@ -17,7 +17,7 @@ public interface ForEachStatement extends Statement {
   /**
    * Retrieve the statements of the foreach statement.
    *
-   * @return Stream of statement strings.
+   * @return Stream of statements.
    */
   Stream<Statement> statements();
 

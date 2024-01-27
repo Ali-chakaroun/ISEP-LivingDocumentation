@@ -2,13 +2,15 @@ package com.infosupport.ldoc.reader;
 
 /**
  * Interface for class of useful methods when dealing with nodes that have modifiers.
+ *
+ * @see Modifier
  */
 public interface HasModifiers {
 
   /**
-   * Retrieve modifiers.
+   * Retrieve modifiers in Living Documentation JSON format.
    *
-   * @return modifier long.
+   * @return an integer where set bits correspond to enumeration members of {@link Modifier}.
    */
   long modifiers();
 

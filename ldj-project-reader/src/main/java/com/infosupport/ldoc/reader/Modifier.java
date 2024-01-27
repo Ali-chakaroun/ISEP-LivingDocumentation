@@ -1,7 +1,9 @@
 package com.infosupport.ldoc.reader;
 
 /**
- * Enumeration of modifiers. Contains all modifiers that can be found in the JSON file.
+ * Enumeration of modifiers. Contains all modifiers that can be found in Living Documentation JSON.
+ *
+ * @see HasModifiers
  */
 public enum Modifier {
   INTERNAL(1),
@@ -22,14 +24,14 @@ public enum Modifier {
   PARTIAL(1 << 15);
 
   /**
-   * Integer that is a power of 2, unique for each modifier.
+   * Unique bitmask with the bit set that corresponds to the modifier.
    */
   private final long mask;
 
   /**
    * Modifier constructor. Sets mask to given number.
    *
-   * @param i Mask number.
+   * @param i Bitmask value.
    */
   Modifier(long i) {
     mask = i;

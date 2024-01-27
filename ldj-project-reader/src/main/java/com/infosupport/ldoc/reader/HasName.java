@@ -1,7 +1,7 @@
 package com.infosupport.ldoc.reader;
 
 /**
- * Interface for class of useful methods when dealing with nodes that hava a name.
+ * Interface for class of useful methods when dealing with nodes that have a name.
  */
 public interface HasName {
 
