@@ -10,6 +10,9 @@ import java.util.stream.StreamSupport;
 
 class Util {
 
+  private Util() {
+  }
+
   static <T> Stream<T> streamOf(JsonNode node, Function<JsonNode, T> converter) {
     return StreamSupport.stream(node.spliterator(), false).map(converter);
   }
