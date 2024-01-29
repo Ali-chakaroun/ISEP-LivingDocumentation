@@ -1,0 +1,300 @@
+[
+  {
+    "Type": 3,
+    "FullName": "EverythingApp.ExampleEnum",
+    "Modifiers": 2,
+    "EnumMembers": [
+      {
+        "Name": "One",
+        "Value": "1",
+        "Modifiers": 2
+      },
+      {
+        "Name": "Two",
+        "Value": "2",
+        "Modifiers": 2
+      }
+    ]
+  },
+  {
+    "Type": 2,
+    "FullName": "EverythingApp.ExampleStruct",
+    "BaseTypes": [
+      "EverythingApp.IExampleInterface"
+    ],
+    "Modifiers": 2,
+    "Properties": [
+      {
+        "Name": "SomeProperty",
+        "Type": "int",
+        "Modifiers": 2
+      }
+    ]
+  },
+  {
+    "Type": 1,
+    "FullName": "EverythingApp.IExampleInterface",
+    "Modifiers": 2,
+    "Methods": [
+      {
+        "Name": "Example",
+        "Attributes": [
+          {
+            "Type": "System.ObsoleteAttribute",
+            "Name": "Obsolete",
+            "Arguments": [
+              {
+                "Name": "Example attribute",
+                "Type": "string",
+                "Value": "Example attribute"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "FullName": "EverythingApp.KitchenSink",
+    "Modifiers": 2,
+    "Fields": [
+      {
+        "Name": "_count",
+        "Type": "int",
+        "Initializer": "1",
+        "Modifiers": 20
+      }
+    ],
+    "Methods": [
+      {
+        "Name": "Main",
+        "Parameters": [
+          {
+            "Type": "string[]",
+            "Name": "args"
+          }
+        ],
+        "Statements": [
+          {
+            "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+            "ContainingType": "System.Random",
+            "Name": "Random"
+          },
+          {
+            "$type": "LivingDocumentation.If, LivingDocumentation.Statements",
+            "Sections": [
+              {
+                "Condition": "rand.Next(2) == 0",
+                "Statements": [
+                  {
+                    "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                    "ContainingType": "System.Console",
+                    "Name": "WriteLine",
+                    "Arguments": [
+                      {
+                        "Type": "string",
+                        "Text": "An if block"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Condition": "rand.Next(1) == 1",
+                "Statements": [
+                  {
+                    "$type": "LivingDocumentation.If, LivingDocumentation.Statements",
+                    "Sections": [
+                      {
+                        "Condition": "rand.Next(1) == 1",
+                        "Statements": [
+                          {
+                            "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                            "ContainingType": "System.Console",
+                            "Name": "WriteLine",
+                            "Arguments": [
+                              {
+                                "Type": "string",
+                                "Text": "An else-if block"
+                              }
+                            ]
+                          },
+                          {
+                            "$type": "LivingDocumentation.ReturnDescription, LivingDocumentation.Descriptions",
+                            "Expression": ""
+                          }
+                        ]
+                      },
+                      {
+                        "Statements": [
+                          {
+                            "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                            "ContainingType": "System.Console",
+                            "Name": "WriteLine",
+                            "Arguments": [
+                              {
+                                "Type": "string",
+                                "Text": "An else block"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Statements": [
+                  {
+                    "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                    "ContainingType": "System.Console",
+                    "Name": "WriteLine",
+                    "Arguments": [
+                      {
+                        "Type": "string",
+                        "Text": "An else block"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "$type": "LivingDocumentation.ForEach, LivingDocumentation.Statements",
+            "Expression": "num in new[] { 1, 2, 3 }",
+            "Statements": [
+              {
+                "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                "ContainingType": "System.Console",
+                "Name": "WriteLine",
+                "Arguments": [
+                  {
+                    "Type": "int",
+                    "Text": "num"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "$type": "LivingDocumentation.Switch, LivingDocumentation.Statements",
+            "Sections": [
+              {
+                "Labels": [
+                  "10",
+                  "20"
+                ],
+                "Statements": [
+                  {
+                    "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                    "ContainingType": "System.Console",
+                    "Name": "WriteLine",
+                    "Arguments": [
+                      {
+                        "Type": "string",
+                        "Text": "A switch case"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "Labels": [
+                  "default"
+                ],
+                "Statements": [
+                  {
+                    "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+                    "ContainingType": "System.Console",
+                    "Name": "WriteLine",
+                    "Arguments": [
+                      {
+                        "Type": "string",
+                        "Text": "A default case"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "Expression": "rand.Next()"
+          },
+          {
+            "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+            "ContainingType": "System.Console",
+            "Name": "WriteLine",
+            "Arguments": [
+              {
+                "Type": "string",
+                "Text": "{0} {1}"
+              },
+              {
+                "Type": "string",
+                "Text": "An"
+              },
+              {
+                "Type": "string",
+                "Text": "invocation"
+              }
+            ]
+          },
+          {
+            "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+            "ContainingType": "System.EventHandler<int>",
+            "Name": "",
+            "Arguments": [
+              {
+                "Type": "object",
+                "Text": "null"
+              },
+              {
+                "Type": "int",
+                "Text": "_count"
+              }
+            ]
+          },
+          {
+            "$type": "LivingDocumentation.AssignmentDescription, LivingDocumentation.Descriptions",
+            "Left": "_count",
+            "Operator": "=",
+            "Right": "_count + 1"
+          }
+        ],
+        "Modifiers": 18,
+        "DocumentationComments": {
+          "Remarks": "Remarks go here.",
+          "Returns": "Returned value goes here.",
+          "Summary": "Summary goes here.",
+          "Exceptions": {
+            "System.IO.IOException": "IOException description goes here."
+          },
+          "Params": {
+            "args": "Description for args goes here."
+          },
+          "SeeAlsos": {
+            "EverythingApp.ExampleEnum": "EverythingApp.ExampleEnum"
+          }
+        }
+      }
+    ],
+    "Events": [
+      {
+        "Name": "ExampleEvent",
+        "Type": "System.EventHandler<int>",
+        "Modifiers": 20
+      }
+    ]
+  },
+  {
+    "FullName": "EverythingApp.SomeClass",
+    "Modifiers": 2,
+    "Constructors": [
+      {
+        "Name": "SomeClass",
+        "Modifiers": 2
+      }
+    ]
+  }
+]

@@ -1,5 +1,6 @@
 package com.infosupport.ldoc.analyzerj;
 
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
@@ -23,6 +24,7 @@ import com.github.javaparser.ast.expr.MemberValuePair;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
@@ -150,6 +152,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         .withAttributes(visit(n.getAnnotations(), arg));
   }
 
+  /** Describe a top-level compilation unit. */
+  @Override
+  public List<Description> visit(CompilationUnit n, Analyzer arg) {
+    // We do not care about top-level comments, e.g. those in package-info.java. Remove them.
+    n.removeComment();
+    // Other than that, the default behavior is fine.
+    return super.visit(n, arg);
+  }
 
   /** Describes a class or interface (Java) as a Type with TypeType CLASS or INTERFACE. */
   @Override
@@ -455,5 +465,15 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             summary,
             !commentParams.isEmpty() ? commentParams : null,
             !commentTypeParams.isEmpty() ? commentTypeParams : null));
+  }
+
+  /**
+   * Describes a Variable Declaration Expression. As these are not supported in the JSON, there is
+   * no matching description. This method is explicitly implemented to return an empty list in order
+   * to prevent annotations being visited that are attached to the Variable Declaration.
+   */
+  @Override
+  public List<Description> visit(VariableDeclarationExpr n, Analyzer arg) {
+    return List.of();
   }
 }

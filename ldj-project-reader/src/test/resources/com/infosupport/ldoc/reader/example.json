@@ -1,0 +1,48 @@
+[
+  {
+    "Modifiers": 2,
+    "FullName": "org.example.EventApp",
+    "DocumentationComments": {
+      "Summary": "An example application where we pretend 6 sandwiches were ordered by a hungry customer who lives\nat 123 Fake Street.."
+    },
+    "Fields": [
+      {
+        "Type": "org.example.models.Order",
+        "DocumentationComments": {
+          "Summary": "The order that was paid."
+        },
+        "Name": "order",
+        "Modifiers": 130
+      }
+    ],
+    "Methods": [
+      {
+        "ReturnType": "void",
+        "DocumentationComments": {
+          "Summary": "Command-line entry point."
+        },
+        "Parameters": [
+          {
+            "Type": "java.lang.String[]",
+            "Name": "args"
+          }
+        ],
+        "Statements": [
+          {
+            "$type": "LivingDocumentation.InvocationDescription, LivingDocumentation.Descriptions",
+            "ContainingType": "org.springframework.context.ApplicationContext",
+            "Name": "publishEvent",
+            "Arguments": [
+              {
+                "Type": "org.example.events.OrderPaid",
+                "Text": "new OrderPaid(new Order(6, \"123 Fake Street\"))"
+              }
+            ]
+          }
+        ],
+        "Name": "main",
+        "Modifiers": 18
+      }
+    ]
+  }
+]
