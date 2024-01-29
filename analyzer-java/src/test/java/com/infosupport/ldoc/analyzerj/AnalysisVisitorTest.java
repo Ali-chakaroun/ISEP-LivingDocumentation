@@ -554,6 +554,20 @@ class AnalysisVisitorTest {
 
     assertEquals(expected, typeDescription);
   }
+
+
+  @Test
+  void variable_declaration_with_annotation() {
+    String code = """
+        @SuppressWarnings
+            int x = 0;
+            return x;
+        """;
+
+    List<Description> expected = List.of(new ReturnDescription("x"));
+
+    assertIterableEquals(parseFragment(code), expected);
+  }
 }
 
 
