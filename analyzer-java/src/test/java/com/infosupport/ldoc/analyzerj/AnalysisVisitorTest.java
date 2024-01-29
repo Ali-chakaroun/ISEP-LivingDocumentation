@@ -333,6 +333,14 @@ class AnalysisVisitorTest {
   }
 
   @Test
+  void package_level_comment() {
+    // Ignore package-level Javadoc comments, since there is no place for them in the JSON schema.
+    assertIterableEquals(
+        List.of(),
+        parse("/** Package javadoc. */ package Playground;"));
+  }
+
+  @Test
   void class_and_method_modifiers() {
     List<Description> parsed =
         parse(

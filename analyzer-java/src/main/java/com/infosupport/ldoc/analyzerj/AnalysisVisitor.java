@@ -1,5 +1,6 @@
 package com.infosupport.ldoc.analyzerj;
 
+import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
@@ -117,6 +118,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         .withAttributes(visit(n.getAnnotations(), arg));
   }
 
+  /** Describe a top-level compilation unit. */
+  @Override
+  public List<Description> visit(CompilationUnit n, Analyzer arg) {
+    // We do not care about top-level comments, e.g. those in package-info.java. Remove them.
+    n.removeComment();
+    // Other than that, the default behavior is fine.
+    return super.visit(n, arg);
+  }
 
   /** Describes a class or interface (Java) as a Type with TypeType CLASS or INTERFACE. */
   @Override
