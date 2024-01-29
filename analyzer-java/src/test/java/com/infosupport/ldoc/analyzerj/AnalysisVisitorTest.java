@@ -559,23 +559,14 @@ class AnalysisVisitorTest {
   @Test
   void variable_declaration_with_annotation() {
     String code = """
-        class Test {
-        void main(String[] args) {
-            @SuppressWarnings
+        @SuppressWarnings
             int x = 0;
-          }
-          }
+            return x;
         """;
 
-    List<Description> expected = List.of(new TypeDescription.Builder(TypeType.CLASS, "Test")
-            .withMembers(new MethodDescription(
-                new MemberDescription("main", 0, List.of(), null),
-                null, List.of(new ParameterDescription("java.lang.String[]", "args", List.of())),
-                List.of()
-            ))
-        .build());
+    List<Description> expected = List.of(new ReturnDescription("x"));
 
-    assertIterableEquals(parse(code), expected);
+    assertIterableEquals(parseFragment(code), expected);
   }
 }
 
