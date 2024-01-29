@@ -92,8 +92,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       } else if (node instanceof Expression e) {
         return resolver.calculateType(e).describe();
       } else {
-        // TODO probably throw a better exception
-        throw new RuntimeException("Type of node not implemented to be resolved");
+        throw new UnsupportedOperationException("Type of node not yet implemented to be resolved");
       }
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
       // References to records can not be resolved yet (issue #66);
