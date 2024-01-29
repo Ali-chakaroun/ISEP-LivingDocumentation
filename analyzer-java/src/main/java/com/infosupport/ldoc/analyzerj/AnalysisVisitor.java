@@ -79,22 +79,41 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
   }
 
   /**
-   * Resolves the given node to a String with its fully-qualified class name.
-   * Calls the corresponding resolver method based on the type of the node.
+   * Resolves the given Type to a String with its fully-qualified class name.
    * */
-  private String resolve(Node node) {
+  private String resolve(Type t) {
     try {
-      if (node instanceof Type t) {
-        return resolver.toResolvedType(t, ResolvedType.class).describe();
-      } else if (node instanceof AnnotationExpr ae) {
-        return resolver.resolveDeclaration(ae, ResolvedAnnotationDeclaration.class)
-            .getQualifiedName();
-      } else if (node instanceof Expression e) {
-        return resolver.calculateType(e).describe();
-      } else {
-        throw new UnsupportedOperationException("Type of node not yet implemented to be resolved");
-      }
+      return resolver.toResolvedType(t, ResolvedType.class).describe();
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
+      // References to records can not be resolved yet (issue #66);
+      // Apparently, in case the to be resolved Record lies in a separate compilation unit,
+      //    an illegal argument exception is thrown.
+      return "?";
+    }
+  }
+
+  /**
+   * Resolves the given AnnotationExpression to a String with its fully-qualified class name.
+   * */
+  private String resolve(AnnotationExpr ae) {
+    try {
+      return resolver.resolveDeclaration(ae, ResolvedAnnotationDeclaration.class)
+          .getQualifiedName();
+    } catch (UnsupportedOperationException | IllegalArgumentException e) {
+      // References to records can not be resolved yet (issue #66);
+      // Apparently, in case the to be resolved Record lies in a separate compilation unit,
+      //    an illegal argument exception is thrown.
+      return "?";
+    }
+  }
+
+  /**
+   * Resolves the given Expression to a String with its fully-qualified class name.
+   * */
+  private String resolve(Expression e) {
+    try {
+      return resolver.calculateType(e).describe();
+    } catch (UnsupportedOperationException | IllegalArgumentException exception) {
       // References to records can not be resolved yet (issue #66);
       // Apparently, in case the to be resolved Record lies in a separate compilation unit,
       //    an illegal argument exception is thrown.
