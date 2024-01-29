@@ -295,6 +295,18 @@ class AnalysisVisitorTest {
         parse("class TestClass { /* Not Javadoc */ int foo; }"));
 
     assertIterableEquals(
+        List.of(new TypeDescription.Builder(TypeType.INTERFACE, "TestInterface")
+            .withComment(new DocumentationCommentsDescription("Bar.", null, "Foo.", null, null))
+            .build()),
+        parse("/** Foo. Bar. */ interface TestInterface {}"));
+
+    assertIterableEquals(
+        List.of(new TypeDescription.Builder(TypeType.STRUCT, "org.example.TestRecord")
+            .withComment(new DocumentationCommentsDescription(null, null, "Present.", null, null))
+            .build()),
+        parse("/** Ignored. */ package org.example; /** Present. */ record TestRecord() {}"));
+
+    assertIterableEquals(
         List.of(
             new TypeDescription.Builder(TypeType.CLASS, "Example")
                 .withMembers(
@@ -339,6 +351,11 @@ class AnalysisVisitorTest {
     assertIterableEquals(
         List.of(),
         parse("/** Package javadoc. */ package Playground;"));
+
+    // Multiple top-level Javadoc comments should still be ignored.
+    assertIterableEquals(
+        List.of(),
+        parse("/** First javadoc. */ /** Second javadoc. */ package Playground;"));
   }
 
   @Test
