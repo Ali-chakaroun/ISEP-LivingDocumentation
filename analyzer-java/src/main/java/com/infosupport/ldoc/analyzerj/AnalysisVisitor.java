@@ -3,6 +3,7 @@ package com.infosupport.ldoc.analyzerj;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.AnnotationDeclaration;
 import com.github.javaparser.ast.body.AnnotationMemberDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -159,6 +160,12 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     n.removeComment();
     // Other than that, the default behavior is fine.
     return super.visit(n, arg);
+  }
+
+  /** Describe a package declaration, by skipping it. It is not represented in the JSON. */
+  @Override
+  public List<Description> visit(PackageDeclaration n, Analyzer arg) {
+    return List.of();
   }
 
   /** Describes a class or interface (Java) as a Type with TypeType CLASS or INTERFACE. */
