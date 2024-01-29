@@ -79,7 +79,8 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     this.resolver = resolver;
   }
 
-  /** Resolves the given node to a String with its fully-qualified class name.
+  /**
+   * Resolves the given node to a String with its fully-qualified class name.
    * Calls the corresponding resolver method based on the type of the node.
    * */
   private String resolve(Node node) {
@@ -96,10 +97,10 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             + "AnalysisVisitor.");
       }
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
-      // References to records can not be resolved yet (issue #66); fall back to unqualified name
-      // Apparently, in case the to be resolved Record lies in a separate compiltation unit,
+      // References to records can not be resolved yet (issue #66);
+      // Apparently, in case the to be resolved Record lies in a separate compilation unit,
       //    an illegal argument exception is thrown.
-      return "Unknown";
+      return "?";
     }
   }
 
