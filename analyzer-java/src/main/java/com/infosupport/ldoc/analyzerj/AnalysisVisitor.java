@@ -24,6 +24,7 @@ import com.github.javaparser.ast.expr.MemberValuePair;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
@@ -431,5 +432,14 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             summary,
             !commentParams.isEmpty() ? commentParams : null,
             !commentTypeParams.isEmpty() ? commentTypeParams : null));
+  }
+
+  /** Describes a Variable Declaration Expression. As these are not supported in the JSON, there is
+   * no matching description. This method is explicitly implemented to return null in order to
+   * prevent annotations being visited that are attached to the Variable Declaration.
+   */
+  @Override
+  public List<Description> visit(VariableDeclarationExpr n, Analyzer arg) {
+    return null;
   }
 }
