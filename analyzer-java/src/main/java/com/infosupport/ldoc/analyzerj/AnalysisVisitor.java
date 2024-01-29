@@ -87,7 +87,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     try {
       return resolver.toResolvedType(t, ResolvedType.class).describe();
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
-      // References to records can not be resolved yet (issue #66);
+      // References to records can not be resolved yet (issue #66)
       // Apparently, in case the to be resolved Record lies in a separate compilation unit,
       //    an illegal argument exception is thrown.
       return "?";
@@ -102,7 +102,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
       return resolver.resolveDeclaration(ae, ResolvedAnnotationDeclaration.class)
           .getQualifiedName();
     } catch (UnsupportedOperationException | IllegalArgumentException e) {
-      // References to records can not be resolved yet (issue #66);
+      // References to records can not be resolved yet (issue #66)
       // Apparently, in case the to be resolved Record lies in a separate compilation unit,
       //    an illegal argument exception is thrown.
       return "?";
@@ -116,7 +116,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     try {
       return resolver.calculateType(e).describe();
     } catch (UnsupportedOperationException | IllegalArgumentException exception) {
-      // References to records can not be resolved yet (issue #66);
+      // References to records can not be resolved yet (issue #66)
       // Apparently, in case the to be resolved Record lies in a separate compilation unit,
       //    an illegal argument exception is thrown.
       return "?";
