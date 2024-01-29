@@ -434,12 +434,13 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
             !commentTypeParams.isEmpty() ? commentTypeParams : null));
   }
 
-  /** Describes a Variable Declaration Expression. As these are not supported in the JSON, there is
+  /**
+   * Describes a Variable Declaration Expression. As these are not supported in the JSON, there is
    * no matching description. This method is explicitly implemented to return null in order to
    * prevent annotations being visited that are attached to the Variable Declaration.
    */
   @Override
   public List<Description> visit(VariableDeclarationExpr n, Analyzer arg) {
-    return null;
+    return List.of();
   }
 }
