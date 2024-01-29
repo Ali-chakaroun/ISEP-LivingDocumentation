@@ -1,5 +1,6 @@
 package com.infosupport.ldoc.analyzerj;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -555,6 +556,28 @@ class AnalysisVisitorTest {
     assertEquals(expected, typeDescription);
   }
 
+  @Test
+  void record_as_method_argument() {
+    String code = """
+        public record TestRecord(int id, String name){            
+        }
+        
+        class TestMethodCall {
+          private void test(TestRecord argRecord) {
+            // do nothing
+          }
+          
+          private void invokeMethod() {
+            TestRecord recVar = new TestRecord(1, "string");
+            test(recVar);
+          }
+        
+        }
+                
+        """;
+
+    assertDoesNotThrow(() -> parse(code));
+  }
 
   @Test
   void variable_declaration_with_annotation() {
