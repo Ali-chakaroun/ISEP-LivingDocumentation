@@ -554,6 +554,29 @@ class AnalysisVisitorTest {
 
     assertEquals(expected, typeDescription);
   }
+
+
+  @Test
+  void variable_declaration_with_annotation() {
+    String code = """
+        class Test {
+        void main(String[] args) {
+            @SuppressWarnings
+            int x = 0;
+          }
+          }
+        """;
+
+    List<Description> expected = List.of(new TypeDescription.Builder(TypeType.CLASS, "Test")
+            .withMembers(new MethodDescription(
+                new MemberDescription("main", 0, List.of(), null),
+                null, List.of(new ParameterDescription("java.lang.String[]", "args", List.of())),
+                List.of()
+            ))
+        .build());
+
+    assertIterableEquals(parse(code), expected);
+  }
 }
 
 
