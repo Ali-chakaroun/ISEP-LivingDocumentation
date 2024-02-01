@@ -11,7 +11,7 @@ up-to-date.
 
 ## State of the project
 
-As of right now, this project is linked to a student assignment originating from the University of
+As February 2024, this project is linked to a student assignment originating from the University of
 Twente and Info Support. The aim of the project is to make the [Living Documentation][ldoc] project
 capable to handle multilingual projects. One aspect of this is to make Living Documentation
 available for the Java environment; which is the purpose of this repository.
@@ -22,6 +22,8 @@ can be identified (which are copied from [Living Documentation][ldoc] descriptio
 * [**Analyzer**](#analyzer): A tool to analyze Java projects.
 * [**Libraries**](#support-libraries): Assists in generating applications that can create plain text files such as MarkDown, AsciiDoc, PlantUML, Mermaid, and more.
 
+> **Note:** at the moment of writing (February 2024), the student project is coming to an end.
+> It is expected that the repository will be moved at some time. When this happens, this repository will refer to the new one.
 
 ## Getting started
 
