@@ -9,18 +9,20 @@ Java. As part of the Living Documentation toolchain, it can be used to generate
 documentation and diagrams from source code so that documentation is always
 up-to-date.
 
+
 ## State of the project
 
-As February 2024, this project is linked to a student assignment originating from the University of
+As of February 2024, this project is linked to a student assignment originating from the University of
 Twente and Info Support. The aim of the project is to make the [Living Documentation][ldoc] project
 capable to handle multilingual projects. One aspect of this is to make Living Documentation
 available for the Java environment; which is the purpose of this repository.
 
-Within the aspect of making Living Documentation available for the Java environment, two features
-can be identified (which are copied from [Living Documentation][ldoc] description):
+This includes:
+- Java Analyzer
+- Maven and Gradle plugin to execute the analyzer
+- A general support library (the project reader)
+- Sample renderers illustrating how Living Documentation can be used
 
-* [**Analyzer**](#analyzer): A tool to analyze Java projects.
-* [**Libraries**](#support-libraries): Assists in generating applications that can create plain text files such as MarkDown, AsciiDoc, PlantUML, Mermaid, and more.
 
 > **Note:** at the moment of writing (February 2024), the student project is coming to an end.
 > It is expected that the repository will be moved at some time. When this happens, this repository will refer to the new one.
@@ -35,6 +37,13 @@ The process of rendering documentation can be summarized as follows:
 2. **Render the documentation**: Use a (custom) renderer that reads the generated JSON file and outputs documentation
 
 > Renderers are applications that you can write yourself making use of the support _Libraries_. These interpret the analyzed code and create documentation files.
+
+
+### Further documentation
+[JSON format documentation][json] describing the structure of the JSON file, as well as [a description in JSON Schema format][schema], are available as part of this repository.
+
+Next to these, sample applications along with a renderer are available (see [sample applications renderers](#sample-applications-renderers))
+
 
 ## Analyzer
 
@@ -72,6 +81,11 @@ A list of Java language features which are included in the analyzer can be found
 ## Support Libraries
 
 This repository contains the [Project Reader](/ldj-project-reader), which is a support library that eases the creation of renderers. This is done by providing a Java interface to deserialize the Living Documentation JSON file.
+
+## Sample applications renderers
+This repository contains two sample applications that make use of the Java Spring framework ([Spring events](/ldj-spring-event-example) & [Spring AMQP](/ldj-spring-amqp-example)).
+For both these sample applications a [renderer](/ldj-spring-renderer-example) has been made (which generates a UML sequence diagram). This may serve as a source of inspiration for creating your own renderers.
+
 
 ## Contributing
 At the moment, this repository is associated to a student assignment of the University of Twente.
