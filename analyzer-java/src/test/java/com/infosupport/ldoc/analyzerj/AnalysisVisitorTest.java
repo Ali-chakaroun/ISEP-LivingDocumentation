@@ -51,7 +51,7 @@ class AnalysisVisitorTest {
   }
 
   private List<Description> parseFragment(String fragment) {
-    String source = String.format("class Test { int test() { %s } }", fragment);
+    String source = String.format("package unit; class Test { int test() { %s } }", fragment);
     List<Description> unit = parse(source);
     List<Description> methods = ((TypeDescription) unit.get(0)).methods();
     List<Description> statements = ((MethodDescription) methods.get(0)).statements();
@@ -273,6 +273,14 @@ class AnalysisVisitorTest {
                 "println",
                 List.of(new ArgumentDescription("java.lang.String", "\"Hello!\"")))),
         parseFragment("System.out.println(\"Hello!\");"));
+
+    assertIterableEquals(
+        List.of(new InvocationDescription("unit.Test", "hashCode", List.of())),
+        parseFragment("this.hashCode();"));
+
+    assertIterableEquals(
+        List.of(new InvocationDescription("unit.Test", "hashCode", List.of())),
+        parseFragment("hashCode();"));
   }
 
   @Test

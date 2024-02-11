@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * AnalysisVisitor converts a JavaParser parse tree into a list of {@link Description} objects. The
@@ -147,6 +148,19 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
         .withComment(comment)
         .withMembers(visit(n.getMembers(), arg))
         .withAttributes(visit(n.getAnnotations(), arg));
+  }
+
+  /** Return the fully qualified name of the nearest enclosing type (class, interface, ...) of e. */
+  private Optional<String> findEnclosingType(Node e) {
+    while (e != null) {
+      if (e instanceof TypeDeclaration<?> td) {
+        return td.getFullyQualifiedName();
+      }
+
+      e = e.getParentNode().orElse(null);
+    }
+
+    return Optional.empty();
   }
 
   /** Describe a top-level compilation unit. */
@@ -436,7 +450,7 @@ public class AnalysisVisitor extends GenericListVisitorAdapter<Description, Anal
     }
     return List.of(
         new InvocationDescription(
-            n.getScope().map(this::resolve).orElse("?"),
+            n.getScope().map(this::resolve).or(() -> findEnclosingType(n)).orElse("?"),
             n.getNameAsString(),
             arguments));
   }
